@@ -24,7 +24,7 @@ public class Mitglied extends Person{
 
     public Mitglied(String vorname, String name, Geschlecht geschlecht, LocalDate geburtsdatum, Adresse adresse, String email, String telefonnummer, String ZPS, int mitgliedsnummer, String ZPSCodeVerein, LocalDate eintrittsdatum, LocalDate austrittsdatum, Status status, long DWZ, int elo, String FIDEtitel) {
         super(vorname,name,geschlecht,geburtsdatum,adresse,email,telefonnummer);
-        this.ZPS = ZPS;
+        this.ZPS = ZPSCodeVerein + "-" + mitgliedsnummer;
         this.mitgliedsnummer = mitgliedsnummer;
         this.ZPSCodeVerein = ZPSCodeVerein;
         this.eintrittsdatum = LocalDate.now();
@@ -40,7 +40,7 @@ public class Mitglied extends Person{
     }
 
     public String getMemberZPS(){
-        return ZPS+ "-" + mitgliedsnummer;
+        return ZPS;
     }
 
     public void setMitgliedsnummer(int mitgliedsnummer) {

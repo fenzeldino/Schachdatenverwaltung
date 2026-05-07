@@ -1,6 +1,8 @@
 package io.github.fenzeldino.Schachdatenverwaltung;
 
 import io.github.fenzeldino.Schachdatenverwaltung.Model.Spieler;
+import io.github.fenzeldino.Schachdatenverwaltung.Repository.MatchUpRepository;
+import io.github.fenzeldino.Schachdatenverwaltung.Repository.SpielerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -18,7 +20,7 @@ public class SchachdatenverwaltungApplication {
 	}
 
 	@Bean
-	public CommandLineRunner demo(BikeRepository bikeRepository, OwnerRepository ownerRepository) {
+	public CommandLineRunner demo(SpielerRepository spielerRepository, MatchUpRepository matchUpRepository) {
 		return (args) -> {
 
 			Spieler spieler1 = new Spieler("Kevin",2000,20);
