@@ -1,7 +1,9 @@
 package io.github.fenzeldino.Schachdatenverwaltung.Model;
 
-import java.time.LocalDate;
+import jakarta.persistence.Entity;
 
+import java.time.LocalDate;
+@Entity
 public class Mitglied extends Person{
 
     protected String ZPS;

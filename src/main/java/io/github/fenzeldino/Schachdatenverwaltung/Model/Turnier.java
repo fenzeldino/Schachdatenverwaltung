@@ -1,16 +1,23 @@
 package io.github.fenzeldino.Schachdatenverwaltung.Model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.Scanner;
-
+@Entity
 public class Turnier implements RatingCalculator{
 
     Scanner meinScanner = new Scanner(System.in);
 
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int TunierId;
     private ArrayList<Spieler> TurnierSpieler = new ArrayList<Spieler>();
     private ArrayList<MatchUp> Matchups = new ArrayList<MatchUp>();
 
@@ -52,7 +59,7 @@ public class Turnier implements RatingCalculator{
             Matchups.add(matchup);
     }
 
-    public void addErgebnis(int MatchUpId,int wahl){
+    public void addErgebnis(int MatchUpId,Spieler Gewinner){
         MatchUp matchup = getMatchUpById(MatchUpId);
 
         if (matchup == null) {
@@ -60,18 +67,23 @@ public class Turnier implements RatingCalculator{
             return;
         }
         System.out.println("Match gefunden");
+        matchup.setGewinner(Gewinner);
 
-        switch(wahl){
-            case 1: matchup.setErg(GewOdVer.Gewinner,matchup.getSpieler1());
-                    matchup.setErg(GewOdVer.Verlierer,matchup.getSpieler2());
-                    System.out.println("Setzen des Gewinners und Verlieres");
-                    break;
-            case 2: matchup.setErg(GewOdVer.Gewinner,matchup.getSpieler2());
-                    matchup.setErg(GewOdVer.Verlierer,matchup.getSpieler1());
-                    break;
-            case 3: matchup.setErg(GewOdVer.Remie,matchup.getSpieler1());
-                    matchup.setErg(GewOdVer.Remie,matchup.getSpieler2());
+    }
+
+    public Spieler getVerlierer(int MatchId){
+        MatchUp match = getMatchUpById(MatchId);
+
+        Spieler Gewinner;
+        Spieler Verlierer;
+
+        Gewinner = match.getGewinner();
+        if(Gewinner == match.getSpieler1()){
+            Verlierer = match.getSpieler2();
+        }else{
+            Verlierer = match.getSpieler1();
         }
+        return Verlierer;
     }
 
     public void setTunierspieler(Spieler spieler){
@@ -91,20 +103,15 @@ public class Turnier implements RatingCalculator{
     public void DresdenCalculator(int MatchId) {
         MatchUp matchUp = getMatchUpById(MatchId);
 
-            if(matchUp.getErg().isEmpty()){
+            if(matchUp.getGewinner()){
                 System.out.println("Ergebnis wurde noch nicht gesetzt");
                 return;
             }
         Spieler Gewinner;
         Spieler Verlierer;
 
-        Gewinner = matchUp.getErg().get(GewOdVer.Gewinner);
-        Verlierer = matchUp.getErg().get(GewOdVer.Verlierer);
-
-        if(Gewinner == null || Verlierer == null){
-            Gewinner = matchUp.getErg().get(GewOdVer.Remie);
-            Verlierer = matchUp.getErg().get(GewOdVer.Remie);
-        }
+        Gewinner = matchUp.getGewinner();
+        Verlierer = getVerlierer(MatchId);
 
         double RatingGewinner = Gewinner.getRating();
         System.out.println("Rating Gewinner: " + RatingGewinner);
@@ -146,11 +153,11 @@ public class Turnier implements RatingCalculator{
     public void EloBerehcnung(int MatchUpId) {
         MatchUp matchUp = getMatchUpById(MatchUpId);
 
-            Spieler a = matchUp.getSpieler1();
-            Spieler b = matchUp.getSpieler2();
+            Spieler Gewinner = matchUp.getGewinner();
+            Spieler Verlierer = getVerlierer(MatchUpId);
 
-            double ra = a.getRating();
-            double rb = b.getRating();
+            double ra = Gewinner.getRating();
+            double rb = Verlierer.getRating();
 
             // Erwartungswert für A
             double ea = 1.0 / (1.0 + Math.pow(10, (rb - ra) / 400.0));

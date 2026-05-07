@@ -1,11 +1,13 @@
 package io.github.fenzeldino.Schachdatenverwaltung.Model;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.util.HashMap;
 
+@Entity
 public class MatchUp {
 
     @Id
@@ -13,7 +15,9 @@ public class MatchUp {
     private int MatchUpId;
     private Spieler Spieler1;
     private Spieler Spieler2;
-    HashMap<GewOdVer, Spieler> erg = new HashMap<GewOdVer, Spieler>();
+    private Tunier tunier;
+    private Spieler Gewinner;
+    private GewOdVer status;
 
     private static int MatchUpIdCount = 0;
     public MatchUp(Spieler Spieler1, Spieler Spieler2){
@@ -47,12 +51,12 @@ public class MatchUp {
         Spieler2 = spieler2;
     }
 
-    public HashMap<GewOdVer, Spieler> getErg() {
-        return erg;
+    public Spieler getGewinner() {
+        return Gewinner;
     }
 
-    public void setErg(GewOdVer GewinnerOderVerliererOderRemie, Spieler spieler) {
-        erg.put(GewinnerOderVerliererOderRemie,spieler);
+    public void setGewinner(Spieler spieler) {
+        this.Gewinner = spieler;
     }
 
 
