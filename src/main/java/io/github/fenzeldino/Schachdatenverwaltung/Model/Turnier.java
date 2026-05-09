@@ -1,9 +1,6 @@
 package io.github.fenzeldino.Schachdatenverwaltung.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.lang.reflect.Array;
 import java.time.LocalDate;
@@ -13,12 +10,19 @@ import java.util.Scanner;
 @Entity
 public class Turnier implements RatingCalculator{
 
-    Scanner meinScanner = new Scanner(System.in);
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="TunierId")
     private int TunierId;
+
+    @OneToMany
+    @JoinColumn(name="tunierId")
     private ArrayList<Spieler> TurnierSpieler = new ArrayList<Spieler>();
+
+    @OneToMany
+    @JoinColumn(name="tunierId")
     private ArrayList<MatchUp> Matchups = new ArrayList<MatchUp>();
 
     static int idCount = 0;

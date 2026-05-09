@@ -1,9 +1,17 @@
 package io.github.fenzeldino.Schachdatenverwaltung.Model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 import java.time.LocalDate;
 
+@Entity
 public class Person implements Comparable<Person>{
 
+
+    protected int PersonenId;
     protected String vorname;
     protected String name;
     protected Geschlecht geschlecht;
@@ -13,7 +21,8 @@ public class Person implements Comparable<Person>{
     protected String telefonnummer;
 
 
-    public Person(String vorname, String name, Geschlecht geschlecht, LocalDate geburtdsatum, Adresse adresse, String email, String telefonnummer) {
+    public Person(int PersonenId,String vorname, String name, Geschlecht geschlecht, LocalDate geburtdsatum, Adresse adresse, String email, String telefonnummer) {
+        this.PersonenId = PersonenId;
         this.vorname = vorname;
         this.name = name;
         this.geschlecht = geschlecht;
@@ -34,6 +43,14 @@ public class Person implements Comparable<Person>{
     public Person(String vorname, LocalDate geburtsdatum){
         this.vorname = vorname;
         this.geburtsdatum = geburtsdatum;
+    }
+
+    public int getPersonenId() {
+        return PersonenId;
+    }
+
+    public void setPersonenId(int personenId) {
+        PersonenId = personenId;
     }
 
     public String getVorname() {

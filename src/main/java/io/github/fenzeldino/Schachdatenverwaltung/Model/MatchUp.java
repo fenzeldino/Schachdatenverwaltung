@@ -1,9 +1,6 @@
 package io.github.fenzeldino.Schachdatenverwaltung.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.HashMap;
 
@@ -13,10 +10,24 @@ public class MatchUp {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int MatchUpId;
+
+    @ManyToOne
+    @JoinColumn(name="spieler1_fk")
     private Spieler Spieler1;
+
+    @ManyToOne
+    @JoinColumn(name="spieler2_fk")
     private Spieler Spieler2;
+
+    @ManyToOne
+    @JoinColumn(name="tunierId_fk")
     private Turnier tunier;
+
+    @OneToOne
+    @JoinColumn(name="GewinnerId_fk")
     private Spieler Gewinner;
+
+    @Column(name="status")
     private GewOdVer status;
 
     private static int MatchUpIdCount = 0;

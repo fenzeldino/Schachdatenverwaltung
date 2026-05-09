@@ -1,17 +1,18 @@
 package io.github.fenzeldino.Schachdatenverwaltung.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
 @Entity
 public class Spieler {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int spielerId;
+    @Column(name="SpielerName")
     private String name;
+    @Column(name="Rating")
     private double rating;
+    @Column(name="Alter")
     private int age;
 
     public Spieler(String name, double rating, int age) {
