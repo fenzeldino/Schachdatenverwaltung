@@ -15,7 +15,7 @@ public class MatchUp {
     private int MatchUpId;
     private Spieler Spieler1;
     private Spieler Spieler2;
-    private Tunier tunier;
+    private Turnier tunier;
     private Spieler Gewinner;
     private GewOdVer status;
 

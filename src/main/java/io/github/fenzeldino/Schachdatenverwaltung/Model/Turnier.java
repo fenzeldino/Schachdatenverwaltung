@@ -103,15 +103,17 @@ public class Turnier implements RatingCalculator{
     public void DresdenCalculator(int MatchId) {
         MatchUp matchUp = getMatchUpById(MatchId);
 
-            if(matchUp.getGewinner()){
-                System.out.println("Ergebnis wurde noch nicht gesetzt");
-                return;
-            }
         Spieler Gewinner;
         Spieler Verlierer;
 
         Gewinner = matchUp.getGewinner();
         Verlierer = getVerlierer(MatchId);
+
+            if(Gewinner == null){
+                System.out.println("Gewinner wurde noch nicht gesetzt");
+                return;
+            }
+
 
         double RatingGewinner = Gewinner.getRating();
         System.out.println("Rating Gewinner: " + RatingGewinner);
@@ -160,19 +162,23 @@ public class Turnier implements RatingCalculator{
             double rb = Verlierer.getRating();
 
             // Erwartungswert für A
+            // 2. Erwartungswert berechnen (Ea)
+            // Formel: 1 / (1 + 10^((RatingB - RatingA) / 400))
             double ea = 1.0 / (1.0 + Math.pow(10, (rb - ra) / 400.0));
-            double eb = 1.0 - ea; // Erwartungswert B ist immer der Rest zu 1
 
-            // Ergebnis bestimmen
-            double sa = (matchUp.getErg().get(GewOdVer.Gewinner) == a) ? 1.0 : 0.0;
-            if (matchUp.getErg().get(GewOdVer.Remie) != null) sa = 0.5;
-            double sb = 1.0 - sa;
+            // 3. K-Faktor festlegen
+            // Ein fixer K-Faktor von 20 ist Standard, könnte aber auch dynamisch sein
+            int k = 20;
 
-            int k = 20; // Dein gewählter K-Faktor
+            // 4. Punkte berechnen
+            // Da wir hier einen festen Gewinner haben, ist das Ergebnis (Sa) immer 1.0
+            // Für ein Remis müsste die MatchUp-Klasse ein entsprechendes Status-Feld prüfen
+            double sa = 1.0;
+            double punktZuwachs = k * (sa - ea);
 
             // Neue Ratings setzen
-            a.setRating(ra + k * (sa - ea));
-            b.setRating(rb + k * (sb - eb));
+            Gewinner.setRating(ra + punktZuwachs);
+            Verlierer.setRating(rb - punktZuwachs);
     }
 
 

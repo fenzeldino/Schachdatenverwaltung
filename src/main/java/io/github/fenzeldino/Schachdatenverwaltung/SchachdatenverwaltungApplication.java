@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class SchachdatenverwaltungApplication {
 
-	private static final Logger log = LoggerFactory.getLogger(SpringDataBikeDemoApplication.class);
+	private static final Logger log = LoggerFactory.getLogger(SchachdatenverwaltungApplication.class);
 
 	public static void main(String[] args) {
 		SpringApplication.run(SchachdatenverwaltungApplication.class, args);
@@ -26,6 +26,8 @@ public class SchachdatenverwaltungApplication {
 			Spieler spieler1 = new Spieler("Kevin",2000,20);
 			Spieler spieler2 = new Spieler("Markus",1200,15);
 			Spieler spieler3 = new Spieler("Hans",1500,28);
+
+
 
 		};
 	}
