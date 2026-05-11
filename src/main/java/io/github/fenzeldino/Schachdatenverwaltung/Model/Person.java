@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 
 import java.time.LocalDate;
 
-@Entity
+
 public class Person implements Comparable<Person>{
 
 
@@ -23,6 +23,16 @@ public class Person implements Comparable<Person>{
 
     public Person(int PersonenId,String vorname, String name, Geschlecht geschlecht, LocalDate geburtdsatum, Adresse adresse, String email, String telefonnummer) {
         this.PersonenId = PersonenId;
+        this.vorname = vorname;
+        this.name = name;
+        this.geschlecht = geschlecht;
+        this.geburtsdatum = geburtdsatum;
+        this.adresse = adresse;
+        this.email = email;
+        this.telefonnummer = telefonnummer;
+    }
+
+    public Person(String vorname, String name, Geschlecht geschlecht, LocalDate geburtdsatum, Adresse adresse, String email, String telefonnummer) {
         this.vorname = vorname;
         this.name = name;
         this.geschlecht = geschlecht;

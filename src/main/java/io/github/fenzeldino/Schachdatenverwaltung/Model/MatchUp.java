@@ -8,7 +8,7 @@ import java.util.HashMap;
 public class MatchUp {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int MatchUpId;
 
     @ManyToOne
@@ -20,8 +20,8 @@ public class MatchUp {
     private Spieler Spieler2;
 
     @ManyToOne
-    @JoinColumn(name="tunierId_fk")
-    private Turnier tunier;
+    @JoinColumn(name="turnierId_fk")
+    private Turnier turnier;
 
     @OneToOne
     @JoinColumn(name="GewinnerId_fk")
@@ -32,11 +32,11 @@ public class MatchUp {
 
     private static int MatchUpIdCount = 0;
     public MatchUp(Spieler Spieler1, Spieler Spieler2){
-        this.MatchUpId = MatchUpIdCount;
         MatchUpIdCount++;
         this.Spieler1 = Spieler1;
         this.Spieler2 = Spieler2;
     }
+
 
     public int getMatchUpId() {
         return MatchUpId;
@@ -69,6 +69,8 @@ public class MatchUp {
     public void setGewinner(Spieler spieler) {
         this.Gewinner = spieler;
     }
+
+
 
 
     @Override

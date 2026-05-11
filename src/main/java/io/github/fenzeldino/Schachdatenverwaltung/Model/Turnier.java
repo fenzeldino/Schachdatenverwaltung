@@ -17,11 +17,11 @@ public class Turnier implements RatingCalculator{
     @Column(name="TunierId")
     private int TunierId;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name="tunierId")
     private ArrayList<Spieler> TurnierSpieler = new ArrayList<Spieler>();
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name="tunierId")
     private ArrayList<MatchUp> Matchups = new ArrayList<MatchUp>();
 
@@ -92,6 +92,7 @@ public class Turnier implements RatingCalculator{
 
     public void setTunierspieler(Spieler spieler){
         TurnierSpieler.add(spieler);
+
     }
 
     public MatchUp getMatchUpById(int id){

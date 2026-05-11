@@ -8,6 +8,7 @@ public class Spieler {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int spielerId;
+
     @Column(name="SpielerName")
     private String name;
     @Column(name="Rating")
