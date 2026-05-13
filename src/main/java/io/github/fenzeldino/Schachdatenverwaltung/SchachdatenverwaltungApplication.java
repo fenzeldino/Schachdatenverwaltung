@@ -45,11 +45,11 @@ public class SchachdatenverwaltungApplication {
 			turnier.setTunierspieler(spieler2);
 			turnier.setTunierspieler(spieler3);
 			turnier.setTunierspieler(spieler4);
-			/*
-			Fehler irgendwo hier:
-			//turnier.createMatchUp(spieler1,spieler2);
-			//turnier.createMatchUp(spieler3,spieler4);
-			*/
+
+
+			turnier.createMatchUp(spieler1,spieler2);
+			turnier.createMatchUp(spieler3,spieler4);
+
 			turnierRepositroy.save(turnier);
 
 		};

@@ -37,6 +37,9 @@ public class MatchUp {
         this.Spieler2 = Spieler2;
     }
 
+    public MatchUp(){ }
+
+
 
     public int getMatchUpId() {
         return MatchUpId;

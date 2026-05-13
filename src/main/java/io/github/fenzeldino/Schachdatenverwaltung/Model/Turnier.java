@@ -14,7 +14,6 @@ public class Turnier implements RatingCalculator{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="TunierId")
     private int TunierId;
 
     @OneToMany(cascade = CascadeType.ALL)
