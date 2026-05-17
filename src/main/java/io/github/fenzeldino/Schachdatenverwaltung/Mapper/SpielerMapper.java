@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public final class SpielerMapper {
 
-    SpielerMapper(){
+    private SpielerMapper(){
 
     }
 

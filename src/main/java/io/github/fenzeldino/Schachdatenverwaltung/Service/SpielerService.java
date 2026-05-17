@@ -25,7 +25,7 @@ public class SpielerService {
         spieler.setRating(Objects.requireNonNull(spielerDto).rating());
 
         spielerRepository.save(spieler);
-        Spieler saved = spielerRepository.save(spieler);
+        Spieler saved = spielerRepository.save(spieler); //saved -> Spieler mit Auto generated Id durch Speichern in DB
         return SpielerMapper.toDto(saved);
     }
 
