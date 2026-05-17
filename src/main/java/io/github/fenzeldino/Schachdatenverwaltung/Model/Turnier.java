@@ -11,8 +11,6 @@ import java.util.Scanner;
 @Entity
 public class Turnier implements RatingCalculator{
 
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int TunierId;
