@@ -20,7 +20,7 @@ public class MatchUp {
     private Spieler Spieler2;
 
     @ManyToOne
-    @JoinColumn(name="turnierId_fk")
+    //@JoinColumn(name="turnierId_fk")
     private Turnier turnier;
 
     @OneToOne

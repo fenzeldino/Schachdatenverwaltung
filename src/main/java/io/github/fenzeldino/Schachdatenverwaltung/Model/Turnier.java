@@ -6,6 +6,7 @@ import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 @Entity
 public class Turnier implements RatingCalculator{
@@ -16,13 +17,12 @@ public class Turnier implements RatingCalculator{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int TunierId;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name="tunierId")
-    private ArrayList<Spieler> TurnierSpieler = new ArrayList<Spieler>();
+    @ManyToMany()
+    private List<Spieler> Spieler = new ArrayList<Spieler>();
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name="tunierId")
-    private ArrayList<MatchUp> Matchups = new ArrayList<MatchUp>();
+    private List<MatchUp> Matchups = new ArrayList<MatchUp>();
 
     static int idCount = 0;
 
@@ -90,8 +90,7 @@ public class Turnier implements RatingCalculator{
     }
 
     public void setTunierspieler(Spieler spieler){
-        TurnierSpieler.add(spieler);
-
+        Spieler.add(spieler);
     }
 
     public MatchUp getMatchUpById(int id){
@@ -187,7 +186,7 @@ public class Turnier implements RatingCalculator{
 
 
     public void anzeigenTunierSpieler(){
-        for(Spieler tun : TurnierSpieler){
+        for(Spieler tun : Spieler){
             System.out.println(tun.toString());
         }
     }

@@ -2,6 +2,9 @@ package io.github.fenzeldino.Schachdatenverwaltung.Model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 public class Spieler {
 
@@ -15,11 +18,21 @@ public class Spieler {
     private double rating;
     @Column(name="Alter")
     private int age;
+    @ManyToMany(mappedBy = "Spieler")
+    private List<Turnier> turnier = new ArrayList<>();
 
     public Spieler(String name, double rating, int age) {
         this.name = name;
         this.rating = rating;
         this.age = age;
+    }
+
+    public List<Turnier> getTurnier() {
+        return turnier;
+    }
+
+    public void setTurnier(List<Turnier> turnier) {
+        this.turnier = turnier;
     }
 
     public Spieler(){}
