@@ -31,6 +31,8 @@ public class Spieler {
         return turnier;
     }
 
+
+
     public void setTurnier(List<Turnier> turnier) {
         this.turnier = turnier;
     }

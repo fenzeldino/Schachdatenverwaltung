@@ -37,6 +37,14 @@ public class Turnier implements RatingCalculator{
 
     }
 
+    public int getTunierId() {
+        return TunierId;
+    }
+
+    public void setTunierId(int tunierId) {
+        TunierId = tunierId;
+    }
+
     public void createSpieler(Person p){
         Spieler spieler = new Spieler();
 
