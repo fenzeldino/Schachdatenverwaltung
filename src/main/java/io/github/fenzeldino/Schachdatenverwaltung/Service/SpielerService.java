@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,14 +33,19 @@ public class SpielerService {
         return SpielerMapper.toDto(saved);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true) // Dirty Checking wird ausgeschalten -> schneller
     public List<SpielerDTO> getAllSpieler(){
-
         return spielerRepository.findAll()
-                .stream()
-                .map(SpielerMapper::toDto)
-                .collect(Collectors.toList());
+                .stream()//Jedes Objekt wird einzeln durchgereicht
+                .map(SpielerMapper::toDto)//Objekt aus DB wird auf DTO gemappt
+                .collect(Collectors.toList()); //sammelt DTOs in einer neun Liste
+    }
 
+    @Transactional(readOnly = true)
+    public SpielerDTO getSpieler(int Id){
+        return spielerRepository.findById(Id)
+                .map(SpielerMapper::toDto)
+                .orElseThrow(() -> new IllegalArgumentException("Spieler mit Id: " + Id + "wurde nicht gefunden"));
     }
 
 }
