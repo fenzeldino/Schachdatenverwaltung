@@ -22,4 +22,9 @@ public record SpielerDTO(Integer spielerId,
     public Double rating() {
         return rating;
     }
+
+    @Override
+    public Set<Integer> TurnierIds() {
+        return TurnierIds;
+    }
 }

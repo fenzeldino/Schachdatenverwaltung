@@ -48,4 +48,22 @@ public class SpielerService {
                 .orElseThrow(() -> new IllegalArgumentException("Spieler mit Id: " + Id + "wurde nicht gefunden"));
     }
 
+    @Transactional
+    public SpielerDTO updateSpieler(int Id,SpielerDTO spieler){
+        Spieler existing = spielerRepository.findById(Id)
+                .orElseThrow(() -> new IllegalArgumentException("Spieler mit Id: " + Id + "wurde nicht gefunden"));
+
+        if(!spieler.spielerId().equals(existing.getSpielerId())){
+            System.out.println("Spieler Ids stimmen nicht überein");
+            return null;
+        }
+
+       existing.setName(spieler.Name());
+       existing.setRating(spieler.rating());
+
+       Spieler saved = spielerRepository.save(existing);
+        return SpielerMapper.toDto(saved);
+    }
+
+
 }
