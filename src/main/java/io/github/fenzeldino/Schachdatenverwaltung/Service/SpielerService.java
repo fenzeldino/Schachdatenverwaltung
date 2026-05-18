@@ -7,7 +7,10 @@ import io.github.fenzeldino.Schachdatenverwaltung.Repository.SpielerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
 @Service
 public class SpielerService {
 
@@ -27,6 +30,16 @@ public class SpielerService {
         spielerRepository.save(spieler);
         Spieler saved = spielerRepository.save(spieler); //saved -> Spieler mit Auto generated Id durch Speichern in DB
         return SpielerMapper.toDto(saved);
+    }
+
+    @Transactional(readOnly = true)
+    public List<SpielerDTO> getAllSpieler(){
+
+        return spielerRepository.findAll()
+                .stream()
+                .map(SpielerMapper::toDto)
+                .collect(Collectors.toList());
+
     }
 
 }
