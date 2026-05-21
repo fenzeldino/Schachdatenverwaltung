@@ -37,6 +37,22 @@ public class Turnier implements RatingCalculator{
 
     }
 
+    public List<Spieler> getSpieler() {
+        return Spieler;
+    }
+
+    public void setSpieler(List<Spieler> spieler) {
+        Spieler = spieler;
+    }
+
+    public List<MatchUp> getMatchups() {
+        return Matchups;
+    }
+
+    public void setMatchups(List<MatchUp> matchups) {
+        Matchups = matchups;
+    }
+
     public int getTunierId() {
         return TunierId;
     }
