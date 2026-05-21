@@ -65,5 +65,13 @@ public class SpielerService {
         return SpielerMapper.toDto(saved);
     }
 
+    @Transactional
+    public void deleteSpieler(int Id){
+        if(!spielerRepository.existsById(Id)){
+            throw new IllegalArgumentException("Spieler nicht gefunden");
+        }
+        spielerRepository.deleteById(Id);
+    }
+
 
 }
