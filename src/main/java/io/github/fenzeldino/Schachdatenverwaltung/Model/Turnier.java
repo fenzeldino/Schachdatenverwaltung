@@ -45,7 +45,7 @@ public class Turnier implements RatingCalculator{
         TunierId = tunierId;
     }
 
-    public void createSpieler(Person p){
+    /*public void createSpieler(Person p){
         Spieler spieler = new Spieler();
 
         spieler.setSpielerId(idCount);
@@ -62,6 +62,7 @@ public class Turnier implements RatingCalculator{
         }
         idCount++;
     }
+    */
 
     public void createMatchUp(Spieler spieler1, Spieler spieler2){
             MatchUp matchup = new MatchUp(spieler1, spieler2);
