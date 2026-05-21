@@ -26,14 +26,10 @@ public class MatchUpService {
     @Transactional
     public MatchUpDTO createMatUp(MatchUpDTO match){
         MatchUp matchUp = new MatchUp();
-        String spielerNameEins = match.SpielerNameEins();
-        String spielerNameZwei = match.SpielerNameZwei();
-        Spieler SpielerEins;
-        Spieler SpielerZwei;
-        SpielerEins = spielerRepository.findByNameContainingIgnoreCase(match.SpielerNameEins());
-        SpielerZwei = spielerRepository.findByNameContainingIgnoreCase(match.SpielerNameZwei());
-        matchUp.setSpieler1(SpielerEins);
-        matchUp.setSpieler1(SpielerEins);
+
+
+        matchUp.setSpieler1(match.SpielerEins());
+        matchUp.setSpieler1(match.SpielerEins());
 
         MatchUp saved = matchUpRepository.save(matchUp);
         return MatchUpMapper.toDto(saved);
@@ -45,6 +41,23 @@ public class MatchUpService {
                 .stream()
                 .map(MatchUpMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public MatchUpDTO updateMatchUp(int Id,MatchUpDTO match){
+        MatchUp existing = matchUpRepository.findById(Id)
+                .orElseThrow(() -> new IllegalArgumentException("MatchUp mit Id: " + Id + " nicht vorhanden"));
+
+        if(!match.MatchUpId().equals(existing.getMatchUpId())){
+            System.out.println("MatchUp mit Id: " + Id + " passt nicht zu der MatchUpId von: " + existing.getMatchUpId());
+            return null;
+        }
+
+        existing.setSpieler1(match.SpielerEins());
+        existing.setSpieler2(match.SpielerZwei());
+
+        MatchUp saved = matchUpRepository.save(existing);
+        return MatchUpMapper.toDto(saved);
     }
 
 

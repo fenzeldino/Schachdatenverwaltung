@@ -1,4 +1,6 @@
 package io.github.fenzeldino.Schachdatenverwaltung.DTO;
 
-public record MatchUpDTO(Integer MatchUpId,String SpielerNameEins,String SpielerNameZwei){
+import io.github.fenzeldino.Schachdatenverwaltung.Model.Spieler;
+
+public record MatchUpDTO(Integer MatchUpId, Spieler SpielerEins, Spieler SpielerZwei){
 }
