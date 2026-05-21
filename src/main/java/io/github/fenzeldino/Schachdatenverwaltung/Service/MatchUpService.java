@@ -60,5 +60,14 @@ public class MatchUpService {
         return MatchUpMapper.toDto(saved);
     }
 
+    @Transactional
+    public void deleteMatchUpById(Integer Id){
+
+        if(!matchUpRepository.existsById(Id)){
+            throw new IllegalArgumentException("MatchUp nicht gefunden");
+        }
+        matchUpRepository.deleteById(Id);
+    }
+
 
 }
