@@ -13,13 +13,13 @@ public class Turnier implements RatingCalculator{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int TunierId;
+    private int TurnierId;
 
     @ManyToMany()
     private List<Spieler> Spieler = new ArrayList<Spieler>();
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name="tunierId")
+    @JoinColumn(name="turnierId")
     private List<MatchUp> Matchups = new ArrayList<MatchUp>();
 
     static int idCount = 0;
@@ -36,6 +36,7 @@ public class Turnier implements RatingCalculator{
     public Turnier(){
 
     }
+
 
     public List<Spieler> getSpieler() {
         return Spieler;
@@ -54,11 +55,11 @@ public class Turnier implements RatingCalculator{
     }
 
     public int getTunierId() {
-        return TunierId;
+        return TurnierId;
     }
 
-    public void setTunierId(int tunierId) {
-        TunierId = tunierId;
+    public void setTunierId(int turnierId) {
+        TurnierId = tunierId;
     }
 
     /*public void createSpieler(Person p){
