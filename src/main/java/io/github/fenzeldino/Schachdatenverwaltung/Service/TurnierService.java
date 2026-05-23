@@ -1,6 +1,8 @@
 package io.github.fenzeldino.Schachdatenverwaltung.Service;
 
+import io.github.fenzeldino.Schachdatenverwaltung.DTO.MatchUpDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.SpielerDTO;
+import io.github.fenzeldino.Schachdatenverwaltung.Mapper.MatchUpMapper;
 import io.github.fenzeldino.Schachdatenverwaltung.Mapper.SpielerMapper;
 import io.github.fenzeldino.Schachdatenverwaltung.Mapper.TurnierMapper;
 import io.github.fenzeldino.Schachdatenverwaltung.Model.MatchUp;
@@ -32,19 +34,36 @@ public class TurnierService {
     }
 
     @Transactional
+    public Turnier findTurnierById(int turnierId){
+        return turnierRepository.findById(turnierId)
+                .orElseThrow(() -> new IllegalArgumentException("Turnier wurde nicht gefunden"));
+    }
+
+
+    @Transactional
     public List<SpielerDTO> showAllTurnierSpieler(int turnierId,Set<Integer> spielerIds){
 
-        Turnier turnier = turnierRepository.findById(turnierId)
-                .orElseThrow(() -> new IllegalArgumentException("Turnier wurde nicht gefunden"));
-
-
-   List<Spieler> turnierSpieler = turnier.getSpieler().stream()//Spieler Liste einzeln durchgehen
+        Turnier turnier = findTurnierById(turnierId);
+        List<Spieler> turnierSpieler = turnier.getSpieler().stream()//Spieler Liste einzeln durchgehen
             .filter(spieler -> spielerIds.contains(spieler.getSpielerId())) // Schauen ob der Spieler eine SpielerId hat die im Set drinnen ist
            .toList();
 
         return turnierSpieler.stream().map(SpielerMapper::toDto).toList();
     }
 
+    public List<MatchUpDTO> showAllMatchUps(int turnierId,Set<Integer> MatchUpIds){
+
+        Turnier turnier = findTurnierById(turnierId);
+        List<MatchUp> TurnierMatchUps = turnier.getMatchups().
+                stream()
+                .filter(MatchUp -> MatchUpIds.contains(MatchUp.getMatchUpId()))
+                .toList();
+
+        return TurnierMatchUps
+                .stream()
+                .map(MatchUpMapper::toDto)
+                .toList();
+    }
 
 
 
