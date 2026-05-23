@@ -59,7 +59,7 @@ public class Turnier implements RatingCalculator{
     }
 
     public void setTunierId(int turnierId) {
-        TurnierId = tunierId;
+        TurnierId = turnierId;
     }
 
     /*public void createSpieler(Person p){
