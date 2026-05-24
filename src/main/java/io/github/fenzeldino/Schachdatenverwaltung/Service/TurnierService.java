@@ -50,7 +50,7 @@ public class TurnierService {
 
         return turnierSpieler.stream().map(SpielerMapper::toDto).toList();
     }
-
+    @Transactional
     public List<MatchUpDTO> showAllMatchUps(int turnierId,Set<Integer> MatchUpIds){
 
         Turnier turnier = findTurnierById(turnierId);
@@ -63,6 +63,14 @@ public class TurnierService {
                 .stream()
                 .map(MatchUpMapper::toDto)
                 .toList();
+    }
+
+    @Transactional
+    public void addMatchUpToTurnier(int TurnierId,MatchUp match){
+        Turnier turnier = findTurnierById(TurnierId);
+        turnier.setMatchups(match);
+        turnierRepository.save(turnier);
+
     }
 
 

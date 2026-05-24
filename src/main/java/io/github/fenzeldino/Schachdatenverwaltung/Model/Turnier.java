@@ -1,5 +1,6 @@
 package io.github.fenzeldino.Schachdatenverwaltung.Model;
 
+import io.github.fenzeldino.Schachdatenverwaltung.DTO.MatchUpDTO;
 import jakarta.persistence.*;
 
 import java.lang.reflect.Array;
@@ -50,8 +51,8 @@ public class Turnier implements RatingCalculator{
         return Matchups;
     }
 
-    public void setMatchups(List<MatchUp> matchups) {
-        Matchups = matchups;
+    public void setMatchups(MatchUp matchup) {
+        Matchups.add(matchup);
     }
 
     public int getTunierId() {

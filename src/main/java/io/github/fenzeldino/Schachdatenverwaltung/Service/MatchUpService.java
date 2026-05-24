@@ -26,10 +26,8 @@ public class MatchUpService {
     @Transactional
     public MatchUpDTO createMatUp(MatchUpDTO match){
         MatchUp matchUp = new MatchUp();
-
-
         matchUp.setSpieler1(match.SpielerEins());
-        matchUp.setSpieler1(match.SpielerEins());
+        matchUp.setSpieler2(match.SpielerZwei());
 
         MatchUp saved = matchUpRepository.save(matchUp);
         return MatchUpMapper.toDto(saved);
