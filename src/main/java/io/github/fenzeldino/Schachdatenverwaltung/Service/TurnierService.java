@@ -73,6 +73,13 @@ public class TurnierService {
 
     }
 
+    @Transactional
+    public void addSpielerToTurnier(int TurnierId,Spieler spieler){
+        Turnier turnier = findTurnierById(TurnierId);
+        turnier.setTunierspieler(spieler);
+        turnierRepository.save(turnier);
+    }
+
 
 
 }
