@@ -79,8 +79,4 @@ public class TurnierService {
         turnier.setTunierspieler(spieler);
         turnierRepository.save(turnier);
     }
-
-
-
-
 }

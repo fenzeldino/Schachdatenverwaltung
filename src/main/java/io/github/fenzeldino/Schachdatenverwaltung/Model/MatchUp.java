@@ -76,6 +76,8 @@ public class MatchUp {
 
 
 
+
+
     @Override
     public String toString() {
         return "MatchUp Id: " + MatchUpId + " " + Spieler1.getName() + "( Alter: " + Spieler1.getAge() + ") "  + "(" + Spieler1.getRating() + ") " + " vs " + Spieler2.getName() + " (Alter: " + Spieler2.getAge() + ") " +  "(" +Spieler2.getRating() + ") ";

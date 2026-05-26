@@ -87,17 +87,10 @@ public class Turnier implements RatingCalculator{
             Matchups.add(matchup);
     }
 
-    public void addErgebnis(int MatchUpId,Spieler Gewinner){
-        MatchUp matchup = getMatchUpById(MatchUpId);
-
-        if (matchup == null) {
-            System.out.println("Fehler: Kein Match mit der ID " + MatchUpId + " gefunden.");
-            return;
-        }
-        System.out.println("Match gefunden");
-        matchup.setGewinner(Gewinner);
-
+    public void setTunierspieler(Spieler spieler){
+        Spieler.add(spieler);
     }
+
 
     public Spieler getVerlierer(int MatchId){
         MatchUp match = getMatchUpById(MatchId);
@@ -114,10 +107,6 @@ public class Turnier implements RatingCalculator{
         return Verlierer;
     }
 
-    public void setTunierspieler(Spieler spieler){
-        Spieler.add(spieler);
-    }
-
     public MatchUp getMatchUpById(int id){
         for(MatchUp m: Matchups){
             if(m.getMatchUpId() == id){
@@ -126,6 +115,7 @@ public class Turnier implements RatingCalculator{
         }
         return null;
     }
+
 
     @Override
     public void DresdenCalculator(int MatchId) {
