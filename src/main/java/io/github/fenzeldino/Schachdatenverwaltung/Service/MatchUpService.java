@@ -1,9 +1,11 @@
 package io.github.fenzeldino.Schachdatenverwaltung.Service;
 
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.MatchUpDTO;
+import io.github.fenzeldino.Schachdatenverwaltung.DTO.SpielerDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.Mapper.MatchUpMapper;
 import io.github.fenzeldino.Schachdatenverwaltung.Model.MatchUp;
 import io.github.fenzeldino.Schachdatenverwaltung.Model.Spieler;
+import io.github.fenzeldino.Schachdatenverwaltung.Model.Turnier;
 import io.github.fenzeldino.Schachdatenverwaltung.Repository.MatchUpRepository;
 import io.github.fenzeldino.Schachdatenverwaltung.Repository.SpielerRepository;
 import jakarta.transaction.Transactional;
@@ -65,6 +67,28 @@ public class MatchUpService {
             throw new IllegalArgumentException("MatchUp nicht gefunden");
         }
         matchUpRepository.deleteById(Id);
+    }
+
+    @Transactional
+    public void addGewinner(MatchUp match, Spieler gewinner){
+        if(gewinner.getSpielerId() == match.getSpieler1().getSpielerId() || gewinner.getSpielerId() == match.getSpieler2().getSpielerId()) {
+            match.setGewinner(gewinner);
+            matchUpRepository.save(match);
+        }else {
+            System.out.println("Spieler nicht im Matchup gefunden");
+            return;
+        }
+    }
+
+    @Transactional
+    public void addVerlierer(MatchUp match, Spieler verlierer){
+        if(verlierer.getSpielerId() == match.getSpieler1().getSpielerId() || verlierer.getSpielerId() == match.getSpieler2().getSpielerId()) {
+            match.setGewinner(verlierer);
+            matchUpRepository.save(match);
+        }else {
+            System.out.println("Spieler nicht im Matchup gefunden");
+            return;
+        }
     }
 
 
