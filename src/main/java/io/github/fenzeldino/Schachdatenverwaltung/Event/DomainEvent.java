@@ -18,4 +18,8 @@ public abstract class DomainEvent {
         }
 
         public abstract void process();
+
+    public LocalDate getOccuredDate() {
+        return occuredDate;
+    }
 }

@@ -48,6 +48,7 @@ public class SchachVerein {
 
     public void MitgliedAusClubEntfernen(LeaveEvent leaveEvent){
         removeMember(leaveEvent.getMitglied());
+        leaveEvent.getMitglied().setAustrittsdatum(leaveEvent.getOccuredDate());
         MitgliederAnzahl--;
     }
 
