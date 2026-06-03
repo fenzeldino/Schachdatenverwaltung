@@ -1,6 +1,7 @@
 package io.github.fenzeldino.Schachdatenverwaltung.Model;
 
 import io.github.fenzeldino.Schachdatenverwaltung.Event.JoinEvent;
+import io.github.fenzeldino.Schachdatenverwaltung.Event.LeaveEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +46,10 @@ public class SchachVerein {
         MitgliederAnzahl++;
     }
 
+    public void MitgliedAusClubEntfernen(LeaveEvent leaveEvent){
+        removeMember(leaveEvent.getMitglied());
+        MitgliederAnzahl--;
+    }
 
 
     public int getId() {
@@ -73,7 +78,6 @@ public class SchachVerein {
 
     public void removeMember(Mitglied member) {
         mitglieder.remove(member);
-        MitgliederAnzahl--;
     }
 
     public int getMitgliederAnzahl() {
