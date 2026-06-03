@@ -90,6 +90,16 @@ public class TurnierService implements RatingCalculator {
     }
 
     @Transactional
+    void AddMatchUpToDB(int TurnierId,Spieler spieler1,Spieler spieler2){
+        Turnier turnier = turnierRepository.findById(TurnierId)
+                        .orElseThrow(() -> new IllegalArgumentException("Turnier nicht gefunden"));
+
+        turnier.createMatchUo(spieler1,spieler2);
+        turnierRepository.save(turnier);
+
+    }
+
+    @Transactional
     @Override
     public void DresdenCalculator(int TurnierId,int MatchId) {
         MatchUp matchUp = getMatchUpById(MatchId);

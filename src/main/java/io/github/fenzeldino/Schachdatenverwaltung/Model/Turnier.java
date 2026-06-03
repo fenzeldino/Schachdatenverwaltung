@@ -68,6 +68,13 @@ public class Turnier {
         Turnier.idCount = idCount;
     }
 
+    public void createMatchUo(Spieler spieler1,Spieler spieler2) {
+        MatchUp matchUp = new MatchUp();
+        matchUp.setSpieler1(spieler1);
+        matchUp.setSpieler2(spieler2);
+
+        Matchups.add(matchUp);
+    }
 
 
 }
