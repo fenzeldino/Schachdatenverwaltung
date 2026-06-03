@@ -2,15 +2,20 @@ package io.github.fenzeldino.Schachdatenverwaltung.Service;
 
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.SpielerDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.Mapper.SpielerMapper;
+import io.github.fenzeldino.Schachdatenverwaltung.Model.Mitglied;
+import io.github.fenzeldino.Schachdatenverwaltung.Model.Person;
 import io.github.fenzeldino.Schachdatenverwaltung.Model.Spieler;
 import io.github.fenzeldino.Schachdatenverwaltung.Repository.SpielerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 @Service
 public class SpielerService {
@@ -73,5 +78,22 @@ public class SpielerService {
         spielerRepository.deleteById(Id);
     }
 
+    @Transactional
+      public void createSpieler(Person p){
+        Spieler spieler = new Spieler();
+
+        spieler.setName(p.getName());
+        LocalDate Geburtstag =  p.getGeburtsatum();
+        LocalDate heute = LocalDate.now();
+        int alter = Period.between(Geburtstag, heute).getYears();
+        spieler.setAge(alter);
+
+        if(p instanceof Mitglied){
+            spieler.setRating(((Mitglied) p).getElo());
+        }else{
+            spieler.setRating(1800);
+        }
+        spielerRepository.save(spieler);
+    }
 
 }

@@ -73,9 +73,13 @@ public class MatchUp {
         this.Gewinner = spieler;
     }
 
+    public Turnier getTurnier() {
+        return turnier;
+    }
 
-
-
+    public void setTurnier(Turnier turnier) {
+        this.turnier = turnier;
+    }
 
 
     @Override

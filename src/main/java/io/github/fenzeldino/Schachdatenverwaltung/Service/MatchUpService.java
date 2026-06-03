@@ -8,10 +8,12 @@ import io.github.fenzeldino.Schachdatenverwaltung.Model.Spieler;
 import io.github.fenzeldino.Schachdatenverwaltung.Model.Turnier;
 import io.github.fenzeldino.Schachdatenverwaltung.Repository.MatchUpRepository;
 import io.github.fenzeldino.Schachdatenverwaltung.Repository.SpielerRepository;
+import io.github.fenzeldino.Schachdatenverwaltung.Repository.TurnierRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,6 +21,7 @@ public class MatchUpService {
 
     private final MatchUpRepository matchUpRepository;
     private final SpielerRepository spielerRepository;
+
 
     public MatchUpService(MatchUpRepository matchUpRepository,SpielerRepository spielerRepository){
         this.matchUpRepository = matchUpRepository;
@@ -36,7 +39,7 @@ public class MatchUpService {
     }
 
     @Transactional
-    public List<MatchUpDTO> getAllMatchUps(){
+    public List<MatchUpDTO> getAllMatchUpsFromDb(){
         return matchUpRepository.findAll()
                 .stream()
                 .map(MatchUpMapper::toDto)

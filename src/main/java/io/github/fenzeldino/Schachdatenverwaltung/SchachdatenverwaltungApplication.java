@@ -35,11 +35,7 @@ public class SchachdatenverwaltungApplication {
 			spielerRepository.save(spieler3);
 			spielerRepository.save(spieler4);
 
-
-
 			Turnier turnier = new Turnier();
-
-
 
 			turnier.setTunierspieler(spieler1);
 			turnier.setTunierspieler(spieler2);
@@ -47,8 +43,8 @@ public class SchachdatenverwaltungApplication {
 			turnier.setTunierspieler(spieler4);
 
 
-			turnier.createMatchUp(spieler1,spieler2);
-			turnier.createMatchUp(spieler3,spieler4);
+			//turnier.createMatchUp(spieler1,spieler2);
+			//turnier.createMatchUp(spieler3,spieler4);
 
 			turnierRepositroy.save(turnier);
 
