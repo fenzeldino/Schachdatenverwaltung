@@ -28,6 +28,7 @@ public class JoinEvent extends DomainEvent{
         verein.handleAnmeldung(this);
     }
 
+
     public JoinEvent setPerson(Person person){
         this.person = person;
         return this;
