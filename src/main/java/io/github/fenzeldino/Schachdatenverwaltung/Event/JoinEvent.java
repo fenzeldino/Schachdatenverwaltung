@@ -2,12 +2,13 @@ package io.github.fenzeldino.Schachdatenverwaltung.Event;
 
 import io.github.fenzeldino.Schachdatenverwaltung.Model.Person;
 import io.github.fenzeldino.Schachdatenverwaltung.Model.SchachVerein;
+import io.github.fenzeldino.Schachdatenverwaltung.Service.ReversalDomainEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 
-public class JoinEvent extends DomainEvent{
+public class JoinEvent extends ReversalDomainEvent  {
 
     private static final Logger log = LoggerFactory.getLogger(JoinEvent.class);
 
@@ -20,6 +21,11 @@ public class JoinEvent extends DomainEvent{
         log.info("created at "+date.toString()+" für Verein " + verein.getName()+ "person: " + person.getName());
         this.person = person;
         this.verein = verein;
+    }
+
+    @Override
+    public void reversal(){
+        verein.MitgliedAusClubEntfernen(this);
     }
 
     @Override
