@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 
-public class JoinEvent extends ReversalDomainEvent  {
+public class JoinEvent extends DomainEvent{
 
     private static final Logger log = LoggerFactory.getLogger(JoinEvent.class);
 
@@ -23,11 +23,12 @@ public class JoinEvent extends ReversalDomainEvent  {
         this.verein = verein;
     }
 
+    /*
     @Override
     public void reversal(){
         verein.MitgliedAusClubEntfernen(this);
     }
-
+    */
     @Override
     public void process(){
         log.info("process");

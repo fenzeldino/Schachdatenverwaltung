@@ -12,6 +12,10 @@ import io.github.fenzeldino.Schachdatenverwaltung.Repository.TurnierRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -29,10 +33,17 @@ public class TurnierService implements RatingCalculator {
     private final TurnierRepository turnierRepository;
     private final MatchUpRepository matchUpRepository;
 
+
+
     public TurnierService(TurnierRepository turnierRepository, SpielerRepository spielerRepository,MatchUpRepository matchUpRepository){
         this.turnierRepository = turnierRepository;
         this.spielerRepository = spielerRepository;
         this.matchUpRepository = matchUpRepository;
+    }
+
+
+    public void startTurnier(int TurnierId){
+
     }
 
     private static final int[][] PUNKTE_TABELLE = {
