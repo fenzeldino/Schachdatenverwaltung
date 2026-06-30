@@ -8,13 +8,14 @@ import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 
-public class JoinEvent extends ReversalDomainEvent  {
+public class JoinEvent extends ReversalDomainEvent{
 
     private static final Logger log = LoggerFactory.getLogger(JoinEvent.class);
 
     private Person person;
     private SchachVerein verein;
     private int Elo;
+    private SchachVerein priorState; // Vorheriger stnadn
 
     public JoinEvent(LocalDate date, Person person, SchachVerein verein, int Elo){
         super(date);
@@ -25,15 +26,16 @@ public class JoinEvent extends ReversalDomainEvent  {
 
     @Override
     public void reversal(){
-        verein.MitgliedAusClubEntfernen(this);
+        verein.handleReversalJoin(this);
     }
+
 
     @Override
     public void process(){
         log.info("process");
+        this.priorState = verein; // vorheriger stand zugewiesen, dann erst änderungen vornehmen
         verein.handleAnmeldung(this);
     }
-
 
     public JoinEvent setPerson(Person person){
         this.person = person;
@@ -43,6 +45,10 @@ public class JoinEvent extends ReversalDomainEvent  {
     public JoinEvent setVerein(SchachVerein verein){
         this.verein = verein;
         return this;
+    }
+
+    public SchachVerein getPriorVereinStand(){
+        return priorState;
     }
 
     public Person getPerson() {

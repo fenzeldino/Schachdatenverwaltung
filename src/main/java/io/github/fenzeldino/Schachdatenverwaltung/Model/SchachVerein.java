@@ -58,6 +58,12 @@ public class SchachVerein {
         MitgliederAnzahl--;
     }
 
+    public void handleReversalJoin(JoinEvent e){ // Stand zurück setzten
+        SchachVerein priorState = e.getPriorVereinStand();
+        this.mitglieder = priorState.getMitglieder();
+        this.MitgliederAnzahl = priorState.getMitgliederAnzahl();
+    }
+
 
     public int getId() {
         return id;
