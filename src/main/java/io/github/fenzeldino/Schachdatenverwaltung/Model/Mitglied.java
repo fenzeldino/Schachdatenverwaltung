@@ -1,14 +1,17 @@
 package io.github.fenzeldino.Schachdatenverwaltung.Model;
 
+import io.github.fenzeldino.Schachdatenverwaltung.Event.JoinEvent;
 import jakarta.persistence.Entity;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 public class Mitglied extends Person{
 
     protected String ZPS;
     protected int mitgliedsnummer;
     protected String ZPSCodeVerein;
+    protected int Alter;
     protected LocalDate eintrittsdatum;
     protected LocalDate austrittsdatum;
     protected Status status;
@@ -35,6 +38,14 @@ public class Mitglied extends Person{
         this.DWZ = DWZ;
         this.elo = elo;
         this.FIDEtitel = FIDEtitel;
+    }
+
+    public int getAlter() {
+        return Alter;
+    }
+
+    public void setAlter(int alter) {
+        Alter = alter;
     }
 
     public int getMitgliedsnummer() {
@@ -96,6 +107,9 @@ public class Mitglied extends Person{
     public void setFIDEtitel(String FIDEtitel) {
         this.FIDEtitel = FIDEtitel;
     }
+
+
+
 
     @Override
     public String
