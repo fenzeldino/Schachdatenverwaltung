@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 
-public class JoinEvent extends DomainEvent{
+public class JoinEvent extends ReversalDomainEvent{
 
     private static final Logger log = LoggerFactory.getLogger(JoinEvent.class);
 
