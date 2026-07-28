@@ -42,10 +42,6 @@ public class SchachdatenverwaltungApplication {
 			turnier.setTunierspieler(spieler3);
 			turnier.setTunierspieler(spieler4);
 
-
-			//turnier.createMatchUp(spieler1,spieler2);
-			//turnier.createMatchUp(spieler3,spieler4);
-
 			turnierRepositroy.save(turnier);
 
 		};

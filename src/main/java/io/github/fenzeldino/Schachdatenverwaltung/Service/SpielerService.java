@@ -2,6 +2,7 @@ package io.github.fenzeldino.Schachdatenverwaltung.Service;
 
 
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.Request.Spieler.SpielerCreateDTO;
+import io.github.fenzeldino.Schachdatenverwaltung.DTO.Request.Spieler.SpielerDeleteDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.Response.Spieler.SpielerResponseDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.SpielerDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.Mapper.SpielerMapper;
@@ -57,7 +58,7 @@ public class SpielerService {
     }
 
     @Transactional
-    public SpielerResponseDTO updateSpieler(int Id,SpielerDTO spieler){
+    public SpielerResponseDTO updateSpieler(int Id,SpielerCreateDTO spieler){//update dto fehlt
         Spieler existing = spielerRepository.findById(Id)
                 .orElseThrow(() -> new IllegalArgumentException("Spieler mit Id: " + Id + "wurde nicht gefunden"));
 
@@ -78,7 +79,7 @@ public class SpielerService {
         if(!spielerRepository.existsById(Id)){
             throw new IllegalArgumentException("Spieler nicht gefunden");
         }
-        spielerRepository.deleteById(Id);
+       spielerRepository.deleteById(Id);
     }
 
     @Transactional
