@@ -1,0 +1,38 @@
+package io.github.fenzeldino.Schachdatenverwaltung.DTO.Request.Spieler;
+
+import java.util.List;
+
+public record SpielerCreateDTO(Integer spielerId,
+                               String Name,
+                               Double rating,
+                               Integer alter,
+                               List<Integer> turnierIds) {
+
+    public SpielerCreateDTO {
+    }
+
+    @Override
+    public Integer spielerId() {
+        return spielerId;
+    }
+
+    @Override
+    public String Name() {
+        return Name;
+    }
+
+    @Override
+    public Double rating() {
+        return rating;
+    }
+
+    @Override
+    public Integer alter() {
+        return alter;
+    }
+
+    @Override
+    public List<Integer> turnierIds() {
+        return turnierIds;
+    }
+}

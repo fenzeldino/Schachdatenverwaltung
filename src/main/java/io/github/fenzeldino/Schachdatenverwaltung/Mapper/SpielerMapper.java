@@ -1,10 +1,12 @@
 package io.github.fenzeldino.Schachdatenverwaltung.Mapper;
 
-import io.github.fenzeldino.Schachdatenverwaltung.DTO.SpielerDTO;
+
+import io.github.fenzeldino.Schachdatenverwaltung.DTO.Request.Spieler.SpielerCreateDTO;
+import io.github.fenzeldino.Schachdatenverwaltung.DTO.Response.Spieler.SpielerResponseDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.Model.Spieler;
 import io.github.fenzeldino.Schachdatenverwaltung.Model.Turnier;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -17,21 +19,29 @@ public final class SpielerMapper {
 
     }
 
-    public static SpielerDTO toDto(Spieler spieler){
+    public static SpielerResponseDTO toDto(Spieler spieler){
         if(spieler == null){
             return null;
         }
-        Set<Integer> TurnierIds = spieler.getTurnier()
+        List<Integer> TurnierIds = spieler.getTurnier()
                 .stream()
                 .map(Turnier::getTunierId)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
 
-        return new SpielerDTO(
+        return new SpielerResponseDTO(
                spieler.getSpielerId(),
                spieler.getName(),
                spieler.getRating(),
                TurnierIds
         );
+    }
+
+
+    public static Spieler toEntity(SpielerCreateDTO spielerDTO){
+        if(spielerDTO == null){
+            return null;
+        }
+        return new Spieler(spielerDTO.Name(),spielerDTO.rating(),spielerDTO.alter());
     }
 
 }

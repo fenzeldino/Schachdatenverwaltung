@@ -1,9 +1,12 @@
 package io.github.fenzeldino.Schachdatenverwaltung.DTO;
+import io.github.fenzeldino.Schachdatenverwaltung.Model.Turnier;
+
+import java.util.List;
 import java.util.Set;
 public record SpielerDTO(Integer spielerId,
                          String Name,
                          Double rating,
-                         Set<Integer> TurnierIds) {
+                         List<Turnier> turnierIds) {
 
     public SpielerDTO {
     }
@@ -24,7 +27,7 @@ public record SpielerDTO(Integer spielerId,
     }
 
     @Override
-    public Set<Integer> TurnierIds() {
-        return TurnierIds;
+    public List<Turnier> turnierIds() {
+        return turnierIds;
     }
 }

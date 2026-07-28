@@ -1,6 +1,7 @@
 package io.github.fenzeldino.Schachdatenverwaltung.Service;
 
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.MatchUpDTO;
+import io.github.fenzeldino.Schachdatenverwaltung.DTO.Response.Spieler.SpielerResponseDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.SpielerDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.Mapper.MatchUpMapper;
 import io.github.fenzeldino.Schachdatenverwaltung.Mapper.SpielerMapper;
@@ -11,6 +12,7 @@ import io.github.fenzeldino.Schachdatenverwaltung.Repository.SpielerRepository;
 import io.github.fenzeldino.Schachdatenverwaltung.Repository.TurnierRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -50,7 +52,7 @@ public class TurnierService implements RatingCalculator {
 
 
     @Transactional
-    public List<SpielerDTO> showAllTurnierSpieler(int turnierId,Set<Integer> spielerIds){
+    public List<SpielerResponseDTO> showAllTurnierSpieler(int turnierId, Set<Integer> spielerIds){
 
         Turnier turnier = findTurnierById(turnierId);
         List<Spieler> turnierSpieler = turnier.getSpieler().stream()//Spieler Liste einzeln durchgehen
@@ -90,7 +92,7 @@ public class TurnierService implements RatingCalculator {
     }
 
     @Transactional
-    void AddMatchUpToDB(int TurnierId,Spieler spieler1,Spieler spieler2){
+    public void AddMatchUpToDB(int TurnierId,Spieler spieler1,Spieler spieler2){
         Turnier turnier = turnierRepository.findById(TurnierId)
                         .orElseThrow(() -> new IllegalArgumentException("Turnier nicht gefunden"));
 

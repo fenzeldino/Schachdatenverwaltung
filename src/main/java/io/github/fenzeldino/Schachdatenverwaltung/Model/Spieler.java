@@ -27,6 +27,13 @@ public class Spieler {
         this.age = age;
     }
 
+    public Spieler(String name, double rating, int age,List<Turnier> turnier) {
+        this.name = name;
+        this.rating = rating;
+        this.age = age;
+        this.turnier = turnier;
+    }
+
     public List<Turnier> getTurnier() {
         return turnier;
     }

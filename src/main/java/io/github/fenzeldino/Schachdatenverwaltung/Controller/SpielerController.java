@@ -1,7 +1,7 @@
 package io.github.fenzeldino.Schachdatenverwaltung.Controller;
 
-import io.github.fenzeldino.Schachdatenverwaltung.DTO.SpielerDTO;
-import io.github.fenzeldino.Schachdatenverwaltung.Repository.SpielerRepository;
+import io.github.fenzeldino.Schachdatenverwaltung.DTO.Request.Spieler.SpielerCreateDTO;
+import io.github.fenzeldino.Schachdatenverwaltung.DTO.Response.Spieler.SpielerResponseDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.Service.SpielerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +26,8 @@ public class SpielerController {
     /* CREATE */
 
     @PostMapping
-    public ResponseEntity<SpielerDTO> create(@RequestBody SpielerDTO spielerDto){
-        SpielerDTO created = spielerService.createSpieler(spielerDto);
+    public ResponseEntity<SpielerResponseDTO> create(@RequestBody SpielerCreateDTO spielerDTO){
+        SpielerResponseDTO created = spielerService.createSpieler(spielerDTO);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
