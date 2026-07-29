@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -75,11 +76,9 @@ class SpielerServiceTest {
 
 
     @Test
-    void getAllSpielerTest(){
-
+    void getAllSpieler_shouldReturnAllPlayer(){
         Turnier turnier1 = new Turnier(1);
         Turnier turnier2 = new Turnier(2);
-
 
         Spieler spieler1 = new Spieler(
                 1,
@@ -109,7 +108,6 @@ class SpielerServiceTest {
 
         when(spielerRepository.findAll()).thenReturn(spielerListe);
 
-
         List<SpielerResponseDTO> testListe = spielerService.getAllSpieler();
 
         assertEquals(3,testListe.size());
@@ -126,7 +124,31 @@ class SpielerServiceTest {
         assertEquals(List.of(1), testListe.get(2).TurnierIds());
 
         verify(spielerRepository).findAll(); // wurde auf spielerService die methode getAllSpieler ausgeführt?
+    }
 
+    @Test
+    void getSpieler_ShouldReturnOneSpieler_WhenIdExists(){
 
+        Turnier turnier1 = new Turnier(1);
+        Turnier turnier2 = new Turnier(2);
+
+        Spieler spieler1 = new Spieler(
+                1,
+                "Max Mustermann",
+                2300.00,
+                23,
+                List.of(turnier1, turnier2)
+        );
+
+        //Arrange
+        when(spielerRepository.findById(1)).thenReturn(Optional.of(spieler1));
+        //Act
+        SpielerResponseDTO testSpieler = spielerService.getSpieler(1);
+        //Assert
+        verify(spielerRepository).findById(1);
+        assertEquals(1,testSpieler.id());
+        assertEquals("Max Mustermann",testSpieler.name());
+        assertEquals(2300.0,testSpieler.rating()); // double beachten
+        assertEquals(List.of(1, 2),testSpieler.TurnierIds());
     }
 }
