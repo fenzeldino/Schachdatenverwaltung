@@ -57,6 +57,7 @@ public class SpielerService {
                 .orElseThrow(() -> new IllegalArgumentException("Spieler mit Id: " + Id + "wurde nicht gefunden"));
     }
 
+
     @Transactional
     public SpielerResponseDTO updateSpieler(int Id,SpielerCreateDTO spieler){//update dto fehlt
         Spieler existing = spielerRepository.findById(Id)
@@ -69,7 +70,7 @@ public class SpielerService {
 
        existing.setName(spieler.Name());
        existing.setRating(spieler.rating());
-
+       existing.setAge(spieler.alter());
        Spieler saved = spielerRepository.save(existing);
         return SpielerMapper.toDto(saved);
     }

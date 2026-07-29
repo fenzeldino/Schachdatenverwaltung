@@ -158,7 +158,41 @@ class SpielerServiceTest {
         when(spielerRepository.findById(999)).thenReturn(Optional.empty());
         assertThrows(IllegalArgumentException.class,
                 () -> spielerService.getSpieler(999));
-        
+
         verify(spielerRepository).findById(999);
+    }
+
+    @Test
+    void updateSpieler_shouldRetrunUpdatedPlayerDTO(){
+
+        Turnier turnier1 = new Turnier(1);
+        Turnier turnier2 = new Turnier(2);
+
+        Spieler spieler1 = new Spieler(
+                1,
+                "Max Mustermann",
+                2300.00,
+                23,
+                List.of(turnier1, turnier2)
+        );
+
+        SpielerCreateDTO toupdate = new SpielerCreateDTO(
+                1,
+                "Mai Mustermann",
+                2200.00,
+                21,
+                List.of(1, 2)
+        );
+
+        when(spielerRepository.findById(1)).thenReturn(Optional.of(spieler1));
+
+        SpielerResponseDTO testSpieler = spielerService.updateSpieler(1,toupdate);
+
+        assertEquals("Mai Mustermann",spieler1.getName());
+        assertEquals(2200.00,spieler1.getRating());
+        assertEquals(21,spieler1.getAge());
+
+        verify(spielerRepository).findById(1);
+        verify(spielerRepository).save(spieler1);
     }
 }
