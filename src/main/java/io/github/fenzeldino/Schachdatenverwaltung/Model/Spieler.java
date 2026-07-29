@@ -11,7 +11,6 @@ public class Spieler {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int spielerId;
-
     @Column(name="SpielerName")
     private String name;
     @Column(name="Rating")
@@ -25,6 +24,14 @@ public class Spieler {
         this.name = name;
         this.rating = rating;
         this.age = age;
+    }
+
+    public Spieler(int spielerId,String name, double rating, int age,List<Turnier> turnier) {
+        this.spielerId = spielerId;
+        this.name = name;
+        this.rating = rating;
+        this.age = age;
+        this.turnier = turnier;
     }
 
     public Spieler(String name, double rating, int age,List<Turnier> turnier) {

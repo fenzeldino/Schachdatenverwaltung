@@ -31,6 +31,10 @@ public class Turnier {
 
     }
 
+    public Turnier(int turnierId){
+        this.TurnierId = turnierId;
+    }
+
     public List<Spieler> getSpieler() {
         return Spieler;
     }
