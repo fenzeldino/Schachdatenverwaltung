@@ -13,12 +13,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -150,5 +150,15 @@ class SpielerServiceTest {
         assertEquals("Max Mustermann",testSpieler.name());
         assertEquals(2300.0,testSpieler.rating()); // double beachten
         assertEquals(List.of(1, 2),testSpieler.TurnierIds());
+    }
+
+    @Test
+    void getSpieler_ShouldThrowException_WhenIdNotFound(){
+
+        when(spielerRepository.findById(999)).thenReturn(Optional.empty());
+        assertThrows(IllegalArgumentException.class,
+                () -> spielerService.getSpieler(999));
+        
+        verify(spielerRepository).findById(999);
     }
 }
