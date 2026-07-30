@@ -16,6 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -27,6 +29,51 @@ class ServiceMatchUpTest {
 
     @InjectMocks
     private MatchUpService matchUpService;
+
+
+    @Test
+    void createMatchUp_shouldCreateMatchUp(){
+
+        Turnier turnier1 = new Turnier(1);
+        Turnier turnier2 = new Turnier(2);
+
+        Spieler spieler1 = new Spieler(
+                1,
+                "Max Mustermann",
+                2300.00,
+                23,
+                List.of(turnier1, turnier2)
+        );
+
+        Spieler spieler2 = new Spieler(
+                2,
+                "Domi Mustermann",
+                2000.00,
+                23,
+                List.of(turnier1, turnier2)
+        );
+
+        MatchUpDTO matchUpDTO = new MatchUpDTO(spieler1,spieler2);
+
+        MatchUp savedMatchUp = new MatchUp();
+        savedMatchUp.setSpieler1(spieler1);
+        savedMatchUp.setSpieler2(spieler2);
+
+        when(matchUpRepository.save(any(MatchUp.class)))
+                .thenReturn(savedMatchUp);
+
+
+        MatchUpDTO testMatch = matchUpService.createMatUp(matchUpDTO);
+
+        assertEquals(spieler1, testMatch.SpielerEins());
+        assertEquals(spieler2, testMatch.SpielerZwei());
+
+        verify(matchUpRepository).save(argThat(matchUp ->
+                matchUp.getSpieler1().equals(spieler1)
+                        && matchUp.getSpieler2().equals(spieler2)
+        ));
+
+    }
 
     @Test
     void getAllMatchUps_shouldReturnAllMatchuUps(){

@@ -49,10 +49,6 @@ public class MatchUpService {
         MatchUp existing = matchUpRepository.findById(Id)
                 .orElseThrow(() -> new IllegalArgumentException("MatchUp mit Id: " + Id + " nicht vorhanden"));
 
-        if(!match.MatchUpId().equals(existing.getMatchUpId())){
-            System.out.println("MatchUp mit Id: " + Id + " passt nicht zu der MatchUpId von: " + existing.getMatchUpId());
-            return null;
-        }
 
         existing.setSpieler1(match.SpielerEins());
         existing.setSpieler2(match.SpielerZwei());

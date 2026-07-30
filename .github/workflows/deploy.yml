@@ -1,0 +1,52 @@
+name: Deploy Schach API
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Projekt auschecken
+        uses: actions/checkout@v4
+
+      - name: Java einrichten
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+
+      - name: Tests ausführen und JAR bauen
+        run: ./mvnw clean package
+
+      - name: Docker-Image bauen
+        run: docker build -t schach-api .
+
+      - name: Docker-Image speichern
+        run: docker save schach-api | gzip > schach-api.tar.gz
+
+      - name: Docker-Image auf Server kopieren
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: schach-api.tar.gz
+          target: /opt/schach-api
+
+      - name: Anwendung auf Server starten
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /opt/schach-api
+            docker load < schach-api.tar.gz
+            docker compose down
+            docker compose up -d
+            rm schach-api.tar.gz
