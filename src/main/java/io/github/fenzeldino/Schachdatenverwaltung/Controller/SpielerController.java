@@ -1,7 +1,7 @@
 package io.github.fenzeldino.Schachdatenverwaltung.Controller;
 
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.Request.Spieler.SpielerCreateDTO;
-import io.github.fenzeldino.Schachdatenverwaltung.DTO.Request.Spieler.SpielerDeleteDTO;
+import io.github.fenzeldino.Schachdatenverwaltung.DTO.Request.Spieler.SpielerUpdateDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.Response.Spieler.SpielerResponseDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.Service.SpielerService;
 import org.springframework.http.HttpStatus;
@@ -42,7 +42,7 @@ public class SpielerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SpielerResponseDTO> updateSpieler(@RequestBody SpielerCreateDTO spielerDTO,@PathVariable Integer id){
+    public ResponseEntity<SpielerResponseDTO> updateSpieler(@RequestBody SpielerUpdateDTO spielerDTO, @PathVariable Integer id){
         SpielerResponseDTO updated = spielerService.updateSpieler(id,spielerDTO);
         return ResponseEntity.ok(updated);
     }

@@ -1,6 +1,7 @@
 package io.github.fenzeldino.Schachdatenverwaltung.ServiceTest;
 
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.Request.Spieler.SpielerCreateDTO;
+import io.github.fenzeldino.Schachdatenverwaltung.DTO.Request.Spieler.SpielerUpdateDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.Response.Spieler.SpielerResponseDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.Mapper.SpielerMapper;
 import io.github.fenzeldino.Schachdatenverwaltung.Model.Spieler;
@@ -31,10 +32,6 @@ class SpielerServiceTest {
 
     @Mock
     private TurnierRepository turnierRepository;
-
-
-    @Mock
-    private SpielerMapper spielerMapper;
 
     @InjectMocks
     private SpielerService spielerService;
@@ -176,7 +173,7 @@ class SpielerServiceTest {
                 List.of(turnier1, turnier2)
         );
 
-        SpielerCreateDTO toupdate = new SpielerCreateDTO(
+        SpielerUpdateDTO toupdate = new SpielerUpdateDTO(
                 1,
                 "Mai Mustermann",
                 2200.00,
@@ -195,4 +192,5 @@ class SpielerServiceTest {
         verify(spielerRepository).findById(1);
         verify(spielerRepository).save(spieler1);
     }
+
 }

@@ -20,12 +20,10 @@ import java.util.stream.Collectors;
 public class MatchUpService {
 
     private final MatchUpRepository matchUpRepository;
-    private final SpielerRepository spielerRepository;
 
 
-    public MatchUpService(MatchUpRepository matchUpRepository,SpielerRepository spielerRepository){
+    public MatchUpService(MatchUpRepository matchUpRepository){
         this.matchUpRepository = matchUpRepository;
-        this.spielerRepository =spielerRepository;
     }
 
     @Transactional
