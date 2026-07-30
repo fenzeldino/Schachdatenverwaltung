@@ -7,46 +7,33 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Projekt auschecken
         uses: actions/checkout@v4
 
-      - name: Java einrichten
+      - name: Java 25 einrichten
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "25"
           cache: maven
 
+      - name: Maven Wrapper ausführbar machen
+        run: chmod +x mvnw
+
       - name: Tests ausführen und JAR bauen
         run: ./mvnw clean package
 
       - name: Docker-Image bauen
-        run: docker build -t schach-api .
+        run: docker build -t schach-api:latest .
 
-      - name: Docker-Image speichern
-        run: docker save schach-api | gzip > schach-api.tar.gz
+      - name: Container neu starten
+        run: |
+          cd /opt/schach-api
+          docker compose down
+          docker compose up -d --force-recreate
 
-      - name: Docker-Image auf Server kopieren
-        uses: appleboy/scp-action@v1
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          source: schach-api.tar.gz
-          target: /opt/schach-api
-
-      - name: Anwendung auf Server starten
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          script: |
-            cd /opt/schach-api
-            docker load < schach-api.tar.gz
-            docker compose down
-            docker compose up -d
-            rm schach-api.tar.gz
+      - name: Containerstatus anzeigen
+        run: docker ps --filter "name=schach-api"
