@@ -1,6 +1,8 @@
 package io.github.fenzeldino.Schachdatenverwaltung.Controller;
 
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.MatchUpDTO;
+import io.github.fenzeldino.Schachdatenverwaltung.DTO.Request.MatchUp.MatchUpCreateDTO;
+import io.github.fenzeldino.Schachdatenverwaltung.DTO.Response.MatchUp.MatchUpResponseDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.Service.MatchUpService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +25,8 @@ public class MatchUpController {
     }
 
     @PostMapping
-    public ResponseEntity<MatchUpDTO> create(@RequestBody MatchUpDTO matchUpDTO){
-        MatchUpDTO created = matchUpService.createMatUp(matchUpDTO);
+    public ResponseEntity<MatchUpResponseDTO> create(@RequestBody MatchUpCreateDTO matchUpDTO){
+        MatchUpResponseDTO created = matchUpService.createMatchUp(matchUpDTO);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 

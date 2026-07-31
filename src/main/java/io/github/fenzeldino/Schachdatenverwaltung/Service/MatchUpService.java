@@ -1,6 +1,8 @@
 package io.github.fenzeldino.Schachdatenverwaltung.Service;
 
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.MatchUpDTO;
+import io.github.fenzeldino.Schachdatenverwaltung.DTO.Request.MatchUp.MatchUpCreateDTO;
+import io.github.fenzeldino.Schachdatenverwaltung.DTO.Response.MatchUp.MatchUpResponseDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.SpielerDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.Mapper.MatchUpMapper;
 import io.github.fenzeldino.Schachdatenverwaltung.Model.MatchUp;
@@ -20,24 +22,29 @@ import java.util.stream.Collectors;
 public class MatchUpService {
 
     private final MatchUpRepository matchUpRepository;
+    private final TurnierRepository turnierRepository;
 
 
-    public MatchUpService(MatchUpRepository matchUpRepository){
+    public MatchUpService(MatchUpRepository matchUpRepository, TurnierRepository turnierRepository){
         this.matchUpRepository = matchUpRepository;
+        this.turnierRepository = turnierRepository;
     }
 
     @Transactional
-    public MatchUpDTO createMatUp(MatchUpDTO match){
+    public MatchUpResponseDTO createMatchUp(MatchUpCreateDTO match){
         MatchUp matchUp = new MatchUp();
-        matchUp.setSpieler1(match.SpielerEins());
-        matchUp.setSpieler2(match.SpielerZwei());
+        matchUp.setSpieler1(match.spielerEins());
+        matchUp.setSpieler2(match.spielerZwei());
+        Turnier turnier = turnierRepository.findById(match.turnierId())
+                        .orElseThrow(() -> new RuntimeException("Turnier nicht vorhanden"));
 
+        matchUp.setTurnier(turnier);
         MatchUp saved = matchUpRepository.save(matchUp);
         return MatchUpMapper.toDto(saved);
     }
 
     @Transactional
-    public List<MatchUpDTO> getAllMatchUpsFromDb(){
+    public List<MatchUpResponseDTO> getAllMatchUpsFromDb(){
         return matchUpRepository.findAll()
                 .stream()
                 .map(MatchUpMapper::toDto)
@@ -45,7 +52,7 @@ public class MatchUpService {
     }
 
     @Transactional
-    public MatchUpDTO updateMatchUp(int Id,MatchUpDTO match){
+    public MatchUpResponseDTO updateMatchUp(int Id,MatchUpDTO match){
         MatchUp existing = matchUpRepository.findById(Id)
                 .orElseThrow(() -> new IllegalArgumentException("MatchUp mit Id: " + Id + " nicht vorhanden"));
 

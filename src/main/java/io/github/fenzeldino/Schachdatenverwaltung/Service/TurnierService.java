@@ -1,6 +1,7 @@
 package io.github.fenzeldino.Schachdatenverwaltung.Service;
 
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.MatchUpDTO;
+import io.github.fenzeldino.Schachdatenverwaltung.DTO.Response.MatchUp.MatchUpResponseDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.Response.Spieler.SpielerResponseDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.SpielerDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.Mapper.MatchUpMapper;
@@ -62,7 +63,7 @@ public class TurnierService implements RatingCalculator {
         return turnierSpieler.stream().map(SpielerMapper::toDto).toList();
     }
     @Transactional
-    public List<MatchUpDTO> showAllMatchUps(int turnierId,Set<Integer> MatchUpIds){
+    public List<MatchUpResponseDTO> showAllMatchUps(int turnierId, Set<Integer> MatchUpIds){
 
         Turnier turnier = findTurnierById(turnierId);
         List<MatchUp> TurnierMatchUps = turnier.getMatchups().

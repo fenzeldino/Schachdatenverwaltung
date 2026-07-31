@@ -40,7 +40,6 @@ class SpielerServiceTest {
     void createSpieler_shouldCreateSpielerWithTurniere() {
         // Arrange
         SpielerCreateDTO spielerDto = new SpielerCreateDTO(
-                1,
                 "Max Mustermann",
                 2300.00,
                 23,

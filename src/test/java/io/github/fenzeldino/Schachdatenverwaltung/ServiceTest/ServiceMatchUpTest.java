@@ -1,6 +1,8 @@
 package io.github.fenzeldino.Schachdatenverwaltung.ServiceTest;
 
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.MatchUpDTO;
+import io.github.fenzeldino.Schachdatenverwaltung.DTO.Request.MatchUp.MatchUpCreateDTO;
+import io.github.fenzeldino.Schachdatenverwaltung.DTO.Response.MatchUp.MatchUpResponseDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.Model.MatchUp;
 import io.github.fenzeldino.Schachdatenverwaltung.Model.Spieler;
 import io.github.fenzeldino.Schachdatenverwaltung.Model.Turnier;
@@ -53,7 +55,7 @@ class ServiceMatchUpTest {
                 List.of(turnier1, turnier2)
         );
 
-        MatchUpDTO matchUpDTO = new MatchUpDTO(spieler1,spieler2);
+        MatchUpCreateDTO matchUpDTO = new MatchUpCreateDTO(spieler1,spieler2,1);
 
         MatchUp savedMatchUp = new MatchUp();
         savedMatchUp.setSpieler1(spieler1);
@@ -63,10 +65,10 @@ class ServiceMatchUpTest {
                 .thenReturn(savedMatchUp);
 
 
-        MatchUpDTO testMatch = matchUpService.createMatUp(matchUpDTO);
+        MatchUpResponseDTO testMatch = matchUpService.createMatchUp(matchUpDTO);
 
-        assertEquals(spieler1, testMatch.SpielerEins());
-        assertEquals(spieler2, testMatch.SpielerZwei());
+        assertEquals(spieler1, testMatch.spielerEins());
+        assertEquals(spieler2, testMatch.spielerZwei());
 
         verify(matchUpRepository).save(argThat(matchUp ->
                 matchUp.getSpieler1().equals(spieler1)
@@ -112,7 +114,7 @@ class ServiceMatchUpTest {
 
         when(matchUpRepository.findAll()).thenReturn(matchUps);
 
-        List<MatchUpDTO> testListe = matchUpService.getAllMatchUpsFromDb();
+        List<MatchUpResponseDTO> testListe = matchUpService.getAllMatchUpsFromDb();
 
         assertEquals(2,testListe.size());
 

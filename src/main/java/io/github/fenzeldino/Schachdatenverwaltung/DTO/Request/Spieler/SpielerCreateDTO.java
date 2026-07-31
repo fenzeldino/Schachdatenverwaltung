@@ -2,7 +2,7 @@ package io.github.fenzeldino.Schachdatenverwaltung.DTO.Request.Spieler;
 
 import java.util.List;
 
-public record SpielerCreateDTO(Integer spielerId,
+public record SpielerCreateDTO(
                                String Name,
                                Double rating,
                                Integer alter,
@@ -11,10 +11,6 @@ public record SpielerCreateDTO(Integer spielerId,
     public SpielerCreateDTO {
     }
 
-    @Override
-    public Integer spielerId() {
-        return spielerId;
-    }
 
     @Override
     public String Name() {
