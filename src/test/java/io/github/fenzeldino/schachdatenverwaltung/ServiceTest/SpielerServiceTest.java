@@ -185,7 +185,6 @@ class SpielerServiceTest {
         assertEquals("Mai Mustermann",spieler1.getName());
         assertEquals(2200.00,spieler1.getRating());
         assertEquals(21,spieler1.getAge());
-
         verify(spielerRepository).findById(1);
         verify(spielerRepository).save(spieler1);
     }
