@@ -1,4 +1,4 @@
-package io.github.fenzeldino.schachdatenverwaltung.ServiceTest;
+package io.github.fenzeldino.schachdatenverwaltung.serviceTest;
 
 import io.github.fenzeldino.schachdatenverwaltung.dto.request.matchUp.MatchUpCreateDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.request.matchUp.MatchUpUpdateDTO;
