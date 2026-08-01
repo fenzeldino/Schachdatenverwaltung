@@ -131,7 +131,6 @@ class ServiceMatchUpTest {
     void updateMatchUp_shouldReturnMatchUpResoponseDTO(){
 
         //Arrange
-
         Turnier turnier1 = new Turnier(1);
         Turnier turnier2 = new Turnier(2);
 
@@ -191,8 +190,10 @@ class ServiceMatchUpTest {
         when(turnierRepository.findById(2)).thenReturn(Optional.of(neuesTurnier));
         //when(spielerRepository.findById(4)).thenReturn(Optional.of(neuerSpieler2)); // Gewinner
 
+        //Act
         MatchUpResponseDTO testMatchUp = matchUpService.updateMatchUp(1,UpdateTo);
 
+        //Assert
         assertEquals(neuerSpieler1,existingMatchUp.getSpieler1());
         assertEquals(neuerSpieler2,existingMatchUp.getSpieler2());
 

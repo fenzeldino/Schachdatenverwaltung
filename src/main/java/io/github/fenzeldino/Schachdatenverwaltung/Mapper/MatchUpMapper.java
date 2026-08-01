@@ -19,7 +19,6 @@ public final class MatchUpMapper {
         }
 
       return new MatchUpResponseDTO(
-
               matchUp.getSpieler1(),
               matchUp.getSpieler2()
       );
