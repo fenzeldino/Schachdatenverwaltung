@@ -23,20 +23,19 @@ jobs:
       - name: Maven Wrapper ausführbar machen
         run: chmod +x mvnw
 
-      - name: Tests und SonarQube Analyse
+      - name: Tests ausführen und JAR bauen
+        run: ./mvnw clean verify
+
+      - name: SonarQube Analyse
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          ./mvnw clean verify sonar:sonar \
+          ./mvnw org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970:sonar \
             -Dsonar.projectKey=fenzeldino_Schachdatenverwaltung \
             -Dsonar.organization=fenzeldino \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.token=${SONAR_TOKEN}
-
-
-
-      - name: Tests ausführen und JAR bauen
-        run: ./mvnw clean package
+            -Dsonar.token=${SONAR_TOKEN} \
+            -Dsonar.qualitygate.wait=true
 
       - name: Docker-Image bauen
         run: docker build -t schach-api:latest .
