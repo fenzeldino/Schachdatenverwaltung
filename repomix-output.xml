@@ -705,87 +705,87 @@ Write-Output "MVN_CMD=$MAVEN_HOME/bin/$MVN_CMD"
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Event/ReversalDomainEvent.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Service;
+  package io.github.fenzeldino.schachdatenverwaltung.Service;
 
-import io.github.fenzeldino.Schachdatenverwaltung.Event.DomainEvent;
+  import io.github.fenzeldino.schachdatenverwaltung.event.DomainEvent;
 
-import java.time.LocalDate;
+  import java.time.LocalDate;
 
-public abstract class ReversalDomainEvent extends DomainEvent {
+  public abstract class ReversalDomainEvent extends DomainEvent {
 
-    public ReversalDomainEvent(LocalDate occuredDate){
-        super(occuredDate);
-    }
+  public ReversalDomainEvent(LocalDate occuredDate){
+  super(occuredDate);
+  }
 
-    public abstract void reversal();
-}
+  public abstract void reversal();
+  }
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Model/Adresse.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Model;
+  package io.github.fenzeldino.schachdatenverwaltung.Model;
 
-public class Adresse {
+  public class Adresse {
 
-    private String strasse;
-    private int hausnummer;
-    private int plz;
-    private String ort;
+  private String strasse;
+  private int hausnummer;
+  private int plz;
+  private String ort;
 
-    public Adresse(String strasse, int hausnummer, int plz,String ort) {
-        this.strasse = strasse;
-        this.hausnummer = hausnummer;
-        this.plz = plz;
-        this.ort = ort;
-    }
+  public Adresse(String strasse, int hausnummer, int plz,String ort) {
+  this.strasse = strasse;
+  this.hausnummer = hausnummer;
+  this.plz = plz;
+  this.ort = ort;
+  }
 
-    public Adresse(){}
+  public Adresse(){}
 
-    public String getStrasse() {
-        return strasse;
-    }
+  public String getStrasse() {
+  return strasse;
+  }
 
-    public void setStrasse(String strasse) {
-        this.strasse = strasse;
-    }
+  public void setStrasse(String strasse) {
+  this.strasse = strasse;
+  }
 
-    public int getHausnummer() {
-        return hausnummer;
-    }
+  public int getHausnummer() {
+  return hausnummer;
+  }
 
-    public void setHausnummer(int hausnummer) {
-        this.hausnummer = hausnummer;
-    }
+  public void setHausnummer(int hausnummer) {
+  this.hausnummer = hausnummer;
+  }
 
-    public int getPlz() {
-        return plz;
-    }
+  public int getPlz() {
+  return plz;
+  }
 
-    public void setPlz(int plz) {
-        this.plz = plz;
-    }
+  public void setPlz(int plz) {
+  this.plz = plz;
+  }
 
-    public String getOrt() {
-        return ort;
-    }
+  public String getOrt() {
+  return ort;
+  }
 
-    public void setString(String ort) {
-        this.ort = ort;
-    }
+  public void setString(String ort) {
+  this.ort = ort;
+  }
 
-    @Override
-    public String toString() {
-        return "Adresse{" +
-                "strasse='" + strasse + '\'' +
-                ", hausnummer=" + hausnummer +
-                ", plz=" + plz +
-                ", ort='" + ort + '\'' +
-                '}';
-    }
-}
+  @Override
+  public String toString() {
+  return "Adresse{" +
+  "strasse='" + strasse + '\'' +
+  ", hausnummer=" + hausnummer +
+  ", plz=" + plz +
+  ", ort='" + ort + '\'' +
+  '}';
+  }
+  }
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Model/DwzMatrix.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Model;
+package io.github.fenzeldino.schachdatenverwaltung.model;
 
 public class DwzMatrix {
 
@@ -842,27 +842,27 @@ public class DwzMatrix {
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Model/Geschlecht.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Model;
+  package io.github.fenzeldino.schachdatenverwaltung.Model;
 
-public enum Geschlecht {
-    Maenlich,
-    Weiblich,
-    Divers
-}
+  public enum Geschlecht {
+  Maenlich,
+  Weiblich,
+  Divers
+  }
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Model/GewOdVer.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Model;
+  package io.github.fenzeldino.schachdatenverwaltung.Model;
 
-public enum GewOdVer {
-    Gewinner,
-    Verlierer,
-    Remie
-}
+  public enum GewOdVer {
+  Gewinner,
+  Verlierer,
+  Remie
+  }
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Model/MemberEloComparator.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Model;
+package io.github.fenzeldino.schachdatenverwaltung.model;
 
 import java.util.Comparator;
 
@@ -876,7 +876,7 @@ public class MemberEloComparator implements Comparator<Mitglied> {
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Model/MemberNameComparator.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Model;
+package io.github.fenzeldino.schachdatenverwaltung.model;
 
 import java.util.Comparator;
 
@@ -898,21 +898,21 @@ public class MemberNameComparator implements Comparator<Mitglied> {
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Model/Status.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Model;
+  package io.github.fenzeldino.schachdatenverwaltung.Model;
 
-public enum Status {
-    P,
-    N,
-    J,
-    D,
-    Leer
-}
+  public enum Status {
+  P,
+  N,
+  J,
+  D,
+  Leer
+  }
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Repository/TurnierRepository.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Repository;
+package io.github.fenzeldino.schachdatenverwaltung.repository;
 
-import io.github.fenzeldino.Schachdatenverwaltung.Model.Turnier;
+import io.github.fenzeldino.schachdatenverwaltung.model.Turnier;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TurnierRepository extends JpaRepository<Turnier,Integer> {
@@ -936,10 +936,10 @@ class SchachdatenverwaltungApplicationTests {
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Controller/MatchUpController.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Controller;
+package io.github.fenzeldino.schachdatenverwaltung.controller;
 
-import io.github.fenzeldino.Schachdatenverwaltung.DTO.MatchUpDTO;
-import io.github.fenzeldino.Schachdatenverwaltung.Service.MatchUpService;
+import io.github.fenzeldino.schachdatenverwaltung.dto.MatchUpDTO;
+import io.github.fenzeldino.schachdatenverwaltung.service.MatchUpService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -970,11 +970,11 @@ public class MatchUpController {
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Controller/SpielerController.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Controller;
+package io.github.fenzeldino.schachdatenverwaltung.controller;
 
-import io.github.fenzeldino.Schachdatenverwaltung.DTO.SpielerDTO;
-import io.github.fenzeldino.Schachdatenverwaltung.Repository.SpielerRepository;
-import io.github.fenzeldino.Schachdatenverwaltung.Service.SpielerService;
+import io.github.fenzeldino.schachdatenverwaltung.dto.SpielerDTO;
+import io.github.fenzeldino.schachdatenverwaltung.repository.SpielerRepository;
+import io.github.fenzeldino.schachdatenverwaltung.service.SpielerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -1008,9 +1008,9 @@ public class SpielerController {
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/DTO/TurnierDTO.java">
-package io.github.fenzeldino.Schachdatenverwaltung.DTO;
+package io.github.fenzeldino.schachdatenverwaltung.dto;
 
-import io.github.fenzeldino.Schachdatenverwaltung.Model.Spieler;
+import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
 
 import java.util.List;
 import java.util.Set;
@@ -1024,41 +1024,41 @@ public record TurnierDTO(
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Mapper/MatchUpMapper.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Mapper;
+  package io.github.fenzeldino.schachdatenverwaltung.Mapper;
 
-import io.github.fenzeldino.Schachdatenverwaltung.DTO.MatchUpDTO;
-import io.github.fenzeldino.Schachdatenverwaltung.Model.MatchUp;
+  import io.github.fenzeldino.schachdatenverwaltung.dto.MatchUpDTO;
+  import io.github.fenzeldino.schachdatenverwaltung.model.MatchUp;
 
-import java.util.Set;
+  import java.util.Set;
 
-public final class MatchUpMapper {
+  public final class MatchUpMapper {
 
-    private MatchUpMapper(){
-    }
+  private MatchUpMapper(){
+  }
 
-    public static MatchUpDTO toDto(MatchUp matchUp){
+  public static MatchUpDTO toDto(MatchUp matchUp){
 
-        if(matchUp == null){
-            return null;
-        }
+  if(matchUp == null){
+  return null;
+  }
 
-      return new MatchUpDTO(
-              matchUp.getMatchUpId(),
-              matchUp.getSpieler1(),
-              matchUp.getSpieler2()
-      );
-    }
+  return new MatchUpDTO(
+  matchUp.getMatchUpId(),
+  matchUp.getSpieler1(),
+  matchUp.getSpieler2()
+  );
+  }
 
 
-}
+  }
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Mapper/SpielerMapper.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Mapper;
+package io.github.fenzeldino.schachdatenverwaltung.mapper;
 
-import io.github.fenzeldino.Schachdatenverwaltung.DTO.SpielerDTO;
-import io.github.fenzeldino.Schachdatenverwaltung.Model.Spieler;
-import io.github.fenzeldino.Schachdatenverwaltung.Model.Turnier;
+import io.github.fenzeldino.schachdatenverwaltung.dto.SpielerDTO;
+import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
+import io.github.fenzeldino.schachdatenverwaltung.model.Turnier;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -1094,12 +1094,12 @@ public final class SpielerMapper {
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Mapper/TurnierMapper.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Mapper;
+package io.github.fenzeldino.schachdatenverwaltung.mapper;
 
-import io.github.fenzeldino.Schachdatenverwaltung.DTO.TurnierDTO;
-import io.github.fenzeldino.Schachdatenverwaltung.Model.MatchUp;
-import io.github.fenzeldino.Schachdatenverwaltung.Model.Spieler;
-import io.github.fenzeldino.Schachdatenverwaltung.Model.Turnier;
+import io.github.fenzeldino.schachdatenverwaltung.dto.TurnierDTO;
+import io.github.fenzeldino.schachdatenverwaltung.model.MatchUp;
+import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
+import io.github.fenzeldino.schachdatenverwaltung.model.Turnier;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -1138,20 +1138,20 @@ public class TurnierMapper {
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Model/RatingCalculator.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Model;
+  package io.github.fenzeldino.schachdatenverwaltung.Model;
 
-public interface RatingCalculator {
+  public interface RatingCalculator {
 
-    public void EloBerehcnung(int TurnierId,int MatchId);
-    public void DresdenCalculator(int TurnierId,int MatchId);
-    public MatchUp getMatchUpById(int id);
-}
+  public void EloBerehcnung(int TurnierId,int MatchId);
+  public void DresdenCalculator(int TurnierId,int MatchId);
+  public MatchUp getMatchUpById(int id);
+  }
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Repository/MatchUpRepository.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Repository;
+package io.github.fenzeldino.schachdatenverwaltung.repository;
 
-import io.github.fenzeldino.Schachdatenverwaltung.Model.MatchUp;
+import io.github.fenzeldino.schachdatenverwaltung.model.MatchUp;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MatchUpRepository extends JpaRepository<MatchUp,Integer> {
@@ -1159,9 +1159,9 @@ public interface MatchUpRepository extends JpaRepository<MatchUp,Integer> {
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Service/EventProcessor.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Service;
+package io.github.fenzeldino.schachdatenverwaltung.service;
 
-import io.github.fenzeldino.Schachdatenverwaltung.Event.DomainEvent;
+import io.github.fenzeldino.schachdatenverwaltung.event.DomainEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1197,16 +1197,16 @@ spring.datasource.password=
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/DTO/MatchUpDTO.java">
-package io.github.fenzeldino.Schachdatenverwaltung.DTO;
+  package io.github.fenzeldino.schachdatenverwaltung.DTO;
 
-import io.github.fenzeldino.Schachdatenverwaltung.Model.Spieler;
+  import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
 
-public record MatchUpDTO(Integer MatchUpId, Spieler SpielerEins, Spieler SpielerZwei){
-}
+  public record MatchUpDTO(Integer MatchUpId, Spieler SpielerEins, Spieler SpielerZwei){
+  }
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/DTO/SpielerDTO.java">
-package io.github.fenzeldino.Schachdatenverwaltung.DTO;
+package io.github.fenzeldino.schachdatenverwaltung.dto;
 import java.util.Set;
 public record SpielerDTO(Integer spielerId,
                          String Name,
@@ -1239,87 +1239,87 @@ public record SpielerDTO(Integer spielerId,
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Event/DomainEvent.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Event;
+  package io.github.fenzeldino.schachdatenverwaltung.Event;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+  import org.slf4j.Logger;
+  import org.slf4j.LoggerFactory;
 
-import java.time.LocalDate;
+  import java.time.LocalDate;
 
-public abstract class DomainEvent {
+  public abstract class DomainEvent {
 
-        private static final Logger log = LoggerFactory.getLogger(DomainEvent.class);
+  private static final Logger log = LoggerFactory.getLogger(DomainEvent.class);
 
-        LocalDate recordedDate,occuredDate;
+  LocalDate recordedDate,occuredDate;
 
-        public DomainEvent(LocalDate occuredDate){
-            log.info("created at "+occuredDate.toString());
-            this.occuredDate = occuredDate;
-            this.recordedDate = LocalDate.now();
-        }
+  public DomainEvent(LocalDate occuredDate){
+  log.info("created at "+occuredDate.toString());
+  this.occuredDate = occuredDate;
+  this.recordedDate = LocalDate.now();
+  }
 
-        public abstract void process();
+  public abstract void process();
 
-    public LocalDate getOccuredDate() {
-        return occuredDate;
-    }
-}
+  public LocalDate getOccuredDate() {
+  return occuredDate;
+  }
+  }
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Event/LeaveEvent.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Event;
+  package io.github.fenzeldino.schachdatenverwaltung.Event;
 
-import io.github.fenzeldino.Schachdatenverwaltung.Model.Mitglied;
-import io.github.fenzeldino.Schachdatenverwaltung.Model.SchachVerein;
-import org.hibernate.event.spi.LoadEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+  import io.github.fenzeldino.schachdatenverwaltung.model.Mitglied;
+  import io.github.fenzeldino.schachdatenverwaltung.model.SchachVerein;
+  import org.hibernate.event.spi.LoadEvent;
+  import org.slf4j.Logger;
+  import org.slf4j.LoggerFactory;
 
-import java.time.LocalDate;
+  import java.time.LocalDate;
 
-public class LeaveEvent extends DomainEvent{
+  public class LeaveEvent extends DomainEvent{
 
-    private static final Logger log = LoggerFactory.getLogger(LeaveEvent.class);
+  private static final Logger log = LoggerFactory.getLogger(LeaveEvent.class);
 
 
-    private SchachVerein verein;
-    private Mitglied mitglied;
+  private SchachVerein verein;
+  private Mitglied mitglied;
 
-    public LeaveEvent(LocalDate date, SchachVerein verein, Mitglied mitglied){
-        super(date);
-        log.info("created at "+date.toString()+" für Verein "+ verein.getName()+" Mitglied: cargo "+ mitglied.getName());
-        this.verein = verein;
-        this.mitglied = mitglied;
-    }
+  public LeaveEvent(LocalDate date, SchachVerein verein, Mitglied mitglied){
+  super(date);
+  log.info("created at "+date.toString()+" für Verein "+ verein.getName()+" Mitglied: cargo "+ mitglied.getName());
+  this.verein = verein;
+  this.mitglied = mitglied;
+  }
 
-    @Override
-    public void process(){
-        log.info("process");
-        verein.MitgliedAusClubEntfernen(this);
-    }
+  @Override
+  public void process(){
+  log.info("process");
+  verein.MitgliedAusClubEntfernen(this);
+  }
 
-    public SchachVerein getVerein() {
-        return verein;
-    }
+  public SchachVerein getVerein() {
+  return verein;
+  }
 
-    public Mitglied getMitglied() {
-        return mitglied;
-    }
+  public Mitglied getMitglied() {
+  return mitglied;
+  }
 
-    public LeaveEvent setVerein(SchachVerein verein){
-        this.verein = verein;
-        return this;
-    }
+  public LeaveEvent setVerein(SchachVerein verein){
+  this.verein = verein;
+  return this;
+  }
 
-    public LeaveEvent setMitglied(Mitglied mitglied){
-        this.mitglied = mitglied;
-        return this;
-    }
-}
+  public LeaveEvent setMitglied(Mitglied mitglied){
+  this.mitglied = mitglied;
+  return this;
+  }
+  }
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Model/Person.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Model;
+package io.github.fenzeldino.schachdatenverwaltung.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -1460,9 +1460,9 @@ public class Person implements Comparable<Person>{
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Repository/SpielerRepository.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Repository;
+package io.github.fenzeldino.schachdatenverwaltung.repository;
 
-import io.github.fenzeldino.Schachdatenverwaltung.Model.Spieler;
+import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -1476,205 +1476,205 @@ public interface SpielerRepository extends JpaRepository<Spieler,Integer> {
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Event/JoinEvent.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Event;
+  package io.github.fenzeldino.schachdatenverwaltung.Event;
 
-import io.github.fenzeldino.Schachdatenverwaltung.Model.Person;
-import io.github.fenzeldino.Schachdatenverwaltung.Model.SchachVerein;
-import io.github.fenzeldino.Schachdatenverwaltung.Service.ReversalDomainEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+  import io.github.fenzeldino.schachdatenverwaltung.model.Person;
+  import io.github.fenzeldino.schachdatenverwaltung.model.SchachVerein;
+  import io.github.fenzeldino.schachdatenverwaltung.service.ReversalDomainEvent;
+  import org.slf4j.Logger;
+  import org.slf4j.LoggerFactory;
 
-import java.time.LocalDate;
+  import java.time.LocalDate;
 
-public class JoinEvent extends ReversalDomainEvent  {
+  public class JoinEvent extends ReversalDomainEvent {
 
-    private static final Logger log = LoggerFactory.getLogger(JoinEvent.class);
+  private static final Logger log = LoggerFactory.getLogger(JoinEvent.class);
 
-    private Person person;
-    private SchachVerein verein;
-    private int Elo;
+  private Person person;
+  private SchachVerein verein;
+  private int Elo;
 
-    public JoinEvent(LocalDate date, Person person, SchachVerein verein, int Elo){
-        super(date);
-        log.info("created at "+date.toString()+" für Verein " + verein.getName()+ "person: " + person.getName());
-        this.person = person;
-        this.verein = verein;
-    }
+  public JoinEvent(LocalDate date, Person person, SchachVerein verein, int Elo){
+  super(date);
+  log.info("created at "+date.toString()+" für Verein " + verein.getName()+ "person: " + person.getName());
+  this.person = person;
+  this.verein = verein;
+  }
 
-    @Override
-    public void reversal(){
-        verein.MitgliedAusClubEntfernen(this);
-    }
+  @Override
+  public void reversal(){
+  verein.MitgliedAusClubEntfernen(this);
+  }
 
-    @Override
-    public void process(){
-        log.info("process");
-        verein.handleAnmeldung(this);
-    }
+  @Override
+  public void process(){
+  log.info("process");
+  verein.handleAnmeldung(this);
+  }
 
 
-    public JoinEvent setPerson(Person person){
-        this.person = person;
-        return this;
-    }
+  public JoinEvent setPerson(Person person){
+  this.person = person;
+  return this;
+  }
 
-    public JoinEvent setVerein(SchachVerein verein){
-        this.verein = verein;
-        return this;
-    }
+  public JoinEvent setVerein(SchachVerein verein){
+  this.verein = verein;
+  return this;
+  }
 
-    public Person getPerson() {
-        return person;
-    }
+  public Person getPerson() {
+  return person;
+  }
 
-    public SchachVerein getVerein() {
-        return verein;
-    }
+  public SchachVerein getVerein() {
+  return verein;
+  }
 
-    public int getElo() {
-        return Elo;
-    }
+  public int getElo() {
+  return Elo;
+  }
 
-    public void setElo(int elo) {
-        Elo = elo;
-    }
-}
+  public void setElo(int elo) {
+  Elo = elo;
+  }
+  }
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Model/Mitglied.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Model;
+  package io.github.fenzeldino.schachdatenverwaltung.Model;
 
-import io.github.fenzeldino.Schachdatenverwaltung.Event.JoinEvent;
-import jakarta.persistence.Entity;
+  import io.github.fenzeldino.schachdatenverwaltung.event.JoinEvent;
+  import jakarta.persistence.Entity;
 
-import java.time.LocalDate;
-import java.time.Period;
+  import java.time.LocalDate;
+  import java.time.Period;
 
-public class Mitglied extends Person{
+  public class Mitglied extends Person{
 
-    protected String ZPS;
-    protected int mitgliedsnummer;
-    protected String ZPSCodeVerein;
-    protected int Alter;
-    protected LocalDate eintrittsdatum;
-    protected LocalDate austrittsdatum;
-    protected Status status;
-    protected long DWZ;
-    protected int elo;
-    protected String FIDEtitel;
+  protected String ZPS;
+  protected int mitgliedsnummer;
+  protected String ZPSCodeVerein;
+  protected int Alter;
+  protected LocalDate eintrittsdatum;
+  protected LocalDate austrittsdatum;
+  protected Status status;
+  protected long DWZ;
+  protected int elo;
+  protected String FIDEtitel;
 
-    public Mitglied(){
-    }
+  public Mitglied(){
+  }
 
-    public Mitglied(String vorname,String name, int elo){
-        super(vorname,name);
-        this.elo = elo;
-    }
+  public Mitglied(String vorname,String name, int elo){
+  super(vorname,name);
+  this.elo = elo;
+  }
 
-    public Mitglied(String vorname, String name, Geschlecht geschlecht, LocalDate geburtsdatum, Adresse adresse, String email, String telefonnummer, String ZPS, int mitgliedsnummer, String ZPSCodeVerein, LocalDate eintrittsdatum, LocalDate austrittsdatum, Status status, long DWZ, int elo, String FIDEtitel) {
-        super(vorname,name,geschlecht,geburtsdatum,adresse,email,telefonnummer);
-        this.ZPS = ZPSCodeVerein + "-" + mitgliedsnummer;
-        this.mitgliedsnummer = mitgliedsnummer;
-        this.ZPSCodeVerein = ZPSCodeVerein;
-        this.eintrittsdatum = LocalDate.now();
-        this.austrittsdatum = austrittsdatum;
-        this.status = status;
-        this.DWZ = DWZ;
-        this.elo = elo;
-        this.FIDEtitel = FIDEtitel;
-    }
+  public Mitglied(String vorname, String name, Geschlecht geschlecht, LocalDate geburtsdatum, Adresse adresse, String
+  email, String telefonnummer, String ZPS, int mitgliedsnummer, String ZPSCodeVerein, LocalDate eintrittsdatum,
+  LocalDate austrittsdatum, Status status, long DWZ, int elo, String FIDEtitel) {
+  super(vorname,name,geschlecht,geburtsdatum,adresse,email,telefonnummer);
+  this.ZPS = ZPSCodeVerein + "-" + mitgliedsnummer;
+  this.mitgliedsnummer = mitgliedsnummer;
+  this.ZPSCodeVerein = ZPSCodeVerein;
+  this.eintrittsdatum = LocalDate.now();
+  this.austrittsdatum = austrittsdatum;
+  this.status = status;
+  this.DWZ = DWZ;
+  this.elo = elo;
+  this.FIDEtitel = FIDEtitel;
+  }
 
-    public int getAlter() {
-        return Alter;
-    }
+  public int getAlter() {
+  return Alter;
+  }
 
-    public void setAlter(int alter) {
-        Alter = alter;
-    }
+  public void setAlter(int alter) {
+  Alter = alter;
+  }
 
-    public int getMitgliedsnummer() {
-        return mitgliedsnummer;
-    }
+  public int getMitgliedsnummer() {
+  return mitgliedsnummer;
+  }
 
-    public String getMemberZPS(){
-        return ZPS;
-    }
+  public String getMemberZPS(){
+  return ZPS;
+  }
 
-    public void setMitgliedsnummer(int mitgliedsnummer) {
-        mitgliedsnummer = mitgliedsnummer;
-    }
+  public void setMitgliedsnummer(int mitgliedsnummer) {
+  mitgliedsnummer = mitgliedsnummer;
+  }
 
-    public LocalDate getEintrittsdatum() {
-        return eintrittsdatum;
-    }
+  public LocalDate getEintrittsdatum() {
+  return eintrittsdatum;
+  }
 
-    public void setEintrittsdatum(LocalDate eintrittsdatum) {
-        this.eintrittsdatum = eintrittsdatum;
-    }
+  public void setEintrittsdatum(LocalDate eintrittsdatum) {
+  this.eintrittsdatum = eintrittsdatum;
+  }
 
-    public LocalDate getAustrittsdatum() {
-        return austrittsdatum;
-    }
+  public LocalDate getAustrittsdatum() {
+  return austrittsdatum;
+  }
 
-    public void setAustrittsdatum(LocalDate austrittsdatum) {
-        this.austrittsdatum = austrittsdatum;
-    }
+  public void setAustrittsdatum(LocalDate austrittsdatum) {
+  this.austrittsdatum = austrittsdatum;
+  }
 
-    public Status getStatus() {
-        return status;
-    }
+  public Status getStatus() {
+  return status;
+  }
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
+  public void setStatus(Status status) {
+  this.status = status;
+  }
 
-    public long getDWZ() {
-        return DWZ;
-    }
+  public long getDWZ() {
+  return DWZ;
+  }
 
-    public void setDWZ(long DWZ) {
-        this.DWZ = DWZ;
-    }
+  public void setDWZ(long DWZ) {
+  this.DWZ = DWZ;
+  }
 
-    public int getElo() {
-        return elo;
-    }
+  public int getElo() {
+  return elo;
+  }
 
-    public void setElo(int elo) {
-        this.elo = elo;
-    }
+  public void setElo(int elo) {
+  this.elo = elo;
+  }
 
-    public String getFIDEtitel() {
-        return FIDEtitel;
-    }
+  public String getFIDEtitel() {
+  return FIDEtitel;
+  }
 
-    public void setFIDEtitel(String FIDEtitel) {
-        this.FIDEtitel = FIDEtitel;
-    }
-
-
+  public void setFIDEtitel(String FIDEtitel) {
+  this.FIDEtitel = FIDEtitel;
+  }
 
 
-    @Override
-    public String
-    toString() {
-        return super.toString() +
-                "ZPS='" + ZPS + '\'' +
-                ", ZPSCodeVerein=" + ZPSCodeVerein +
-                ", eintrittsdatum=" + eintrittsdatum +
-                ", austrittsdatum=" + austrittsdatum +
-                ", DWZ=" + DWZ +
-                ", elo=" + elo +
-                '}';
-    }
-}
+  @Override
+  public String
+  toString() {
+  return super.toString() +
+  "ZPS='" + ZPS + '\'' +
+  ", ZPSCodeVerein=" + ZPSCodeVerein +
+  ", eintrittsdatum=" + eintrittsdatum +
+  ", austrittsdatum=" + austrittsdatum +
+  ", DWZ=" + DWZ +
+  ", elo=" + elo +
+  '}';
+  }
+  }
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Model/SchachVerein.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Model;
+package io.github.fenzeldino.schachdatenverwaltung.model;
 
-import io.github.fenzeldino.Schachdatenverwaltung.Event.JoinEvent;
-import io.github.fenzeldino.Schachdatenverwaltung.Event.LeaveEvent;
+import io.github.fenzeldino.schachdatenverwaltung.event.JoinEvent;
+import io.github.fenzeldino.schachdatenverwaltung.event.LeaveEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1780,7 +1780,7 @@ public class SchachVerein {
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Model/Spieler.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Model;
+package io.github.fenzeldino.schachdatenverwaltung.model;
 
 import jakarta.persistence.*;
 
@@ -1866,74 +1866,75 @@ public class Spieler {
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/SchachdatenverwaltungApplication.java">
-package io.github.fenzeldino.Schachdatenverwaltung;
+  package io.github.fenzeldino.Schachdatenverwaltung;
 
-import io.github.fenzeldino.Schachdatenverwaltung.Model.Spieler;
-import io.github.fenzeldino.Schachdatenverwaltung.Model.Turnier;
-import io.github.fenzeldino.Schachdatenverwaltung.Repository.MatchUpRepository;
-import io.github.fenzeldino.Schachdatenverwaltung.Repository.SpielerRepository;
-import io.github.fenzeldino.Schachdatenverwaltung.Repository.TurnierRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
+  import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
+  import io.github.fenzeldino.schachdatenverwaltung.model.Turnier;
+  import io.github.fenzeldino.schachdatenverwaltung.repository.MatchUpRepository;
+  import io.github.fenzeldino.schachdatenverwaltung.repository.SpielerRepository;
+  import io.github.fenzeldino.schachdatenverwaltung.repository.TurnierRepository;
+  import org.slf4j.Logger;
+  import org.slf4j.LoggerFactory;
+  import org.springframework.boot.CommandLineRunner;
+  import org.springframework.boot.SpringApplication;
+  import org.springframework.boot.autoconfigure.SpringBootApplication;
+  import org.springframework.context.annotation.Bean;
 
-@SpringBootApplication
-public class SchachdatenverwaltungApplication {
+  @SpringBootApplication
+  public class SchachdatenverwaltungApplication {
 
-	private static final Logger log = LoggerFactory.getLogger(SchachdatenverwaltungApplication.class);
+  private static final Logger log = LoggerFactory.getLogger(SchachdatenverwaltungApplication.class);
 
-	public static void main(String[] args) {
-		SpringApplication.run(SchachdatenverwaltungApplication.class, args);
-	}
+  public static void main(String[] args) {
+  SpringApplication.run(SchachdatenverwaltungApplication.class, args);
+  }
 
-	@Bean
-	public CommandLineRunner demo(SpielerRepository spielerRepository, MatchUpRepository matchUpRepository,TurnierRepository turnierRepositroy) {
-		return (args) -> {
+  @Bean
+  public CommandLineRunner demo(SpielerRepository spielerRepository, MatchUpRepository
+  matchUpRepository,TurnierRepository turnierRepositroy) {
+  return (args) -> {
 
-			Spieler spieler1 = new Spieler("Kevin",2000,20);
-			Spieler spieler2 = new Spieler("Markus",1200,15);
-			Spieler spieler3 = new Spieler("Hans",1500,28);
-			Spieler spieler4 = new Spieler("Marten",2000,22);
+  Spieler spieler1 = new Spieler("Kevin",2000,20);
+  Spieler spieler2 = new Spieler("Markus",1200,15);
+  Spieler spieler3 = new Spieler("Hans",1500,28);
+  Spieler spieler4 = new Spieler("Marten",2000,22);
 
-			spielerRepository.save(spieler1);
-			spielerRepository.save(spieler2);
-			spielerRepository.save(spieler3);
-			spielerRepository.save(spieler4);
+  spielerRepository.save(spieler1);
+  spielerRepository.save(spieler2);
+  spielerRepository.save(spieler3);
+  spielerRepository.save(spieler4);
 
-			Turnier turnier = new Turnier();
+  Turnier turnier = new Turnier();
 
-			turnier.setTunierspieler(spieler1);
-			turnier.setTunierspieler(spieler2);
-			turnier.setTunierspieler(spieler3);
-			turnier.setTunierspieler(spieler4);
+  turnier.setTunierspieler(spieler1);
+  turnier.setTunierspieler(spieler2);
+  turnier.setTunierspieler(spieler3);
+  turnier.setTunierspieler(spieler4);
 
 
-			//turnier.createMatchUp(spieler1,spieler2);
-			//turnier.createMatchUp(spieler3,spieler4);
+  //turnier.createMatchUp(spieler1,spieler2);
+  //turnier.createMatchUp(spieler3,spieler4);
 
-			turnierRepositroy.save(turnier);
+  turnierRepositroy.save(turnier);
 
-		};
-	}
+  };
+  }
 
-}
+  }
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Service/MatchUpService.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Service;
+package io.github.fenzeldino.schachdatenverwaltung.service;
 
-import io.github.fenzeldino.Schachdatenverwaltung.DTO.MatchUpDTO;
-import io.github.fenzeldino.Schachdatenverwaltung.DTO.SpielerDTO;
-import io.github.fenzeldino.Schachdatenverwaltung.Mapper.MatchUpMapper;
-import io.github.fenzeldino.Schachdatenverwaltung.Model.MatchUp;
-import io.github.fenzeldino.Schachdatenverwaltung.Model.Spieler;
-import io.github.fenzeldino.Schachdatenverwaltung.Model.Turnier;
-import io.github.fenzeldino.Schachdatenverwaltung.Repository.MatchUpRepository;
-import io.github.fenzeldino.Schachdatenverwaltung.Repository.SpielerRepository;
-import io.github.fenzeldino.Schachdatenverwaltung.Repository.TurnierRepository;
+import io.github.fenzeldino.schachdatenverwaltung.dto.MatchUpDTO;
+import io.github.fenzeldino.schachdatenverwaltung.dto.SpielerDTO;
+import io.github.fenzeldino.schachdatenverwaltung.mapper.MatchUpMapper;
+import io.github.fenzeldino.schachdatenverwaltung.model.MatchUp;
+import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
+import io.github.fenzeldino.schachdatenverwaltung.model.Turnier;
+import io.github.fenzeldino.schachdatenverwaltung.repository.MatchUpRepository;
+import io.github.fenzeldino.schachdatenverwaltung.repository.SpielerRepository;
+import io.github.fenzeldino.schachdatenverwaltung.repository.TurnierRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -2023,14 +2024,14 @@ public class MatchUpService {
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Service/SpielerService.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Service;
+package io.github.fenzeldino.schachdatenverwaltung.service;
 
-import io.github.fenzeldino.Schachdatenverwaltung.DTO.SpielerDTO;
-import io.github.fenzeldino.Schachdatenverwaltung.Mapper.SpielerMapper;
-import io.github.fenzeldino.Schachdatenverwaltung.Model.Mitglied;
-import io.github.fenzeldino.Schachdatenverwaltung.Model.Person;
-import io.github.fenzeldino.Schachdatenverwaltung.Model.Spieler;
-import io.github.fenzeldino.Schachdatenverwaltung.Repository.SpielerRepository;
+import io.github.fenzeldino.schachdatenverwaltung.dto.SpielerDTO;
+import io.github.fenzeldino.schachdatenverwaltung.mapper.SpielerMapper;
+import io.github.fenzeldino.schachdatenverwaltung.model.Mitglied;
+import io.github.fenzeldino.schachdatenverwaltung.model.Person;
+import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
+import io.github.fenzeldino.schachdatenverwaltung.repository.SpielerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -2125,109 +2126,110 @@ public class SpielerService {
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Model/MatchUp.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Model;
+  package io.github.fenzeldino.schachdatenverwaltung.Model;
 
-import jakarta.persistence.*;
+  import jakarta.persistence.*;
 
-import java.util.HashMap;
+  import java.util.HashMap;
 
-@Entity
-public class MatchUp {
+  @Entity
+  public class MatchUp {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int MatchUpId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int MatchUpId;
 
-    @ManyToOne
-    @JoinColumn(name="spieler1_fk")
-    private Spieler Spieler1;
+  @ManyToOne
+  @JoinColumn(name="spieler1_fk")
+  private Spieler Spieler1;
 
-    @ManyToOne
-    @JoinColumn(name="spieler2_fk")
-    private Spieler Spieler2;
+  @ManyToOne
+  @JoinColumn(name="spieler2_fk")
+  private Spieler Spieler2;
 
-    @ManyToOne
-    //@JoinColumn(name="turnierId_fk")
-    private Turnier turnier;
+  @ManyToOne
+  //@JoinColumn(name="turnierId_fk")
+  private Turnier turnier;
 
-    @OneToOne
-    @JoinColumn(name="GewinnerId_fk")
-    private Spieler Gewinner;
+  @OneToOne
+  @JoinColumn(name="GewinnerId_fk")
+  private Spieler Gewinner;
 
-    @Column(name="status")
-    private GewOdVer status;
+  @Column(name="status")
+  private GewOdVer status;
 
-    private static int MatchUpIdCount = 0;
-    public MatchUp(Spieler Spieler1, Spieler Spieler2){
-        MatchUpIdCount++;
-        this.Spieler1 = Spieler1;
-        this.Spieler2 = Spieler2;
-    }
+  private static int MatchUpIdCount = 0;
+  public MatchUp(Spieler Spieler1, Spieler Spieler2){
+  MatchUpIdCount++;
+  this.Spieler1 = Spieler1;
+  this.Spieler2 = Spieler2;
+  }
 
-    public MatchUp(){ }
-
-
-
-    public int getMatchUpId() {
-        return MatchUpId;
-    }
-
-    public void setMatchUpId(int matchUpId) {
-        MatchUpId = matchUpId;
-    }
-
-    public Spieler getSpieler1() {
-        return Spieler1;
-    }
-
-    public Spieler getSpieler2() {
-        return Spieler2;
-    }
-
-    public void setSpieler1(Spieler spieler1) {
-        Spieler1 = spieler1;
-    }
-
-    public void setSpieler2(Spieler spieler2) {
-        Spieler2 = spieler2;
-    }
-
-    public Spieler getGewinner() {
-        return Gewinner;
-    }
-
-    public void setGewinner(Spieler spieler) {
-        this.Gewinner = spieler;
-    }
-
-    public Turnier getTurnier() {
-        return turnier;
-    }
-
-    public void setTurnier(Turnier turnier) {
-        this.turnier = turnier;
-    }
+  public MatchUp(){ }
 
 
-    @Override
-    public String toString() {
-        return "MatchUp Id: " + MatchUpId + " " + Spieler1.getName() + "( Alter: " + Spieler1.getAge() + ") "  + "(" + Spieler1.getRating() + ") " + " vs " + Spieler2.getName() + " (Alter: " + Spieler2.getAge() + ") " +  "(" +Spieler2.getRating() + ") ";
-    }
-}
+  public int getMatchUpId() {
+  return MatchUpId;
+  }
+
+  public void setMatchUpId(int matchUpId) {
+  MatchUpId = matchUpId;
+  }
+
+  public Spieler getSpieler1() {
+  return Spieler1;
+  }
+
+  public Spieler getSpieler2() {
+  return Spieler2;
+  }
+
+  public void setSpieler1(Spieler spieler1) {
+  Spieler1 = spieler1;
+  }
+
+  public void setSpieler2(Spieler spieler2) {
+  Spieler2 = spieler2;
+  }
+
+  public Spieler getGewinner() {
+  return Gewinner;
+  }
+
+  public void setGewinner(Spieler spieler) {
+  this.Gewinner = spieler;
+  }
+
+  public Turnier getTurnier() {
+  return turnier;
+  }
+
+  public void setTurnier(Turnier turnier) {
+  this.turnier = turnier;
+  }
+
+
+  @Override
+  public String toString() {
+  return "MatchUp Id: " + MatchUpId + " " + Spieler1.getName() + "( Alter: " + Spieler1.getAge() + ") " + "(" +
+  Spieler1.getRating() + ") " + " vs " + Spieler2.getName() + " (Alter: " + Spieler2.getAge() + ") " + "("
+  +Spieler2.getRating() + ") ";
+  }
+  }
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Service/TurnierService.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Service;
+package io.github.fenzeldino.schachdatenverwaltung.service;
 
-import io.github.fenzeldino.Schachdatenverwaltung.DTO.MatchUpDTO;
-import io.github.fenzeldino.Schachdatenverwaltung.DTO.SpielerDTO;
-import io.github.fenzeldino.Schachdatenverwaltung.Mapper.MatchUpMapper;
-import io.github.fenzeldino.Schachdatenverwaltung.Mapper.SpielerMapper;
-import io.github.fenzeldino.Schachdatenverwaltung.Mapper.TurnierMapper;
-import io.github.fenzeldino.Schachdatenverwaltung.Model.*;
-import io.github.fenzeldino.Schachdatenverwaltung.Repository.MatchUpRepository;
-import io.github.fenzeldino.Schachdatenverwaltung.Repository.SpielerRepository;
-import io.github.fenzeldino.Schachdatenverwaltung.Repository.TurnierRepository;
+import io.github.fenzeldino.schachdatenverwaltung.dto.MatchUpDTO;
+import io.github.fenzeldino.schachdatenverwaltung.dto.SpielerDTO;
+import io.github.fenzeldino.schachdatenverwaltung.mapper.MatchUpMapper;
+import io.github.fenzeldino.schachdatenverwaltung.mapper.SpielerMapper;
+import io.github.fenzeldino.schachdatenverwaltung.mapper.TurnierMapper;
+import io.github.fenzeldino.schachdatenverwaltung.model.*;
+import io.github.fenzeldino.schachdatenverwaltung.repository.MatchUpRepository;
+import io.github.fenzeldino.schachdatenverwaltung.repository.SpielerRepository;
+import io.github.fenzeldino.schachdatenverwaltung.repository.TurnierRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -2434,9 +2436,9 @@ public class TurnierService implements RatingCalculator {
 </file>
 
 <file path="src/main/java/io/github/fenzeldino/Schachdatenverwaltung/Model/Turnier.java">
-package io.github.fenzeldino.Schachdatenverwaltung.Model;
+package io.github.fenzeldino.schachdatenverwaltung.model;
 
-import io.github.fenzeldino.Schachdatenverwaltung.DTO.MatchUpDTO;
+import io.github.fenzeldino.schachdatenverwaltung.dto.MatchUpDTO;
 import jakarta.persistence.*;
 
 import java.lang.reflect.Array;
