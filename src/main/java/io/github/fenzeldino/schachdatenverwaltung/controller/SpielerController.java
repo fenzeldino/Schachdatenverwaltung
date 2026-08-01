@@ -24,7 +24,6 @@ public class SpielerController {
     }
 
     /* CREATE */
-
     @PostMapping
     public ResponseEntity<SpielerResponseDTO> create(@RequestBody SpielerCreateDTO spielerDTO){
         SpielerResponseDTO created = spielerService.createSpieler(spielerDTO);
