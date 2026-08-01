@@ -27,8 +27,6 @@ public class MatchUp {
     @JoinColumn(name="GewinnerId_fk")
     private Spieler Gewinner;
 
-    @Column(name="status")
-    private GewOdVer status;
 
     private static int MatchUpIdCount = 0;
     public MatchUp(Spieler Spieler1, Spieler Spieler2){
@@ -38,6 +36,15 @@ public class MatchUp {
     }
 
     public MatchUp(){ }
+
+    public MatchUp(int MatchUpId,Spieler Spieler1, Spieler Spieler2,Turnier turnier,Spieler Gewinner){
+        this.MatchUpId = MatchUpId;
+        this.Spieler1 = Spieler1;
+        this.Spieler2 = Spieler2;
+        this.turnier = turnier;
+        this.Gewinner = Gewinner;
+
+    }
 
 
 

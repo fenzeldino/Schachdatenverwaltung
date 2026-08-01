@@ -2,6 +2,7 @@ package io.github.fenzeldino.Schachdatenverwaltung.Service;
 
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.MatchUpDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.Request.MatchUp.MatchUpCreateDTO;
+import io.github.fenzeldino.Schachdatenverwaltung.DTO.Request.MatchUp.MatchUpUpdateDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.Response.MatchUp.MatchUpResponseDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.DTO.SpielerDTO;
 import io.github.fenzeldino.Schachdatenverwaltung.Mapper.MatchUpMapper;
@@ -23,11 +24,12 @@ public class MatchUpService {
 
     private final MatchUpRepository matchUpRepository;
     private final TurnierRepository turnierRepository;
+    private final SpielerRepository spielerRepository;
 
-
-    public MatchUpService(MatchUpRepository matchUpRepository, TurnierRepository turnierRepository){
+    public MatchUpService(MatchUpRepository matchUpRepository, TurnierRepository turnierRepository,SpielerRepository spielerRepository){
         this.matchUpRepository = matchUpRepository;
         this.turnierRepository = turnierRepository;
+        this.spielerRepository = spielerRepository;
     }
 
     @Transactional
@@ -52,13 +54,18 @@ public class MatchUpService {
     }
 
     @Transactional
-    public MatchUpResponseDTO updateMatchUp(int Id,MatchUpDTO match){
+    public MatchUpResponseDTO updateMatchUp(int Id, MatchUpUpdateDTO match){
         MatchUp existing = matchUpRepository.findById(Id)
                 .orElseThrow(() -> new IllegalArgumentException("MatchUp mit Id: " + Id + " nicht vorhanden"));
 
-
-        existing.setSpieler1(match.SpielerEins());
-        existing.setSpieler2(match.SpielerZwei());
+        existing.setSpieler1(spielerRepository.findById(match.spielerEinsId())
+                .orElseThrow(() ->new IllegalArgumentException("Spieler1 nicht gefunden"))); //update Spieler1
+        existing.setSpieler2(spielerRepository.findById(match.spielerZweiId())
+                .orElseThrow(() ->new IllegalArgumentException("Spieler2 nicht gefunden"))); //update Spieler2
+        existing.setTurnier(turnierRepository.findById(match.turnierId())
+                .orElseThrow(() -> new IllegalArgumentException("Turnier nicht gefunden"))); //update Turnier
+        existing.setGewinner(spielerRepository.findById(match.gewinnerId())
+                .orElseThrow(() -> new IllegalArgumentException("Gewinner id nicht gefunden"))); //update Gewinner
 
         MatchUp saved = matchUpRepository.save(existing);
         return MatchUpMapper.toDto(saved);
