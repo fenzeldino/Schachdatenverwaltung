@@ -33,6 +33,12 @@ public class SpielerService {
 
     @Transactional
     public SpielerResponseDTO createSpieler(SpielerCreateDTO spielerDto){
+
+        if(spielerDto == null){
+            System.out.println("Leere Argument kann nicht verarbeitet werden");
+            return null;
+        }
+
         Spieler spieler = SpielerMapper.toEntity(spielerDto);
         List<Turnier> Turniere = turnierRepository.findAllById(spielerDto.turnierIds());
         spieler.setTurnier(Turniere);

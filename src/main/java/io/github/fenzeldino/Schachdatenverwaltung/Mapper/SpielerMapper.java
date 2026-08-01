@@ -39,6 +39,7 @@ public final class SpielerMapper {
 
     public static Spieler toEntity(SpielerCreateDTO spielerDTO){
         if(spielerDTO == null){
+            System.out.println("Leeres SpielerDto");
             return null;
         }
         return new Spieler(spielerDTO.Name(),spielerDTO.rating(),spielerDTO.alter());
