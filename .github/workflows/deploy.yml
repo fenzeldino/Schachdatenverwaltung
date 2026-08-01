@@ -27,11 +27,11 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-            ./mvnw clean verify sonar:sonar \
-              -Dsonar.projectKey=fenzeldino_Schachdatenverwaltung \
-              -Dsonar.organization=fenzeldino \
-              -Dsonar.host.url=https://sonarcloud.io \
-              -Dsonar.token=${SONAR_TOKEN}
+          ./mvnw clean verify sonar:sonar \
+            -Dsonar.projectKey=fenzeldino_Schachdatenverwaltung \
+            -Dsonar.organization=fenzeldino \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.token=${SONAR_TOKEN}
 
 
 
