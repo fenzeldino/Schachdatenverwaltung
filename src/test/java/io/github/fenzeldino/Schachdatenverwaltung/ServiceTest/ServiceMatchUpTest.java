@@ -8,6 +8,7 @@ import io.github.fenzeldino.Schachdatenverwaltung.Model.Spieler;
 import io.github.fenzeldino.Schachdatenverwaltung.Model.Turnier;
 import io.github.fenzeldino.Schachdatenverwaltung.Repository.MatchUpRepository;
 import io.github.fenzeldino.Schachdatenverwaltung.Repository.SpielerRepository;
+import io.github.fenzeldino.Schachdatenverwaltung.Repository.TurnierRepository;
 import io.github.fenzeldino.Schachdatenverwaltung.Service.MatchUpService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,6 +30,9 @@ class ServiceMatchUpTest {
 
     @Mock
     private MatchUpRepository matchUpRepository;
+
+    @Mock
+    private TurnierRepository turnierRepository;
 
     @InjectMocks
     private MatchUpService matchUpService;
@@ -63,6 +68,8 @@ class ServiceMatchUpTest {
 
         when(matchUpRepository.save(any(MatchUp.class)))
                 .thenReturn(savedMatchUp);
+
+        when(turnierRepository.findById(matchUpDTO.turnierId())).thenReturn(Optional.of(turnier1));
 
 
         MatchUpResponseDTO testMatch = matchUpService.createMatchUp(matchUpDTO);
