@@ -9,7 +9,7 @@ import java.util.List;
 public class Spieler {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int spielerId;
     @Column(name="SpielerName")
     private String name;
