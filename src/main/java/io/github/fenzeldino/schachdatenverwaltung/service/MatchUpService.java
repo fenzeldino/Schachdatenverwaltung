@@ -88,6 +88,16 @@ public class MatchUpService {
         }
     }
 
+    /* Für den Controller: setzt den Gewinner per ID statt roher Entities. */
+    @Transactional
+    public void addGewinner(int matchUpId, int gewinnerId){
+        MatchUp match = matchUpRepository.findById(matchUpId)
+                .orElseThrow(() -> new IllegalArgumentException("MatchUp nicht gefunden"));
+        Spieler gewinner = spielerRepository.findById(gewinnerId)
+                .orElseThrow(() -> new IllegalArgumentException("Spieler nicht gefunden"));
+        addGewinner(match, gewinner);
+    }
+
     @Transactional
     public void addVerlierer(MatchUp match, Spieler verlierer){
         if(verlierer.getSpielerId() == match.getSpieler1().getSpielerId() || verlierer.getSpielerId() == match.getSpieler2().getSpielerId()) {
@@ -97,6 +107,16 @@ public class MatchUpService {
             System.out.println("Spieler nicht im Matchup gefunden");
             return;
         }
+    }
+
+    /* Für den Controller: setzt den Verlierer per ID statt roher Entities. */
+    @Transactional
+    public void addVerlierer(int matchUpId, int verliererId){
+        MatchUp match = matchUpRepository.findById(matchUpId)
+                .orElseThrow(() -> new IllegalArgumentException("MatchUp nicht gefunden"));
+        Spieler verlierer = spielerRepository.findById(verliererId)
+                .orElseThrow(() -> new IllegalArgumentException("Spieler nicht gefunden"));
+        addVerlierer(match, verlierer);
     }
 
 }

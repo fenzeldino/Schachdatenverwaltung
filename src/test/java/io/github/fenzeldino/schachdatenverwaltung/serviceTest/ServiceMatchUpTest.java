@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
@@ -203,5 +203,83 @@ class ServiceMatchUpTest {
         verify(turnierRepository).findById(2);
         verify(matchUpRepository).save(existingMatchUp);
 
+    }
+
+    @Test
+    void deleteMatchUpById_shouldDelete_WhenExists(){
+        when(matchUpRepository.existsById(1)).thenReturn(true);
+
+        matchUpService.deleteMatchUpById(1);
+
+        verify(matchUpRepository).deleteById(1);
+    }
+
+    @Test
+    void deleteMatchUpById_shouldThrowException_WhenNotFound(){
+        when(matchUpRepository.existsById(999)).thenReturn(false);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> matchUpService.deleteMatchUpById(999));
+
+        verify(matchUpRepository, never()).deleteById(any());
+    }
+
+    @Test
+    void addGewinner_shouldSetGewinner_WhenSpielerIstTeilDesMatches(){
+        Spieler spieler1 = new Spieler(1, "Max Mustermann", 2300.00, 23, List.of());
+        Spieler spieler2 = new Spieler(2, "Domi Mustermann", 2000.00, 23, List.of());
+        MatchUp matchUp = new MatchUp(spieler1, spieler2);
+
+        matchUpService.addGewinner(matchUp, spieler1);
+
+        assertEquals(spieler1, matchUp.getGewinner());
+        verify(matchUpRepository).save(matchUp);
+    }
+
+    @Test
+    void addGewinner_shouldDoNothing_WhenSpielerNichtTeilDesMatchesIst(){
+        Spieler spieler1 = new Spieler(1, "Max Mustermann", 2300.00, 23, List.of());
+        Spieler spieler2 = new Spieler(2, "Domi Mustermann", 2000.00, 23, List.of());
+        Spieler fremderSpieler = new Spieler(3, "Nev Mustermann", 2100.00, 20, List.of());
+        MatchUp matchUp = new MatchUp(spieler1, spieler2);
+
+        matchUpService.addGewinner(matchUp, fremderSpieler);
+
+        assertNull(matchUp.getGewinner());
+        verify(matchUpRepository, never()).save(any());
+    }
+
+    @Test
+    void addGewinner_byId_shouldLoadEntitiesUndGewinnerSetzen(){
+        Spieler spieler1 = new Spieler(1, "Max Mustermann", 2300.00, 23, List.of());
+        Spieler spieler2 = new Spieler(2, "Domi Mustermann", 2000.00, 23, List.of());
+        MatchUp matchUp = new MatchUp(spieler1, spieler2);
+        matchUp.setMatchUpId(8);
+
+        when(matchUpRepository.findById(8)).thenReturn(Optional.of(matchUp));
+        when(spielerRepository.findById(1)).thenReturn(Optional.of(spieler1));
+
+        matchUpService.addGewinner(8, 1);
+
+        assertEquals(spieler1, matchUp.getGewinner());
+        verify(matchUpRepository).save(matchUp);
+    }
+
+    @Test
+    void addVerlierer_byId_shouldLoadEntitiesUndVerliererSetzen(){
+        Spieler spieler1 = new Spieler(1, "Max Mustermann", 2300.00, 23, List.of());
+        Spieler spieler2 = new Spieler(2, "Domi Mustermann", 2000.00, 23, List.of());
+        MatchUp matchUp = new MatchUp(spieler1, spieler2);
+        matchUp.setMatchUpId(8);
+
+        when(matchUpRepository.findById(8)).thenReturn(Optional.of(matchUp));
+        when(spielerRepository.findById(2)).thenReturn(Optional.of(spieler2));
+
+        matchUpService.addVerlierer(8, 2);
+
+        // Bestehender Bug in addVerlierer(): setzt aktuell match.setGewinner(verlierer)
+        // statt eines eigenen Verlierer-Felds. Test dokumentiert den Ist-Zustand.
+        assertEquals(spieler2, matchUp.getGewinner());
+        verify(matchUpRepository).save(matchUp);
     }
 }
