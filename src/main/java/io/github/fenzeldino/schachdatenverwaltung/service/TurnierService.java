@@ -1,9 +1,13 @@
 package io.github.fenzeldino.schachdatenverwaltung.service;
 
+import io.github.fenzeldino.schachdatenverwaltung.dto.request.turnier.TurnierCreateDTO;
+import io.github.fenzeldino.schachdatenverwaltung.dto.request.turnier.TurnierUpdateDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.matchUp.MatchUpResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.spieler.SpielerResponseDTO;
+import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.TurnierResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.mapper.MatchUpMapper;
 import io.github.fenzeldino.schachdatenverwaltung.mapper.SpielerMapper;
+import io.github.fenzeldino.schachdatenverwaltung.mapper.TurnierMapper;
 import io.github.fenzeldino.schachdatenverwaltung.model.*;
 import io.github.fenzeldino.schachdatenverwaltung.repository.MatchUpRepository;
 import io.github.fenzeldino.schachdatenverwaltung.repository.SpielerRepository;
@@ -14,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -41,6 +46,64 @@ public class TurnierService implements RatingCalculator {
     public Turnier findTurnierById(int turnierId){
         return turnierRepository.findById(turnierId)
                 .orElseThrow(() -> new IllegalArgumentException("Turnier wurde nicht gefunden"));
+    }
+
+    @Transactional
+    public TurnierResponseDTO createTurnier(TurnierCreateDTO turnierDto){
+
+        if(turnierDto == null){
+            System.out.println("Leere Argument kann nicht verarbeitet werden");
+            return null;
+        }
+
+        Turnier turnier = new Turnier();
+
+        if(turnierDto.spielerIds() != null){
+            List<Spieler> spieler = spielerRepository.findAllById(turnierDto.spielerIds());
+            turnier.setSpieler(spieler);
+        }
+
+        Turnier saved = turnierRepository.save(turnier);
+        return TurnierMapper.toDto(saved);
+    }
+
+    @Transactional
+    public List<TurnierResponseDTO> getAllTurniere(){
+        return turnierRepository.findAll()
+                .stream()
+                .map(TurnierMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public TurnierResponseDTO getTurnier(int id){
+        return TurnierMapper.toDto(findTurnierById(id));
+    }
+
+    @Transactional
+    public TurnierResponseDTO updateTurnier(int id, TurnierUpdateDTO turnierDto){
+        Turnier existing = findTurnierById(id);
+
+        if(!turnierDto.turnierId().equals(existing.getTunierId())){
+            System.out.println("Turnier Ids stimmen nicht überein");
+            return null;
+        }
+
+        if(turnierDto.spielerIds() != null){
+            List<Spieler> spieler = spielerRepository.findAllById(turnierDto.spielerIds());
+            existing.setSpieler(spieler);
+        }
+
+        Turnier saved = turnierRepository.save(existing);
+        return TurnierMapper.toDto(saved);
+    }
+
+    @Transactional
+    public void deleteTurnier(int id){
+        if(!turnierRepository.existsById(id)){
+            throw new IllegalArgumentException("Turnier nicht gefunden");
+        }
+        turnierRepository.deleteById(id);
     }
 
 
@@ -77,11 +140,26 @@ public class TurnierService implements RatingCalculator {
 
     }
 
+    /* Für den Controller: verknüpft ein bereits existierendes MatchUp per ID mit dem Turnier. */
+    @Transactional
+    public void addMatchUpToTurnier(int turnierId, int matchUpId){
+        MatchUp matchUp = getMatchUpById(matchUpId);
+        addMatchUpToTurnier(turnierId, matchUp);
+    }
+
     @Transactional
     public void addSpielerToTurnier(int TurnierId,Spieler spieler){
         Turnier turnier = findTurnierById(TurnierId);
         turnier.setTunierspieler(spieler);
         turnierRepository.save(turnier);
+    }
+
+    /* Für den Controller: fügt einen bereits existierenden Spieler per ID zum Turnier hinzu. */
+    @Transactional
+    public void addSpielerToTurnier(int turnierId, int spielerId){
+        Spieler spieler = spielerRepository.findById(spielerId)
+                .orElseThrow(() -> new IllegalArgumentException("Spieler nicht gefunden"));
+        addSpielerToTurnier(turnierId, spieler);
     }
 
     @Transactional
@@ -92,6 +170,16 @@ public class TurnierService implements RatingCalculator {
         turnier.createMatchUo(spieler1,spieler2);
         turnierRepository.save(turnier);
 
+    }
+
+    /* Für den Controller: erstellt ein neues MatchUp zwischen zwei bereits existierenden Spielern per ID. */
+    @Transactional
+    public void addMatchUpToDB(int turnierId, int spieler1Id, int spieler2Id){
+        Spieler spieler1 = spielerRepository.findById(spieler1Id)
+                .orElseThrow(() -> new IllegalArgumentException("Spieler1 nicht gefunden"));
+        Spieler spieler2 = spielerRepository.findById(spieler2Id)
+                .orElseThrow(() -> new IllegalArgumentException("Spieler2 nicht gefunden"));
+        AddMatchUpToDB(turnierId, spieler1, spieler2);
     }
 
     @Transactional

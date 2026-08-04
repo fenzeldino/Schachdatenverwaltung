@@ -1,6 +1,6 @@
 package io.github.fenzeldino.schachdatenverwaltung.mapper;
 
-import io.github.fenzeldino.schachdatenverwaltung.dto.TurnierDTO;
+import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.TurnierResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.model.MatchUp;
 import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
 import io.github.fenzeldino.schachdatenverwaltung.model.Turnier;
@@ -14,7 +14,7 @@ public class TurnierMapper {
 
     }
 
-    public static TurnierDTO toDto(Turnier turnier){
+    public static TurnierResponseDTO toDto(Turnier turnier){
         if(turnier == null){
             return null;
         }
@@ -29,7 +29,7 @@ public class TurnierMapper {
                 .map(MatchUp::getMatchUpId)
                 .collect(Collectors.toSet());
 
-        return new TurnierDTO(
+        return new TurnierResponseDTO(
                 turnier.getTunierId(),
                 spielerIds,
                 matchUpIds
