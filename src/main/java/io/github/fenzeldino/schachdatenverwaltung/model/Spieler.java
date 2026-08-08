@@ -20,6 +20,21 @@ public class Spieler {
     @ManyToMany(mappedBy = "Spieler")
     private List<Turnier> turnier = new ArrayList<>();
 
+    /**
+     * Verein, dem dieser Spieler angehört. Bewusst nullable: die bestehenden
+     * Spieler-Datensätze in der Produktiv-DB haben noch keinen Verein, und
+     * {@code ddl-auto=update} kann eine NOT-NULL-Spalte nicht nachträglich auf
+     * eine befüllte Tabelle legen.
+     *
+     * Fetch-Typ bewusst EAGER (JPA-Default für ManyToOne): der SpielerMapper
+     * liest den Vereinsnamen mit und wird auch außerhalb einer Transaktion
+     * aufgerufen (z. B. in Mapper-Tests) — LAZY würde dort eine
+     * LazyInitializationException auslösen.
+     */
+    @ManyToOne
+    @JoinColumn(name = "verein_id")
+    private Verein verein;
+
     public Spieler(String name, double rating, int age) {
         this.name = name;
         this.rating = rating;
@@ -52,6 +67,14 @@ public class Spieler {
     }
 
     public Spieler(){}
+
+    public Verein getVerein() {
+        return verein;
+    }
+
+    public void setVerein(Verein verein) {
+        this.verein = verein;
+    }
 
     public int getSpielerId(){
         return spielerId;

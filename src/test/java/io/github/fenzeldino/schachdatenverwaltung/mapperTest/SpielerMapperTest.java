@@ -5,6 +5,7 @@ import io.github.fenzeldino.schachdatenverwaltung.dto.response.spieler.SpielerRe
 import io.github.fenzeldino.schachdatenverwaltung.mapper.SpielerMapper;
 import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
 import io.github.fenzeldino.schachdatenverwaltung.model.Turnier;
+import io.github.fenzeldino.schachdatenverwaltung.model.Verein;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -37,6 +38,28 @@ class SpielerMapperTest {
         assertEquals("Max Mustermann", result.name());
         assertEquals(2300.00, result.rating());
         assertEquals(List.of(1, 2), result.TurnierIds());
+    }
+
+    @Test
+    void toDto_shouldMapVerein_WhenSpielerHasOne() {
+        Verein verein = new Verein("SC Dresden 1920", "C0327");
+        verein.setVereinId(4);
+
+        Spieler spieler = new Spieler("Max Mustermann", 2300.00, 23);
+        spieler.setVerein(verein);
+
+        SpielerResponseDTO result = SpielerMapper.toDto(spieler);
+
+        assertEquals(4, result.vereinId());
+        assertEquals("SC Dresden 1920", result.vereinName());
+    }
+
+    @Test
+    void toDto_shouldLeaveVereinNull_WhenSpielerHasNone() {
+        SpielerResponseDTO result = SpielerMapper.toDto(new Spieler("Max Mustermann", 2300.00, 23));
+
+        assertNull(result.vereinId());
+        assertNull(result.vereinName());
     }
 
     @Test
