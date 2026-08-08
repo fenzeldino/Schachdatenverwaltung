@@ -3,9 +3,11 @@ package io.github.fenzeldino.schachdatenverwaltung.serviceTest;
 import io.github.fenzeldino.schachdatenverwaltung.dto.request.turnier.TurnierCreateDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.request.turnier.TurnierUpdateDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.TurnierResponseDTO;
+import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.VereinImTurnierDTO;
 import io.github.fenzeldino.schachdatenverwaltung.model.MatchUp;
 import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
 import io.github.fenzeldino.schachdatenverwaltung.model.Turnier;
+import io.github.fenzeldino.schachdatenverwaltung.model.Verein;
 import io.github.fenzeldino.schachdatenverwaltung.repository.MatchUpRepository;
 import io.github.fenzeldino.schachdatenverwaltung.repository.SpielerRepository;
 import io.github.fenzeldino.schachdatenverwaltung.repository.TurnierRepository;
@@ -179,6 +181,58 @@ class TurnierServiceTest {
         assertTrue(turnier.getSpieler().contains(spieler));
         verify(spielerRepository).findById(3);
         verify(turnierRepository).save(turnier);
+    }
+
+    private Verein vereinMitId(int id, String name) {
+        Verein verein = new Verein(name);
+        verein.setVereinId(id);
+        return verein;
+    }
+
+    @Test
+    void getVereineImTurnier_shouldGroupSpielerByVereinWithCount() {
+        Turnier turnier = new Turnier(1);
+        Verein dresden = vereinMitId(1, "SC Dresden 1920");
+        Verein leipzig = vereinMitId(2, "SG Leipzig");
+
+        Spieler max = new Spieler(1, "Max Mustermann", 2300.00, 23, new ArrayList<>());
+        max.setVerein(dresden);
+        Spieler erika = new Spieler(2, "Erika Musterfrau", 1670.00, 31, new ArrayList<>());
+        erika.setVerein(dresden);
+        Spieler anna = new Spieler(3, "Anna Schmidt", 2010.00, 28, new ArrayList<>());
+        anna.setVerein(leipzig);
+
+        turnier.setSpieler(List.of(max, erika, anna));
+        when(turnierRepository.findById(1)).thenReturn(Optional.of(turnier));
+
+        List<VereinImTurnierDTO> result = turnierService.getVereineImTurnier(1);
+
+        assertEquals(2, result.size());
+        // sortiert nach Name: "SC" vor "SG" (C < G)
+        assertEquals("SC Dresden 1920", result.get(0).name());
+        assertEquals(2, result.get(0).spielerImTurnier());
+        assertEquals("SG Leipzig", result.get(1).name());
+        assertEquals(1, result.get(1).spielerImTurnier());
+    }
+
+    @Test
+    void getVereineImTurnier_shouldIgnoreSpielerOhneVerein() {
+        Turnier turnier = new Turnier(1);
+        Spieler ohneVerein = new Spieler(4, "Kein Verein", 1500.00, 19, new ArrayList<>());
+
+        turnier.setSpieler(List.of(ohneVerein));
+        when(turnierRepository.findById(1)).thenReturn(Optional.of(turnier));
+
+        List<VereinImTurnierDTO> result = turnierService.getVereineImTurnier(1);
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void getVereineImTurnier_shouldThrow_WhenTurnierNotFound() {
+        when(turnierRepository.findById(99)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> turnierService.getVereineImTurnier(99));
     }
 
     @Test

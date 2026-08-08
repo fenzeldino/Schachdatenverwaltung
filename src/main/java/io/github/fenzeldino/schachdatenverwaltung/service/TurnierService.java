@@ -5,6 +5,7 @@ import io.github.fenzeldino.schachdatenverwaltung.dto.request.turnier.TurnierUpd
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.matchUp.MatchUpResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.spieler.SpielerResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.TurnierResponseDTO;
+import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.VereinImTurnierDTO;
 import io.github.fenzeldino.schachdatenverwaltung.mapper.MatchUpMapper;
 import io.github.fenzeldino.schachdatenverwaltung.mapper.SpielerMapper;
 import io.github.fenzeldino.schachdatenverwaltung.mapper.TurnierMapper;
@@ -16,7 +17,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -129,6 +132,33 @@ public class TurnierService implements RatingCalculator {
         return TurnierMatchUps
                 .stream()
                 .map(MatchUpMapper::toDto)
+                .toList();
+    }
+
+    /**
+     * Vereine, die im Turnier vertreten sind, mit Teilnehmerzahl je Verein.
+     * Spieler ohne Verein tragen nicht bei (siehe Spieler.verein, nullable —
+     * die Vereins-Zuordnung ist noch nicht für alle Spieler nachgepflegt).
+     *
+     * Gruppierung nach vereinId statt nach der Verein-Entity selbst: Verein
+     * hat kein eigenes equals()/hashCode(), Gruppierung über den
+     * Entity-Identitätsvergleich wäre also nicht verlässlich.
+     */
+    @Transactional
+    public List<VereinImTurnierDTO> getVereineImTurnier(int turnierId){
+        Turnier turnier = findTurnierById(turnierId);
+
+        Map<Integer, List<Spieler>> spielerProVerein = turnier.getSpieler().stream()
+                .filter(spieler -> spieler.getVerein() != null)
+                .collect(Collectors.groupingBy(spieler -> spieler.getVerein().getVereinId()));
+
+        return spielerProVerein.values().stream()
+                .map(gruppe -> new VereinImTurnierDTO(
+                        gruppe.get(0).getVerein().getVereinId(),
+                        gruppe.get(0).getVerein().getName(),
+                        gruppe.size()
+                ))
+                .sorted(Comparator.comparing(VereinImTurnierDTO::name))
                 .toList();
     }
 

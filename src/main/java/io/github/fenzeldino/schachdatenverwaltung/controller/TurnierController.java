@@ -5,6 +5,7 @@ import io.github.fenzeldino.schachdatenverwaltung.dto.request.turnier.TurnierUpd
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.matchUp.MatchUpResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.spieler.SpielerResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.TurnierResponseDTO;
+import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.VereinImTurnierDTO;
 import io.github.fenzeldino.schachdatenverwaltung.service.TurnierService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +60,12 @@ public class TurnierController {
     @GetMapping("/{turnierId}/spieler")
     public ResponseEntity<List<SpielerResponseDTO>> showAllTurnierSpieler(@PathVariable Integer turnierId, @RequestParam Set<Integer> ids){
         return ResponseEntity.ok(turnierService.showAllTurnierSpieler(turnierId, ids));
+    }
+
+    /* Vereine, die im Turnier vertreten sind, mit Teilnehmerzahl je Verein: GET /api/Turnier/5/vereine */
+    @GetMapping("/{turnierId}/vereine")
+    public ResponseEntity<List<VereinImTurnierDTO>> getVereineImTurnier(@PathVariable Integer turnierId){
+        return ResponseEntity.ok(turnierService.getVereineImTurnier(turnierId));
     }
 
     /* MatchUps eines Turniers gefiltert nach IDs anzeigen: GET /api/Turnier/5/matchups?ids=8,9 */

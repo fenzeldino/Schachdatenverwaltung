@@ -6,6 +6,7 @@ import io.github.fenzeldino.schachdatenverwaltung.dto.request.turnier.TurnierUpd
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.matchUp.MatchUpResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.spieler.SpielerResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.TurnierResponseDTO;
+import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.VereinImTurnierDTO;
 import io.github.fenzeldino.schachdatenverwaltung.service.TurnierService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -108,6 +109,23 @@ class TurnierControllerTest {
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(1, result.getBody().size());
         verify(turnierService).showAllTurnierSpieler(1, Set.of(1));
+    }
+
+    @Test
+    void getVereineImTurnier_shouldReturnVereineMitAnzahl() {
+        List<VereinImTurnierDTO> vereine = List.of(
+                new VereinImTurnierDTO(2, "SG Leipzig", 1),
+                new VereinImTurnierDTO(1, "SC Dresden 1920", 2)
+        );
+
+        when(turnierService.getVereineImTurnier(1)).thenReturn(vereine);
+
+        ResponseEntity<List<VereinImTurnierDTO>> result = turnierController.getVereineImTurnier(1);
+
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(2, result.getBody().size());
+        assertEquals("SG Leipzig", result.getBody().get(0).name());
+        verify(turnierService).getVereineImTurnier(1);
     }
 
     @Test
