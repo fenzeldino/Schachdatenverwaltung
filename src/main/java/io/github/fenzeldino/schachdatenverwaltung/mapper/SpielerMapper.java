@@ -5,6 +5,7 @@ import io.github.fenzeldino.schachdatenverwaltung.dto.request.spieler.SpielerCre
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.spieler.SpielerResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
 import io.github.fenzeldino.schachdatenverwaltung.model.Turnier;
+import io.github.fenzeldino.schachdatenverwaltung.model.Verein;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,11 +29,15 @@ public final class SpielerMapper {
                 .map(Turnier::getTunierId)
                 .collect(Collectors.toList());
 
+        Verein verein = spieler.getVerein();
+
         return new SpielerResponseDTO(
                spieler.getSpielerId(),
                spieler.getName(),
                spieler.getRating(),
-               TurnierIds
+               TurnierIds,
+               verein == null ? null : verein.getVereinId(),
+               verein == null ? null : verein.getName()
         );
     }
 
