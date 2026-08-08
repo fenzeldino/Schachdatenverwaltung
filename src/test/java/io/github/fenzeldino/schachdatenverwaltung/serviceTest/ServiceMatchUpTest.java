@@ -76,8 +76,8 @@ class ServiceMatchUpTest {
 
         MatchUpResponseDTO testMatch = matchUpService.createMatchUp(matchUpDTO);
 
-        assertEquals(spieler1, testMatch.spielerEins());
-        assertEquals(spieler2, testMatch.spielerZwei());
+        assertEquals(spieler1.getSpielerId(), testMatch.spielerEins().id());
+        assertEquals(spieler2.getSpielerId(), testMatch.spielerZwei().id());
 
         verify(matchUpRepository).save(argThat(matchUp ->
                 matchUp.getSpieler1().equals(spieler1)

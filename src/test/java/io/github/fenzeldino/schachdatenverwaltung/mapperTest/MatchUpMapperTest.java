@@ -27,9 +27,25 @@ class MatchUpMapperTest {
 
         MatchUpResponseDTO result = MatchUpMapper.toDto(matchUp);
 
-        assertEquals(spieler1, result.spielerEins());
-        assertEquals(spieler2, result.spielerZwei());
+        assertEquals(spieler1.getSpielerId(), result.spielerEins().id());
+        assertEquals(spieler1.getName(), result.spielerEins().name());
+        assertEquals(spieler1.getRating(), result.spielerEins().rating());
+        assertEquals(spieler2.getSpielerId(), result.spielerZwei().id());
         assertNull(result.gewinner());
+    }
+
+    @Test
+    void toDto_shouldProjectSpielerFelder_undNichtDieVolleEntity() {
+        // Regressionstest fuer den Rekursions-Fund: die volle Spieler-Entity
+        // (mit Spieler.turnier) darf hier nie mehr direkt eingebettet sein.
+        Spieler spieler1 = new Spieler(1, "Max Mustermann", 2300.00, 23, new ArrayList<>());
+        Spieler spieler2 = new Spieler(2, "Domi Mustermann", 2000.00, 23, new ArrayList<>());
+        MatchUp matchUp = new MatchUp(spieler1, spieler2);
+
+        MatchUpResponseDTO result = MatchUpMapper.toDto(matchUp);
+
+        assertEquals(io.github.fenzeldino.schachdatenverwaltung.dto.response.matchUp.MatchUpSpielerDTO.class,
+                result.spielerEins().getClass());
     }
 
     @Test
@@ -43,7 +59,8 @@ class MatchUpMapperTest {
         MatchUpResponseDTO result = MatchUpMapper.toDto(matchUp);
 
         assertEquals(8, result.matchUpId());
-        assertEquals(spieler1, result.gewinner());
+        assertEquals(spieler1.getSpielerId(), result.gewinner().id());
+        assertEquals(spieler1.getName(), result.gewinner().name());
     }
 
     @Test
