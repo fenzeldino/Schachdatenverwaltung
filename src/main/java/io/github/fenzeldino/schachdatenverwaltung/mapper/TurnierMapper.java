@@ -31,6 +31,11 @@ public class TurnierMapper {
 
         return new TurnierResponseDTO(
                 turnier.getTunierId(),
+                turnier.getName(),
+                turnier.getDatum(),
+                turnier.getOrt(),
+                turnier.getStatus(),
+                spielerIds.size(),
                 spielerIds,
                 matchUpIds
         );

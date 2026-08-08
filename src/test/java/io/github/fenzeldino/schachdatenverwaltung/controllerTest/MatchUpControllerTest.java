@@ -36,7 +36,7 @@ class MatchUpControllerTest {
         Spieler spieler2 = new Spieler(2, "Domi Mustermann", 2000.00, 23, new ArrayList<>());
 
         MatchUpCreateDTO createDto = new MatchUpCreateDTO(spieler1, spieler2, 1);
-        MatchUpResponseDTO responseDto = new MatchUpResponseDTO(spieler1, spieler2);
+        MatchUpResponseDTO responseDto = new MatchUpResponseDTO(1, spieler1, spieler2, null);
 
         when(matchUpService.createMatchUp(createDto)).thenReturn(responseDto);
 
@@ -51,7 +51,7 @@ class MatchUpControllerTest {
     void getAllMatchUps_shouldReturnList() {
         Spieler spieler1 = new Spieler(1, "Max Mustermann", 2300.00, 23, new ArrayList<>());
         Spieler spieler2 = new Spieler(2, "Domi Mustermann", 2000.00, 23, new ArrayList<>());
-        List<MatchUpResponseDTO> matchUps = List.of(new MatchUpResponseDTO(spieler1, spieler2));
+        List<MatchUpResponseDTO> matchUps = List.of(new MatchUpResponseDTO(1, spieler1, spieler2, null));
 
         when(matchUpService.getAllMatchUpsFromDb()).thenReturn(matchUps);
 
@@ -68,7 +68,7 @@ class MatchUpControllerTest {
         Spieler spieler2 = new Spieler(2, "Domi Mustermann", 2000.00, 23, new ArrayList<>());
 
         MatchUpUpdateDTO updateDto = new MatchUpUpdateDTO(1, 1, 2, 1, 1);
-        MatchUpResponseDTO responseDto = new MatchUpResponseDTO(spieler1, spieler2);
+        MatchUpResponseDTO responseDto = new MatchUpResponseDTO(1, spieler1, spieler2, null);
 
         when(matchUpService.updateMatchUp(1, updateDto)).thenReturn(responseDto);
 

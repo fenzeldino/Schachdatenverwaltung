@@ -60,6 +60,12 @@ public class TurnierService implements RatingCalculator {
         }
 
         Turnier turnier = new Turnier();
+        turnier.setName(turnierDto.name());
+        turnier.setDatum(turnierDto.datum());
+        turnier.setOrt(turnierDto.ort());
+        // Status wird bei der Erstellung nicht vom Client vorgegeben — ein neues
+        // Turnier ist per Definition geplant, nicht laufend oder abgeschlossen.
+        turnier.setStatus(TurnierStatus.GEPLANT);
 
         if(turnierDto.spielerIds() != null){
             List<Spieler> spieler = spielerRepository.findAllById(turnierDto.spielerIds());
@@ -91,6 +97,11 @@ public class TurnierService implements RatingCalculator {
             System.out.println("Turnier Ids stimmen nicht überein");
             return null;
         }
+
+        existing.setName(turnierDto.name());
+        existing.setDatum(turnierDto.datum());
+        existing.setOrt(turnierDto.ort());
+        existing.setStatus(turnierDto.status());
 
         if(turnierDto.spielerIds() != null){
             List<Spieler> spieler = spielerRepository.findAllById(turnierDto.spielerIds());

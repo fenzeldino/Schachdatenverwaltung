@@ -7,6 +7,7 @@ import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.VereinImT
 import io.github.fenzeldino.schachdatenverwaltung.model.MatchUp;
 import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
 import io.github.fenzeldino.schachdatenverwaltung.model.Turnier;
+import io.github.fenzeldino.schachdatenverwaltung.model.TurnierStatus;
 import io.github.fenzeldino.schachdatenverwaltung.model.Verein;
 import io.github.fenzeldino.schachdatenverwaltung.repository.MatchUpRepository;
 import io.github.fenzeldino.schachdatenverwaltung.repository.SpielerRepository;
@@ -17,6 +18,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +49,7 @@ class TurnierServiceTest {
     @Test
     void createTurnier_shouldCreateTurnierWithSpieler() {
         // Arrange
-        TurnierCreateDTO createDto = new TurnierCreateDTO(List.of(1, 2));
+        TurnierCreateDTO createDto = new TurnierCreateDTO("Stadtmeisterschaft 2026", LocalDate.of(2026, 9, 12), "Dresden", List.of(1, 2));
 
         Spieler spieler1 = new Spieler(1, "Max Mustermann", 2300.00, 23, new ArrayList<>());
         Spieler spieler2 = new Spieler(2, "Domi Mustermann", 2000.00, 23, new ArrayList<>());
@@ -55,6 +58,10 @@ class TurnierServiceTest {
         when(spielerRepository.findAllById(List.of(1, 2))).thenReturn(spielerListe);
 
         Turnier savedTurnier = new Turnier(5);
+        savedTurnier.setName("Stadtmeisterschaft 2026");
+        savedTurnier.setDatum(LocalDate.of(2026, 9, 12));
+        savedTurnier.setOrt("Dresden");
+        savedTurnier.setStatus(TurnierStatus.GEPLANT);
         savedTurnier.setSpieler(spielerListe);
 
         when(turnierRepository.save(any(Turnier.class))).thenReturn(savedTurnier);
@@ -65,10 +72,16 @@ class TurnierServiceTest {
         // Assert
         assertNotNull(result);
         assertEquals(5, result.turnierId());
+        assertEquals("Stadtmeisterschaft 2026", result.name());
+        assertEquals(TurnierStatus.GEPLANT, result.status());
+        assertEquals(2, result.teilnehmerAnzahl());
         assertEquals(Set.of(1, 2), result.spielerIds());
 
         verify(spielerRepository).findAllById(List.of(1, 2));
-        verify(turnierRepository).save(argThat(turnier -> turnier.getSpieler().equals(spielerListe)));
+        verify(turnierRepository).save(argThat(turnier ->
+                turnier.getSpieler().equals(spielerListe)
+                        && turnier.getStatus() == TurnierStatus.GEPLANT
+        ));
     }
 
     @Test
@@ -121,7 +134,8 @@ class TurnierServiceTest {
         Turnier existing = new Turnier(1);
         Spieler spielerNeu = new Spieler(3, "Nev Mustermann", 2100.00, 20, new ArrayList<>());
 
-        TurnierUpdateDTO updateDto = new TurnierUpdateDTO(1, List.of(3));
+        TurnierUpdateDTO updateDto = new TurnierUpdateDTO(
+                1, "Vereinspokal", LocalDate.of(2026, 7, 20), "Dresden", TurnierStatus.LAUFEND, List.of(3));
 
         when(turnierRepository.findById(1)).thenReturn(Optional.of(existing));
         when(spielerRepository.findAllById(List.of(3))).thenReturn(List.of(spielerNeu));
@@ -130,6 +144,8 @@ class TurnierServiceTest {
         TurnierResponseDTO result = turnierService.updateTurnier(1, updateDto);
 
         assertEquals(List.of(spielerNeu), existing.getSpieler());
+        assertEquals("Vereinspokal", result.name());
+        assertEquals(TurnierStatus.LAUFEND, result.status());
         assertEquals(Set.of(3), result.spielerIds());
         verify(turnierRepository).findById(1);
         verify(spielerRepository).findAllById(List.of(3));
@@ -139,7 +155,8 @@ class TurnierServiceTest {
     @Test
     void updateTurnier_shouldReturnNull_WhenIdsDoNotMatch() {
         Turnier existing = new Turnier(1);
-        TurnierUpdateDTO updateDto = new TurnierUpdateDTO(2, List.of(3));
+        TurnierUpdateDTO updateDto = new TurnierUpdateDTO(
+                2, "Vereinspokal", LocalDate.of(2026, 7, 20), "Dresden", TurnierStatus.LAUFEND, List.of(3));
 
         when(turnierRepository.findById(1)).thenReturn(Optional.of(existing));
 

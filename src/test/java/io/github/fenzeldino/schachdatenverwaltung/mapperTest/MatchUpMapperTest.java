@@ -29,6 +29,21 @@ class MatchUpMapperTest {
 
         assertEquals(spieler1, result.spielerEins());
         assertEquals(spieler2, result.spielerZwei());
+        assertNull(result.gewinner());
+    }
+
+    @Test
+    void toDto_shouldMapMatchUpIdUndGewinner() {
+        Spieler spieler1 = new Spieler(1, "Max Mustermann", 2300.00, 23, new ArrayList<>());
+        Spieler spieler2 = new Spieler(2, "Domi Mustermann", 2000.00, 23, new ArrayList<>());
+        MatchUp matchUp = new MatchUp(spieler1, spieler2);
+        matchUp.setMatchUpId(8);
+        matchUp.setGewinner(spieler1);
+
+        MatchUpResponseDTO result = MatchUpMapper.toDto(matchUp);
+
+        assertEquals(8, result.matchUpId());
+        assertEquals(spieler1, result.gewinner());
     }
 
     @Test

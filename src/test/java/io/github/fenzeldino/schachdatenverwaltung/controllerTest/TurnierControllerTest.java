@@ -7,6 +7,7 @@ import io.github.fenzeldino.schachdatenverwaltung.dto.response.matchUp.MatchUpRe
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.spieler.SpielerResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.TurnierResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.VereinImTurnierDTO;
+import io.github.fenzeldino.schachdatenverwaltung.model.TurnierStatus;
 import io.github.fenzeldino.schachdatenverwaltung.service.TurnierService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -34,8 +36,11 @@ class TurnierControllerTest {
 
     @Test
     void create_shouldReturnCreatedTurnier() {
-        TurnierCreateDTO createDto = new TurnierCreateDTO(List.of(1, 2));
-        TurnierResponseDTO responseDto = new TurnierResponseDTO(1, Set.of(1, 2), Set.of());
+        TurnierCreateDTO createDto = new TurnierCreateDTO(
+                "Stadtmeisterschaft 2026", LocalDate.of(2026, 9, 12), "Dresden", List.of(1, 2));
+        TurnierResponseDTO responseDto = new TurnierResponseDTO(
+                1, "Stadtmeisterschaft 2026", LocalDate.of(2026, 9, 12), "Dresden",
+                TurnierStatus.GEPLANT, 2, Set.of(1, 2), Set.of());
 
         when(turnierService.createTurnier(createDto)).thenReturn(responseDto);
 
@@ -49,8 +54,10 @@ class TurnierControllerTest {
     @Test
     void getAllTurniere_shouldReturnListOfTurniere() {
         List<TurnierResponseDTO> turniere = List.of(
-                new TurnierResponseDTO(1, Set.of(), Set.of()),
-                new TurnierResponseDTO(2, Set.of(), Set.of())
+                new TurnierResponseDTO(1, "Stadtmeisterschaft 2026", LocalDate.of(2026, 9, 12), "Dresden",
+                        TurnierStatus.GEPLANT, 0, Set.of(), Set.of()),
+                new TurnierResponseDTO(2, "Vereinspokal", LocalDate.of(2026, 7, 20), "Dresden",
+                        TurnierStatus.ABGESCHLOSSEN, 0, Set.of(), Set.of())
         );
 
         when(turnierService.getAllTurniere()).thenReturn(turniere);
@@ -64,7 +71,9 @@ class TurnierControllerTest {
 
     @Test
     void getTurnier_shouldReturnSingleTurnier() {
-        TurnierResponseDTO responseDto = new TurnierResponseDTO(1, Set.of(1), Set.of());
+        TurnierResponseDTO responseDto = new TurnierResponseDTO(
+                1, "Stadtmeisterschaft 2026", LocalDate.of(2026, 9, 12), "Dresden",
+                TurnierStatus.GEPLANT, 1, Set.of(1), Set.of());
 
         when(turnierService.getTurnier(1)).thenReturn(responseDto);
 
@@ -76,8 +85,11 @@ class TurnierControllerTest {
 
     @Test
     void updateTurnier_shouldReturnUpdatedTurnier() {
-        TurnierUpdateDTO updateDto = new TurnierUpdateDTO(1, List.of(3));
-        TurnierResponseDTO responseDto = new TurnierResponseDTO(1, Set.of(3), Set.of());
+        TurnierUpdateDTO updateDto = new TurnierUpdateDTO(
+                1, "Vereinspokal", LocalDate.of(2026, 7, 20), "Dresden", TurnierStatus.LAUFEND, List.of(3));
+        TurnierResponseDTO responseDto = new TurnierResponseDTO(
+                1, "Vereinspokal", LocalDate.of(2026, 7, 20), "Dresden",
+                TurnierStatus.LAUFEND, 1, Set.of(3), Set.of());
 
         when(turnierService.updateTurnier(1, updateDto)).thenReturn(responseDto);
 
