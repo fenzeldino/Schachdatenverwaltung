@@ -12,11 +12,13 @@ import io.github.fenzeldino.schachdatenverwaltung.model.Verein;
 import io.github.fenzeldino.schachdatenverwaltung.repository.MatchUpRepository;
 import io.github.fenzeldino.schachdatenverwaltung.repository.SpielerRepository;
 import io.github.fenzeldino.schachdatenverwaltung.repository.TurnierRepository;
+import io.github.fenzeldino.schachdatenverwaltung.service.RatingService;
 import io.github.fenzeldino.schachdatenverwaltung.service.TurnierService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
@@ -42,6 +44,9 @@ class TurnierServiceTest {
 
     @Mock
     private MatchUpRepository matchUpRepository;
+
+    @Spy
+    private RatingService ratingService = new RatingService();
 
     @InjectMocks
     private TurnierService turnierService;
