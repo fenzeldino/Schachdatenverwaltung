@@ -225,25 +225,17 @@ class ServiceMatchUpTest {
     }
 
     @Test
-    void addGewinner_shouldSetGewinner_WhenSpielerIstTeilDesMatches(){
-        Spieler spieler1 = new Spieler(1, "Max Mustermann", 2300.00, 23, List.of());
-        Spieler spieler2 = new Spieler(2, "Domi Mustermann", 2000.00, 23, List.of());
-        MatchUp matchUp = new MatchUp(spieler1, spieler2);
-
-        matchUpService.addGewinner(matchUp, spieler1);
-
-        assertEquals(spieler1, matchUp.getGewinner());
-        verify(matchUpRepository).save(matchUp);
-    }
-
-    @Test
     void addGewinner_shouldDoNothing_WhenSpielerNichtTeilDesMatchesIst(){
         Spieler spieler1 = new Spieler(1, "Max Mustermann", 2300.00, 23, List.of());
         Spieler spieler2 = new Spieler(2, "Domi Mustermann", 2000.00, 23, List.of());
         Spieler fremderSpieler = new Spieler(3, "Nev Mustermann", 2100.00, 20, List.of());
         MatchUp matchUp = new MatchUp(spieler1, spieler2);
+        matchUp.setMatchUpId(8);
 
-        matchUpService.addGewinner(matchUp, fremderSpieler);
+        when(matchUpRepository.findById(8)).thenReturn(Optional.of(matchUp));
+        when(spielerRepository.findById(3)).thenReturn(Optional.of(fremderSpieler));
+
+        matchUpService.addGewinner(8, 3);
 
         assertNull(matchUp.getGewinner());
         verify(matchUpRepository, never()).save(any());

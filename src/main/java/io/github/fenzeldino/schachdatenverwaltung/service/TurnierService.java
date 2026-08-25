@@ -173,54 +173,37 @@ public class TurnierService implements RatingCalculator {
                 .toList();
     }
 
-    @Transactional
-    public void addMatchUpToTurnier(int TurnierId,MatchUp match){
-        Turnier turnier = findTurnierById(TurnierId);
-        turnier.setMatchups(match);
-        turnierRepository.save(turnier);
-
-    }
-
-    /* Für den Controller: verknüpft ein bereits existierendes MatchUp per ID mit dem Turnier. */
+    /* Verknüpft ein bereits existierendes MatchUp per ID mit dem Turnier. */
     @Transactional
     public void addMatchUpToTurnier(int turnierId, int matchUpId){
+        Turnier turnier = findTurnierById(turnierId);
         MatchUp matchUp = getMatchUpById(matchUpId);
-        addMatchUpToTurnier(turnierId, matchUp);
+        turnier.setMatchups(matchUp);
+        turnierRepository.save(turnier);
     }
 
+    /* Fügt einen bereits existierenden Spieler per ID zum Turnier hinzu. */
     @Transactional
-    public void addSpielerToTurnier(int TurnierId,Spieler spieler){
-        Turnier turnier = findTurnierById(TurnierId);
+    public void addSpielerToTurnier(int turnierId, int spielerId){
+        Turnier turnier = findTurnierById(turnierId);
+        Spieler spieler = spielerRepository.findById(spielerId)
+                .orElseThrow(() -> new IllegalArgumentException("Spieler nicht gefunden"));
         turnier.setTunierspieler(spieler);
         turnierRepository.save(turnier);
     }
 
-    /* Für den Controller: fügt einen bereits existierenden Spieler per ID zum Turnier hinzu. */
-    @Transactional
-    public void addSpielerToTurnier(int turnierId, int spielerId){
-        Spieler spieler = spielerRepository.findById(spielerId)
-                .orElseThrow(() -> new IllegalArgumentException("Spieler nicht gefunden"));
-        addSpielerToTurnier(turnierId, spieler);
-    }
-
-    @Transactional
-    public void AddMatchUpToDB(int TurnierId,Spieler spieler1,Spieler spieler2){
-        Turnier turnier = turnierRepository.findById(TurnierId)
-                        .orElseThrow(() -> new IllegalArgumentException("Turnier nicht gefunden"));
-
-        turnier.createMatchUo(spieler1,spieler2);
-        turnierRepository.save(turnier);
-
-    }
-
-    /* Für den Controller: erstellt ein neues MatchUp zwischen zwei bereits existierenden Spielern per ID. */
+    /* Erstellt ein neues MatchUp zwischen zwei bereits existierenden Spielern per ID. */
     @Transactional
     public void addMatchUpToDB(int turnierId, int spieler1Id, int spieler2Id){
+        Turnier turnier = turnierRepository.findById(turnierId)
+                        .orElseThrow(() -> new IllegalArgumentException("Turnier nicht gefunden"));
         Spieler spieler1 = spielerRepository.findById(spieler1Id)
                 .orElseThrow(() -> new IllegalArgumentException("Spieler1 nicht gefunden"));
         Spieler spieler2 = spielerRepository.findById(spieler2Id)
                 .orElseThrow(() -> new IllegalArgumentException("Spieler2 nicht gefunden"));
-        AddMatchUpToDB(turnierId, spieler1, spieler2);
+
+        turnier.createMatchUo(spieler1,spieler2);
+        turnierRepository.save(turnier);
     }
 
     @Transactional
