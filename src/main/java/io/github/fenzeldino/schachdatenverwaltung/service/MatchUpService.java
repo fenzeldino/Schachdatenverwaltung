@@ -3,6 +3,8 @@ package io.github.fenzeldino.schachdatenverwaltung.service;
 import io.github.fenzeldino.schachdatenverwaltung.dto.request.matchUp.MatchUpCreateDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.request.matchUp.MatchUpUpdateDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.matchUp.MatchUpResponseDTO;
+import io.github.fenzeldino.schachdatenverwaltung.exception.InvalidRequestException;
+import io.github.fenzeldino.schachdatenverwaltung.exception.ResourceNotFoundException;
 import io.github.fenzeldino.schachdatenverwaltung.mapper.MatchUpMapper;
 import io.github.fenzeldino.schachdatenverwaltung.model.MatchUp;
 import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
@@ -35,7 +37,7 @@ public class MatchUpService {
         matchUp.setSpieler1(match.spielerEins());
         matchUp.setSpieler2(match.spielerZwei());
         Turnier turnier = turnierRepository.findById(match.turnierId())
-                        .orElseThrow(() -> new RuntimeException("Turnier nicht vorhanden"));
+                        .orElseThrow(() -> new ResourceNotFoundException("Turnier nicht vorhanden"));
 
         matchUp.setTurnier(turnier);
         MatchUp saved = matchUpRepository.save(matchUp);
@@ -53,16 +55,16 @@ public class MatchUpService {
     @Transactional
     public MatchUpResponseDTO updateMatchUp(int Id, MatchUpUpdateDTO match){
         MatchUp existing = matchUpRepository.findById(Id)
-                .orElseThrow(() -> new IllegalArgumentException("MatchUp mit Id: " + Id + " nicht vorhanden"));
+                .orElseThrow(() -> new ResourceNotFoundException("MatchUp mit Id: " + Id + " nicht vorhanden"));
 
         existing.setSpieler1(spielerRepository.findById(match.spielerEinsId())
-                .orElseThrow(() ->new IllegalArgumentException("Spieler1 nicht gefunden"))); //update Spieler1
+                .orElseThrow(() ->new ResourceNotFoundException("Spieler1 nicht gefunden"))); //update Spieler1
         existing.setSpieler2(spielerRepository.findById(match.spielerZweiId())
-                .orElseThrow(() ->new IllegalArgumentException("Spieler2 nicht gefunden"))); //update Spieler2
+                .orElseThrow(() ->new ResourceNotFoundException("Spieler2 nicht gefunden"))); //update Spieler2
         existing.setTurnier(turnierRepository.findById(match.turnierId())
-                .orElseThrow(() -> new IllegalArgumentException("Turnier nicht gefunden"))); //update Turnier
+                .orElseThrow(() -> new ResourceNotFoundException("Turnier nicht gefunden"))); //update Turnier
         existing.setGewinner(spielerRepository.findById(match.gewinnerId())
-                .orElseThrow(() -> new IllegalArgumentException("Gewinner id nicht gefunden"))); //update Gewinner
+                .orElseThrow(() -> new ResourceNotFoundException("Gewinner id nicht gefunden"))); //update Gewinner
 
         MatchUp saved = matchUpRepository.save(existing);
         return MatchUpMapper.toDto(saved);
@@ -72,7 +74,7 @@ public class MatchUpService {
     public void deleteMatchUpById(Integer Id){
 
         if(!matchUpRepository.existsById(Id)){
-            throw new IllegalArgumentException("MatchUp nicht gefunden");
+            throw new ResourceNotFoundException("MatchUp nicht gefunden");
         }
         matchUpRepository.deleteById(Id);
     }
@@ -81,16 +83,15 @@ public class MatchUpService {
     @Transactional
     public void addGewinner(int matchUpId, int gewinnerId){
         MatchUp match = matchUpRepository.findById(matchUpId)
-                .orElseThrow(() -> new IllegalArgumentException("MatchUp nicht gefunden"));
+                .orElseThrow(() -> new ResourceNotFoundException("MatchUp nicht gefunden"));
         Spieler gewinner = spielerRepository.findById(gewinnerId)
-                .orElseThrow(() -> new IllegalArgumentException("Spieler nicht gefunden"));
+                .orElseThrow(() -> new ResourceNotFoundException("Spieler nicht gefunden"));
 
         if(gewinner.getSpielerId() == match.getSpieler1().getSpielerId() || gewinner.getSpielerId() == match.getSpieler2().getSpielerId()) {
             match.setGewinner(gewinner);
             matchUpRepository.save(match);
         }else {
-            System.out.println("Spieler nicht im Matchup gefunden");
-            return;
+            throw new InvalidRequestException("Spieler nicht im Matchup gefunden");
         }
     }
 
@@ -98,16 +99,15 @@ public class MatchUpService {
     @Transactional
     public void addVerlierer(int matchUpId, int verliererId){
         MatchUp match = matchUpRepository.findById(matchUpId)
-                .orElseThrow(() -> new IllegalArgumentException("MatchUp nicht gefunden"));
+                .orElseThrow(() -> new ResourceNotFoundException("MatchUp nicht gefunden"));
         Spieler verlierer = spielerRepository.findById(verliererId)
-                .orElseThrow(() -> new IllegalArgumentException("Spieler nicht gefunden"));
+                .orElseThrow(() -> new ResourceNotFoundException("Spieler nicht gefunden"));
 
         if(verlierer.getSpielerId() == match.getSpieler1().getSpielerId() || verlierer.getSpielerId() == match.getSpieler2().getSpielerId()) {
             match.setGewinner(verlierer);
             matchUpRepository.save(match);
         }else {
-            System.out.println("Spieler nicht im Matchup gefunden");
-            return;
+            throw new InvalidRequestException("Spieler nicht im Matchup gefunden");
         }
     }
 

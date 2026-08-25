@@ -4,6 +4,8 @@ import io.github.fenzeldino.schachdatenverwaltung.dto.request.turnier.TurnierCre
 import io.github.fenzeldino.schachdatenverwaltung.dto.request.turnier.TurnierUpdateDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.TurnierResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.VereinImTurnierDTO;
+import io.github.fenzeldino.schachdatenverwaltung.exception.InvalidRequestException;
+import io.github.fenzeldino.schachdatenverwaltung.exception.ResourceNotFoundException;
 import io.github.fenzeldino.schachdatenverwaltung.model.MatchUp;
 import io.github.fenzeldino.schachdatenverwaltung.model.RatingResult;
 import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
@@ -91,10 +93,8 @@ class TurnierServiceTest {
     }
 
     @Test
-    void createTurnier_shouldReturnNull_WhenDtoIsNull() {
-        TurnierResponseDTO result = turnierService.createTurnier(null);
-
-        assertNull(result);
+    void createTurnier_shouldThrowException_WhenDtoIsNull() {
+        assertThrows(InvalidRequestException.class, () -> turnierService.createTurnier(null));
         verify(turnierRepository, never()).save(any());
     }
 
@@ -129,7 +129,7 @@ class TurnierServiceTest {
     void getTurnier_shouldThrowException_WhenIdNotFound() {
         when(turnierRepository.findById(999)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ResourceNotFoundException.class,
                 () -> turnierService.getTurnier(999));
 
         verify(turnierRepository).findById(999);
@@ -159,16 +159,14 @@ class TurnierServiceTest {
     }
 
     @Test
-    void updateTurnier_shouldReturnNull_WhenIdsDoNotMatch() {
+    void updateTurnier_shouldThrowException_WhenIdsDoNotMatch() {
         Turnier existing = new Turnier(1);
         TurnierUpdateDTO updateDto = new TurnierUpdateDTO(
                 2, "Vereinspokal", LocalDate.of(2026, 7, 20), "Dresden", TurnierStatus.LAUFEND, List.of(3));
 
         when(turnierRepository.findById(1)).thenReturn(Optional.of(existing));
 
-        TurnierResponseDTO result = turnierService.updateTurnier(1, updateDto);
-
-        assertNull(result);
+        assertThrows(InvalidRequestException.class, () -> turnierService.updateTurnier(1, updateDto));
         verify(turnierRepository, never()).save(any());
     }
 
@@ -185,7 +183,7 @@ class TurnierServiceTest {
     void deleteTurnier_shouldThrowException_WhenNotFound() {
         when(turnierRepository.existsById(999)).thenReturn(false);
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ResourceNotFoundException.class,
                 () -> turnierService.deleteTurnier(999));
 
         verify(turnierRepository, never()).deleteById(anyInt());
@@ -255,7 +253,7 @@ class TurnierServiceTest {
     void getVereineImTurnier_shouldThrow_WhenTurnierNotFound() {
         when(turnierRepository.findById(99)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> turnierService.getVereineImTurnier(99));
+        assertThrows(ResourceNotFoundException.class, () -> turnierService.getVereineImTurnier(99));
     }
 
     @Test
@@ -325,7 +323,7 @@ class TurnierServiceTest {
 
         when(matchUpRepository.findById(10)).thenReturn(Optional.of(matchUp));
 
-        assertThrows(IllegalArgumentException.class, () -> turnierService.DresdenCalculator(1, 10));
+        assertThrows(InvalidRequestException.class, () -> turnierService.DresdenCalculator(1, 10));
         verify(spielerRepository, never()).save(any());
     }
 

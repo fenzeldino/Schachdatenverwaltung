@@ -3,6 +3,8 @@ package io.github.fenzeldino.schachdatenverwaltung.serviceTest;
 import io.github.fenzeldino.schachdatenverwaltung.dto.request.matchUp.MatchUpCreateDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.request.matchUp.MatchUpUpdateDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.matchUp.MatchUpResponseDTO;
+import io.github.fenzeldino.schachdatenverwaltung.exception.InvalidRequestException;
+import io.github.fenzeldino.schachdatenverwaltung.exception.ResourceNotFoundException;
 import io.github.fenzeldino.schachdatenverwaltung.model.MatchUp;
 import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
 import io.github.fenzeldino.schachdatenverwaltung.model.Turnier;
@@ -84,6 +86,18 @@ class ServiceMatchUpTest {
                         && matchUp.getSpieler2().equals(spieler2)
         ));
 
+    }
+
+    @Test
+    void createMatchUp_shouldThrowException_WhenTurnierNichtGefunden(){
+        Spieler spieler1 = new Spieler(1, "Max Mustermann", 2300.00, 23, List.of());
+        Spieler spieler2 = new Spieler(2, "Domi Mustermann", 2000.00, 23, List.of());
+        MatchUpCreateDTO matchUpDTO = new MatchUpCreateDTO(spieler1, spieler2, 99);
+
+        when(turnierRepository.findById(99)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> matchUpService.createMatchUp(matchUpDTO));
+        verify(matchUpRepository, never()).save(any());
     }
 
     @Test
@@ -218,14 +232,14 @@ class ServiceMatchUpTest {
     void deleteMatchUpById_shouldThrowException_WhenNotFound(){
         when(matchUpRepository.existsById(999)).thenReturn(false);
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ResourceNotFoundException.class,
                 () -> matchUpService.deleteMatchUpById(999));
 
         verify(matchUpRepository, never()).deleteById(any());
     }
 
     @Test
-    void addGewinner_shouldDoNothing_WhenSpielerNichtTeilDesMatchesIst(){
+    void addGewinner_shouldThrowException_WhenSpielerNichtTeilDesMatchesIst(){
         Spieler spieler1 = new Spieler(1, "Max Mustermann", 2300.00, 23, List.of());
         Spieler spieler2 = new Spieler(2, "Domi Mustermann", 2000.00, 23, List.of());
         Spieler fremderSpieler = new Spieler(3, "Nev Mustermann", 2100.00, 20, List.of());
@@ -235,7 +249,7 @@ class ServiceMatchUpTest {
         when(matchUpRepository.findById(8)).thenReturn(Optional.of(matchUp));
         when(spielerRepository.findById(3)).thenReturn(Optional.of(fremderSpieler));
 
-        matchUpService.addGewinner(8, 3);
+        assertThrows(InvalidRequestException.class, () -> matchUpService.addGewinner(8, 3));
 
         assertNull(matchUp.getGewinner());
         verify(matchUpRepository, never()).save(any());

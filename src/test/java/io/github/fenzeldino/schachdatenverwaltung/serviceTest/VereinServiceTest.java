@@ -4,6 +4,7 @@ import io.github.fenzeldino.schachdatenverwaltung.dto.request.verein.VereinCreat
 import io.github.fenzeldino.schachdatenverwaltung.dto.request.verein.VereinUpdateDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.spieler.SpielerResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.verein.VereinResponseDTO;
+import io.github.fenzeldino.schachdatenverwaltung.exception.ResourceNotFoundException;
 import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
 import io.github.fenzeldino.schachdatenverwaltung.model.Verein;
 import io.github.fenzeldino.schachdatenverwaltung.repository.SpielerRepository;
@@ -101,7 +102,7 @@ class VereinServiceTest {
     void getVerein_shouldThrow_WhenNotFound() {
         when(vereinRepository.findById(99)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> vereinService.getVerein(99));
+        assertThrows(ResourceNotFoundException.class, () -> vereinService.getVerein(99));
     }
 
     /* ---------- der eigentliche Join ---------- */
@@ -127,7 +128,7 @@ class VereinServiceTest {
     void getSpielerImVerein_shouldThrow_WhenVereinNotFound() {
         when(vereinRepository.existsById(99)).thenReturn(false);
 
-        assertThrows(IllegalArgumentException.class, () -> vereinService.getSpielerImVerein(99));
+        assertThrows(ResourceNotFoundException.class, () -> vereinService.getSpielerImVerein(99));
         verify(spielerRepository, never()).findByVerein_VereinId(any());
     }
 
@@ -154,7 +155,7 @@ class VereinServiceTest {
         when(vereinRepository.findById(1)).thenReturn(Optional.of(vereinMitId(1, "SC Dresden 1920")));
         when(spielerRepository.findById(99)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> vereinService.spielerZuweisen(1, 99));
+        assertThrows(ResourceNotFoundException.class, () -> vereinService.spielerZuweisen(1, 99));
     }
 
     @Test
@@ -207,7 +208,7 @@ class VereinServiceTest {
     void deleteVerein_shouldThrow_WhenNotFound() {
         when(vereinRepository.findById(99)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> vereinService.deleteVerein(99));
+        assertThrows(ResourceNotFoundException.class, () -> vereinService.deleteVerein(99));
         verify(vereinRepository, never()).delete(any());
     }
 }

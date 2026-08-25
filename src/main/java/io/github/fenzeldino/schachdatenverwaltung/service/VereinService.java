@@ -4,6 +4,7 @@ import io.github.fenzeldino.schachdatenverwaltung.dto.request.verein.VereinCreat
 import io.github.fenzeldino.schachdatenverwaltung.dto.request.verein.VereinUpdateDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.spieler.SpielerResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.verein.VereinResponseDTO;
+import io.github.fenzeldino.schachdatenverwaltung.exception.ResourceNotFoundException;
 import io.github.fenzeldino.schachdatenverwaltung.mapper.SpielerMapper;
 import io.github.fenzeldino.schachdatenverwaltung.mapper.VereinMapper;
 import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
@@ -53,7 +54,7 @@ public class VereinService {
     public VereinResponseDTO getVerein(int id) {
         return vereinRepository.findById(id)
                 .map(VereinMapper::toDto)
-                .orElseThrow(() -> new IllegalArgumentException("Verein mit Id: " + id + " wurde nicht gefunden"));
+                .orElseThrow(() -> new ResourceNotFoundException("Verein mit Id: " + id + " wurde nicht gefunden"));
     }
 
     /**
@@ -63,7 +64,7 @@ public class VereinService {
     @Transactional(readOnly = true)
     public List<SpielerResponseDTO> getSpielerImVerein(int vereinId) {
         if (!vereinRepository.existsById(vereinId)) {
-            throw new IllegalArgumentException("Verein mit Id: " + vereinId + " wurde nicht gefunden");
+            throw new ResourceNotFoundException("Verein mit Id: " + vereinId + " wurde nicht gefunden");
         }
 
         return spielerRepository.findByVerein_VereinId(vereinId)
@@ -76,10 +77,10 @@ public class VereinService {
     @Transactional
     public SpielerResponseDTO spielerZuweisen(int vereinId, int spielerId) {
         Verein verein = vereinRepository.findById(vereinId)
-                .orElseThrow(() -> new IllegalArgumentException("Verein mit Id: " + vereinId + " wurde nicht gefunden"));
+                .orElseThrow(() -> new ResourceNotFoundException("Verein mit Id: " + vereinId + " wurde nicht gefunden"));
 
         Spieler spieler = spielerRepository.findById(spielerId)
-                .orElseThrow(() -> new IllegalArgumentException("Spieler mit Id: " + spielerId + " wurde nicht gefunden"));
+                .orElseThrow(() -> new ResourceNotFoundException("Spieler mit Id: " + spielerId + " wurde nicht gefunden"));
 
         spieler.setVerein(verein);
         return SpielerMapper.toDto(spielerRepository.save(spieler));
@@ -89,7 +90,7 @@ public class VereinService {
     @Transactional
     public SpielerResponseDTO spielerEntfernen(int spielerId) {
         Spieler spieler = spielerRepository.findById(spielerId)
-                .orElseThrow(() -> new IllegalArgumentException("Spieler mit Id: " + spielerId + " wurde nicht gefunden"));
+                .orElseThrow(() -> new ResourceNotFoundException("Spieler mit Id: " + spielerId + " wurde nicht gefunden"));
 
         spieler.setVerein(null);
         return SpielerMapper.toDto(spielerRepository.save(spieler));
@@ -98,7 +99,7 @@ public class VereinService {
     @Transactional
     public VereinResponseDTO updateVerein(int id, VereinUpdateDTO vereinDTO) {
         Verein existing = vereinRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Verein mit Id: " + id + " wurde nicht gefunden"));
+                .orElseThrow(() -> new ResourceNotFoundException("Verein mit Id: " + id + " wurde nicht gefunden"));
 
         existing.setName(vereinDTO.name());
         existing.setZpsCode(vereinDTO.zpsCode());
@@ -113,7 +114,7 @@ public class VereinService {
     @Transactional
     public void deleteVerein(int id) {
         Verein verein = vereinRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Verein mit Id: " + id + " wurde nicht gefunden"));
+                .orElseThrow(() -> new ResourceNotFoundException("Verein mit Id: " + id + " wurde nicht gefunden"));
 
         List<Spieler> zugeordnete = spielerRepository.findByVerein_VereinId(id);
         zugeordnete.forEach(spieler -> spieler.setVerein(null));
