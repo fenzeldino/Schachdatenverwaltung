@@ -5,6 +5,7 @@ import io.github.fenzeldino.schachdatenverwaltung.dto.request.turnier.TurnierUpd
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.TurnierResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.VereinImTurnierDTO;
 import io.github.fenzeldino.schachdatenverwaltung.model.MatchUp;
+import io.github.fenzeldino.schachdatenverwaltung.model.RatingResult;
 import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
 import io.github.fenzeldino.schachdatenverwaltung.model.Turnier;
 import io.github.fenzeldino.schachdatenverwaltung.model.TurnierStatus;
@@ -291,5 +292,59 @@ class TurnierServiceTest {
         assertEquals(spieler1, turnier.getMatchups().getFirst().getSpieler1());
         assertEquals(spieler2, turnier.getMatchups().getFirst().getSpieler2());
         verify(turnierRepository).save(turnier);
+    }
+
+    @Test
+    void dresdenCalculator_shouldReturnRatingResultAndUpdateSpieler() {
+        // Gewinner-Rating 1700 / Alter 25 -> DWZ-Matrix-Faktor 1.0 (Band 1601-1800 / 21-35),
+        // diff=0 -> Zeile "0-50", Favoritensieg -> Basispunkte 5 (siehe RatingServiceTest)
+        Spieler gewinner = new Spieler(1, "Max Mustermann", 1700.0, 25, new ArrayList<>());
+        Spieler verlierer = new Spieler(2, "Domi Mustermann", 1700.0, 23, new ArrayList<>());
+        MatchUp matchUp = new MatchUp(gewinner, verlierer);
+        matchUp.setMatchUpId(8);
+        matchUp.setGewinner(gewinner);
+
+        when(matchUpRepository.findById(8)).thenReturn(Optional.of(matchUp));
+
+        RatingResult result = turnierService.DresdenCalculator(1, 8);
+
+        assertEquals(1705.0, result.neuesGewinnerRating(), 1e-9);
+        assertEquals(1695.0, result.neuesVerliererRating(), 1e-9);
+        assertEquals(1705.0, gewinner.getRating(), 1e-9);
+        assertEquals(1695.0, verlierer.getRating(), 1e-9);
+        verify(spielerRepository).save(gewinner);
+        verify(spielerRepository).save(verlierer);
+    }
+
+    @Test
+    void dresdenCalculator_shouldThrowException_WhenGewinnerNochNichtGesetzt() {
+        Spieler spieler1 = new Spieler(1, "Max Mustermann", 1700.0, 25, new ArrayList<>());
+        Spieler spieler2 = new Spieler(2, "Domi Mustermann", 1700.0, 23, new ArrayList<>());
+        MatchUp matchUp = new MatchUp(spieler1, spieler2);
+        matchUp.setMatchUpId(10);
+
+        when(matchUpRepository.findById(10)).thenReturn(Optional.of(matchUp));
+
+        assertThrows(IllegalArgumentException.class, () -> turnierService.DresdenCalculator(1, 10));
+        verify(spielerRepository, never()).save(any());
+    }
+
+    @Test
+    void eloBerehcnung_shouldReturnRatingResultAndUpdateSpieler() {
+        Spieler gewinner = new Spieler(1, "Max Mustermann", 1500.0, 25, new ArrayList<>());
+        Spieler verlierer = new Spieler(2, "Domi Mustermann", 1500.0, 23, new ArrayList<>());
+        MatchUp matchUp = new MatchUp(gewinner, verlierer);
+        matchUp.setMatchUpId(9);
+        matchUp.setGewinner(gewinner);
+
+        when(matchUpRepository.findById(9)).thenReturn(Optional.of(matchUp));
+
+        RatingResult result = turnierService.EloBerehcnung(1, 9);
+
+        // Ea = 0.5 -> Zuwachs = 20 * 0.5 = 10
+        assertEquals(1510.0, result.neuesGewinnerRating(), 1e-9);
+        assertEquals(1490.0, result.neuesVerliererRating(), 1e-9);
+        verify(spielerRepository).save(gewinner);
+        verify(spielerRepository).save(verlierer);
     }
 }

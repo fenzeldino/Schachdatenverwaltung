@@ -6,6 +6,7 @@ import io.github.fenzeldino.schachdatenverwaltung.dto.response.matchUp.MatchUpRe
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.spieler.SpielerResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.TurnierResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.VereinImTurnierDTO;
+import io.github.fenzeldino.schachdatenverwaltung.model.RatingResult;
 import io.github.fenzeldino.schachdatenverwaltung.service.TurnierService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -97,16 +98,16 @@ public class TurnierController {
 
     /* Rating-Berechnung nach Dresdner Methode auslösen: POST /api/Turnier/5/matchups/8/dresden */
     @PostMapping("/{turnierId}/matchups/{matchId}/dresden")
-    public ResponseEntity<Void> calculateDresden(@PathVariable Integer turnierId, @PathVariable Integer matchId){
-        turnierService.DresdenCalculator(turnierId, matchId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<RatingResult> calculateDresden(@PathVariable Integer turnierId, @PathVariable Integer matchId){
+        RatingResult result = turnierService.DresdenCalculator(turnierId, matchId);
+        return ResponseEntity.ok(result);
     }
 
     /* Rating-Berechnung nach Elo auslösen: POST /api/Turnier/5/matchups/8/elo */
     @PostMapping("/{turnierId}/matchups/{matchId}/elo")
-    public ResponseEntity<Void> calculateElo(@PathVariable Integer turnierId, @PathVariable Integer matchId){
-        turnierService.EloBerehcnung(turnierId, matchId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<RatingResult> calculateElo(@PathVariable Integer turnierId, @PathVariable Integer matchId){
+        RatingResult result = turnierService.EloBerehcnung(turnierId, matchId);
+        return ResponseEntity.ok(result);
     }
 
 }

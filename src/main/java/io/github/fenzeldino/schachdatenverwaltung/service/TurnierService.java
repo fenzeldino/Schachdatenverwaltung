@@ -202,15 +202,14 @@ public class TurnierService {
     }
 
     @Transactional
-    public void DresdenCalculator(int TurnierId,int MatchId) {
+    public RatingResult DresdenCalculator(int TurnierId,int MatchId) {
         MatchUp matchUp = getMatchUpById(MatchId);
 
         Spieler Gewinner = matchUp.getGewinner();
         Spieler Verlierer = getVerlierer(MatchId);
 
         if(Gewinner == null){
-            System.out.println("Gewinner wurde noch nicht gesetzt");
-            return;
+            throw new IllegalArgumentException("Gewinner wurde noch nicht gesetzt");
         }
 
         RatingResult result = ratingService.dresden(Gewinner.getRating(), Gewinner.getAge(), Verlierer.getRating());
@@ -220,9 +219,11 @@ public class TurnierService {
 
         spielerRepository.save(Gewinner);
         spielerRepository.save(Verlierer);
+
+        return result;
     }
 
-    public void EloBerehcnung(int TurnierId,int MatchUpId) {
+    public RatingResult EloBerehcnung(int TurnierId,int MatchUpId) {
         MatchUp matchUp = getMatchUpById(MatchUpId);
 
         Spieler Gewinner = matchUp.getGewinner();
@@ -235,6 +236,8 @@ public class TurnierService {
 
         spielerRepository.save(Gewinner);
         spielerRepository.save(Verlierer);
+
+        return result;
     }
 
     public Spieler getVerlierer(int MatchId){
