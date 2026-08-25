@@ -6,6 +6,8 @@ import io.github.fenzeldino.schachdatenverwaltung.dto.response.matchUp.MatchUpRe
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.spieler.SpielerResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.TurnierResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.VereinImTurnierDTO;
+import io.github.fenzeldino.schachdatenverwaltung.exception.InvalidRequestException;
+import io.github.fenzeldino.schachdatenverwaltung.exception.ResourceNotFoundException;
 import io.github.fenzeldino.schachdatenverwaltung.mapper.MatchUpMapper;
 import io.github.fenzeldino.schachdatenverwaltung.mapper.SpielerMapper;
 import io.github.fenzeldino.schachdatenverwaltung.mapper.TurnierMapper;
@@ -26,37 +28,31 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class TurnierService implements RatingCalculator {
+public class TurnierService {
 
     private final SpielerRepository spielerRepository;
     private final TurnierRepository turnierRepository;
     private final MatchUpRepository matchUpRepository;
+    private final RatingService ratingService;
 
-    public TurnierService(TurnierRepository turnierRepository, SpielerRepository spielerRepository,MatchUpRepository matchUpRepository){
+    public TurnierService(TurnierRepository turnierRepository, SpielerRepository spielerRepository,MatchUpRepository matchUpRepository, RatingService ratingService){
         this.turnierRepository = turnierRepository;
         this.spielerRepository = spielerRepository;
         this.matchUpRepository = matchUpRepository;
+        this.ratingService = ratingService;
     }
-
-    private static final int[][] PUNKTE_TABELLE = {
-            {5,2,0}, // 0-50 Punkte
-            {6,3,0}, //51-100Punkte
-            {7,4,0}, //101-200Punkte
-            {8,5,0}  //>200 Punkte
-    };
 
     @Transactional
     public Turnier findTurnierById(int turnierId){
         return turnierRepository.findById(turnierId)
-                .orElseThrow(() -> new IllegalArgumentException("Turnier wurde nicht gefunden"));
+                .orElseThrow(() -> new ResourceNotFoundException("Turnier wurde nicht gefunden"));
     }
 
     @Transactional
     public TurnierResponseDTO createTurnier(TurnierCreateDTO turnierDto){
 
         if(turnierDto == null){
-            System.out.println("Leere Argument kann nicht verarbeitet werden");
-            return null;
+            throw new InvalidRequestException("Leere Argument kann nicht verarbeitet werden");
         }
 
         Turnier turnier = new Turnier();
@@ -94,8 +90,7 @@ public class TurnierService implements RatingCalculator {
         Turnier existing = findTurnierById(id);
 
         if(!turnierDto.turnierId().equals(existing.getTunierId())){
-            System.out.println("Turnier Ids stimmen nicht überein");
-            return null;
+            throw new InvalidRequestException("Turnier Ids stimmen nicht überein");
         }
 
         existing.setName(turnierDto.name());
@@ -115,7 +110,7 @@ public class TurnierService implements RatingCalculator {
     @Transactional
     public void deleteTurnier(int id){
         if(!turnierRepository.existsById(id)){
-            throw new IllegalArgumentException("Turnier nicht gefunden");
+            throw new ResourceNotFoundException("Turnier nicht gefunden");
         }
         turnierRepository.deleteById(id);
     }
@@ -173,143 +168,76 @@ public class TurnierService implements RatingCalculator {
                 .toList();
     }
 
-    @Transactional
-    public void addMatchUpToTurnier(int TurnierId,MatchUp match){
-        Turnier turnier = findTurnierById(TurnierId);
-        turnier.setMatchups(match);
-        turnierRepository.save(turnier);
-
-    }
-
-    /* Für den Controller: verknüpft ein bereits existierendes MatchUp per ID mit dem Turnier. */
+    /* Verknüpft ein bereits existierendes MatchUp per ID mit dem Turnier. */
     @Transactional
     public void addMatchUpToTurnier(int turnierId, int matchUpId){
+        Turnier turnier = findTurnierById(turnierId);
         MatchUp matchUp = getMatchUpById(matchUpId);
-        addMatchUpToTurnier(turnierId, matchUp);
+        turnier.setMatchups(matchUp);
+        turnierRepository.save(turnier);
     }
 
+    /* Fügt einen bereits existierenden Spieler per ID zum Turnier hinzu. */
     @Transactional
-    public void addSpielerToTurnier(int TurnierId,Spieler spieler){
-        Turnier turnier = findTurnierById(TurnierId);
+    public void addSpielerToTurnier(int turnierId, int spielerId){
+        Turnier turnier = findTurnierById(turnierId);
+        Spieler spieler = spielerRepository.findById(spielerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Spieler nicht gefunden"));
         turnier.setTunierspieler(spieler);
         turnierRepository.save(turnier);
     }
 
-    /* Für den Controller: fügt einen bereits existierenden Spieler per ID zum Turnier hinzu. */
+    /* Erstellt ein neues MatchUp zwischen zwei bereits existierenden Spielern per ID. */
     @Transactional
-    public void addSpielerToTurnier(int turnierId, int spielerId){
-        Spieler spieler = spielerRepository.findById(spielerId)
-                .orElseThrow(() -> new IllegalArgumentException("Spieler nicht gefunden"));
-        addSpielerToTurnier(turnierId, spieler);
-    }
-
-    @Transactional
-    public void AddMatchUpToDB(int TurnierId,Spieler spieler1,Spieler spieler2){
-        Turnier turnier = turnierRepository.findById(TurnierId)
-                        .orElseThrow(() -> new IllegalArgumentException("Turnier nicht gefunden"));
+    public void addMatchUpToDB(int turnierId, int spieler1Id, int spieler2Id){
+        Turnier turnier = turnierRepository.findById(turnierId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Turnier nicht gefunden"));
+        Spieler spieler1 = spielerRepository.findById(spieler1Id)
+                .orElseThrow(() -> new ResourceNotFoundException("Spieler1 nicht gefunden"));
+        Spieler spieler2 = spielerRepository.findById(spieler2Id)
+                .orElseThrow(() -> new ResourceNotFoundException("Spieler2 nicht gefunden"));
 
         turnier.createMatchUo(spieler1,spieler2);
         turnierRepository.save(turnier);
-
-    }
-
-    /* Für den Controller: erstellt ein neues MatchUp zwischen zwei bereits existierenden Spielern per ID. */
-    @Transactional
-    public void addMatchUpToDB(int turnierId, int spieler1Id, int spieler2Id){
-        Spieler spieler1 = spielerRepository.findById(spieler1Id)
-                .orElseThrow(() -> new IllegalArgumentException("Spieler1 nicht gefunden"));
-        Spieler spieler2 = spielerRepository.findById(spieler2Id)
-                .orElseThrow(() -> new IllegalArgumentException("Spieler2 nicht gefunden"));
-        AddMatchUpToDB(turnierId, spieler1, spieler2);
     }
 
     @Transactional
-    @Override
-    public void DresdenCalculator(int TurnierId,int MatchId) {
+    public RatingResult DresdenCalculator(int TurnierId,int MatchId) {
         MatchUp matchUp = getMatchUpById(MatchId);
 
-        Spieler Gewinner;
-        Spieler Verlierer;
-
-        Gewinner = matchUp.getGewinner();
-        Verlierer = getVerlierer(MatchId);
+        Spieler Gewinner = matchUp.getGewinner();
+        Spieler Verlierer = getVerlierer(MatchId);
 
         if(Gewinner == null){
-            System.out.println("Gewinner wurde noch nicht gesetzt");
-            return;
+            throw new InvalidRequestException("Gewinner wurde noch nicht gesetzt");
         }
 
+        RatingResult result = ratingService.dresden(Gewinner.getRating(), Gewinner.getAge(), Verlierer.getRating());
 
-        double RatingGewinner = Gewinner.getRating();
-        System.out.println("Rating Gewinner: " + RatingGewinner);
-        double RatingVerlierer = Verlierer.getRating();
-        System.out.println("Rating Verlierer: " + RatingVerlierer);
-
-        double diff = Math.abs(RatingGewinner - RatingVerlierer); //Differenz bestimmen für Punkte_Tabelle
-        boolean gewinnerWarFavorit = RatingGewinner >= RatingVerlierer; //Favorit bestimmen
-
-        int zeile;
-        if (diff <= 50) zeile = 0;
-        else if (diff <= 100) zeile = 1;
-        else if (diff <= 150) zeile = 2;
-        else zeile = 3;
-
-        // 4. Basispunkte aus deiner PUNKTE_TABELLE holen
-        // Spalte 0 = Favoritensieg, Spalte 2 = Außenseitersieg
-        int spalte = gewinnerWarFavorit ? 0 : 2;
-        int basisPunkte = PUNKTE_TABELLE[zeile][spalte];
-
-        // 5. Faktor aus der DWZ-Matrix (aus dem Bild) holen
-        // Hier nutzt du die Methode, die wir zuvor besprochen haben
-        double faktor = DwzMatrix.getFactor((int)Gewinner.getRating(), Gewinner.getAge());
-
-        // 6. Finale Berechnung
-        double punktZuwachs = basisPunkte * faktor;
-
-        // 7. Ratings aktualisieren
-        Gewinner.setRating(RatingGewinner + punktZuwachs);
-        System.out.println("Gewinner Rating nach änderung: " + Gewinner.getRating());
-        Verlierer.setRating(RatingVerlierer - punktZuwachs); // Bei Dresden meist symmetrisch
-        System.out.println("Verlierer Rating nach änderung: " + Verlierer.getRating());
-
-        System.out.println("Berechnung abgeschlossen: " + Gewinner.getName() + " erhält +" + punktZuwachs);
+        Gewinner.setRating(result.neuesGewinnerRating());
+        Verlierer.setRating(result.neuesVerliererRating());
 
         spielerRepository.save(Gewinner);
         spielerRepository.save(Verlierer);
 
+        return result;
     }
 
-    @Override
-    public void EloBerehcnung(int TurnierId,int MatchUpId) {
+    public RatingResult EloBerehcnung(int TurnierId,int MatchUpId) {
         MatchUp matchUp = getMatchUpById(MatchUpId);
 
         Spieler Gewinner = matchUp.getGewinner();
         Spieler Verlierer = getVerlierer(MatchUpId);
 
-        double ra = Gewinner.getRating();
-        double rb = Verlierer.getRating();
+        RatingResult result = ratingService.elo(Gewinner.getRating(), Verlierer.getRating());
 
-        // Erwartungswert für A
-        // 2. Erwartungswert berechnen (Ea)
-        // Formel: 1 / (1 + 10^((RatingB - RatingA) / 400))
-        double ea = 1.0 / (1.0 + Math.pow(10, (rb - ra) / 400.0));
-
-        // 3. K-Faktor festlegen
-        // Ein fixer K-Faktor von 20 ist Standard, könnte aber auch dynamisch sein
-        int k = 20;
-
-        // 4. Punkte berechnen
-        // Da wir hier einen festen Gewinner haben, ist das Ergebnis (Sa) immer 1.0
-        // Für ein Remis müsste die MatchUp-Klasse ein entsprechendes Status-Feld prüfen
-        double sa = 1.0;
-        double punktZuwachs = k * (sa - ea);
-
-        // Neue Ratings setzen
-        Gewinner.setRating(ra + punktZuwachs);
-        Verlierer.setRating(rb - punktZuwachs);
+        Gewinner.setRating(result.neuesGewinnerRating());
+        Verlierer.setRating(result.neuesVerliererRating());
 
         spielerRepository.save(Gewinner);
         spielerRepository.save(Verlierer);
+
+        return result;
     }
 
     public Spieler getVerlierer(int MatchId){
@@ -331,7 +259,7 @@ public class TurnierService implements RatingCalculator {
     public MatchUp getMatchUpById(int MatchUpId){
 
         return matchUpRepository.findById(MatchUpId)
-                .orElseThrow(() -> new IllegalArgumentException("MatchUp nicht gefunden"));
+                .orElseThrow(() -> new ResourceNotFoundException("MatchUp nicht gefunden"));
 
     }
 

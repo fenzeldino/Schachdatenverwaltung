@@ -4,7 +4,10 @@ import io.github.fenzeldino.schachdatenverwaltung.dto.request.turnier.TurnierCre
 import io.github.fenzeldino.schachdatenverwaltung.dto.request.turnier.TurnierUpdateDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.TurnierResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.VereinImTurnierDTO;
+import io.github.fenzeldino.schachdatenverwaltung.exception.InvalidRequestException;
+import io.github.fenzeldino.schachdatenverwaltung.exception.ResourceNotFoundException;
 import io.github.fenzeldino.schachdatenverwaltung.model.MatchUp;
+import io.github.fenzeldino.schachdatenverwaltung.model.RatingResult;
 import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
 import io.github.fenzeldino.schachdatenverwaltung.model.Turnier;
 import io.github.fenzeldino.schachdatenverwaltung.model.TurnierStatus;
@@ -12,11 +15,13 @@ import io.github.fenzeldino.schachdatenverwaltung.model.Verein;
 import io.github.fenzeldino.schachdatenverwaltung.repository.MatchUpRepository;
 import io.github.fenzeldino.schachdatenverwaltung.repository.SpielerRepository;
 import io.github.fenzeldino.schachdatenverwaltung.repository.TurnierRepository;
+import io.github.fenzeldino.schachdatenverwaltung.service.RatingService;
 import io.github.fenzeldino.schachdatenverwaltung.service.TurnierService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
@@ -42,6 +47,9 @@ class TurnierServiceTest {
 
     @Mock
     private MatchUpRepository matchUpRepository;
+
+    @Spy
+    private RatingService ratingService = new RatingService();
 
     @InjectMocks
     private TurnierService turnierService;
@@ -85,10 +93,8 @@ class TurnierServiceTest {
     }
 
     @Test
-    void createTurnier_shouldReturnNull_WhenDtoIsNull() {
-        TurnierResponseDTO result = turnierService.createTurnier(null);
-
-        assertNull(result);
+    void createTurnier_shouldThrowException_WhenDtoIsNull() {
+        assertThrows(InvalidRequestException.class, () -> turnierService.createTurnier(null));
         verify(turnierRepository, never()).save(any());
     }
 
@@ -123,7 +129,7 @@ class TurnierServiceTest {
     void getTurnier_shouldThrowException_WhenIdNotFound() {
         when(turnierRepository.findById(999)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ResourceNotFoundException.class,
                 () -> turnierService.getTurnier(999));
 
         verify(turnierRepository).findById(999);
@@ -153,16 +159,14 @@ class TurnierServiceTest {
     }
 
     @Test
-    void updateTurnier_shouldReturnNull_WhenIdsDoNotMatch() {
+    void updateTurnier_shouldThrowException_WhenIdsDoNotMatch() {
         Turnier existing = new Turnier(1);
         TurnierUpdateDTO updateDto = new TurnierUpdateDTO(
                 2, "Vereinspokal", LocalDate.of(2026, 7, 20), "Dresden", TurnierStatus.LAUFEND, List.of(3));
 
         when(turnierRepository.findById(1)).thenReturn(Optional.of(existing));
 
-        TurnierResponseDTO result = turnierService.updateTurnier(1, updateDto);
-
-        assertNull(result);
+        assertThrows(InvalidRequestException.class, () -> turnierService.updateTurnier(1, updateDto));
         verify(turnierRepository, never()).save(any());
     }
 
@@ -179,7 +183,7 @@ class TurnierServiceTest {
     void deleteTurnier_shouldThrowException_WhenNotFound() {
         when(turnierRepository.existsById(999)).thenReturn(false);
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ResourceNotFoundException.class,
                 () -> turnierService.deleteTurnier(999));
 
         verify(turnierRepository, never()).deleteById(anyInt());
@@ -249,7 +253,7 @@ class TurnierServiceTest {
     void getVereineImTurnier_shouldThrow_WhenTurnierNotFound() {
         when(turnierRepository.findById(99)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> turnierService.getVereineImTurnier(99));
+        assertThrows(ResourceNotFoundException.class, () -> turnierService.getVereineImTurnier(99));
     }
 
     @Test
@@ -286,5 +290,59 @@ class TurnierServiceTest {
         assertEquals(spieler1, turnier.getMatchups().getFirst().getSpieler1());
         assertEquals(spieler2, turnier.getMatchups().getFirst().getSpieler2());
         verify(turnierRepository).save(turnier);
+    }
+
+    @Test
+    void dresdenCalculator_shouldReturnRatingResultAndUpdateSpieler() {
+        // Gewinner-Rating 1700 / Alter 25 -> DWZ-Matrix-Faktor 1.0 (Band 1601-1800 / 21-35),
+        // diff=0 -> Zeile "0-50", Favoritensieg -> Basispunkte 5 (siehe RatingServiceTest)
+        Spieler gewinner = new Spieler(1, "Max Mustermann", 1700.0, 25, new ArrayList<>());
+        Spieler verlierer = new Spieler(2, "Domi Mustermann", 1700.0, 23, new ArrayList<>());
+        MatchUp matchUp = new MatchUp(gewinner, verlierer);
+        matchUp.setMatchUpId(8);
+        matchUp.setGewinner(gewinner);
+
+        when(matchUpRepository.findById(8)).thenReturn(Optional.of(matchUp));
+
+        RatingResult result = turnierService.DresdenCalculator(1, 8);
+
+        assertEquals(1705.0, result.neuesGewinnerRating(), 1e-9);
+        assertEquals(1695.0, result.neuesVerliererRating(), 1e-9);
+        assertEquals(1705.0, gewinner.getRating(), 1e-9);
+        assertEquals(1695.0, verlierer.getRating(), 1e-9);
+        verify(spielerRepository).save(gewinner);
+        verify(spielerRepository).save(verlierer);
+    }
+
+    @Test
+    void dresdenCalculator_shouldThrowException_WhenGewinnerNochNichtGesetzt() {
+        Spieler spieler1 = new Spieler(1, "Max Mustermann", 1700.0, 25, new ArrayList<>());
+        Spieler spieler2 = new Spieler(2, "Domi Mustermann", 1700.0, 23, new ArrayList<>());
+        MatchUp matchUp = new MatchUp(spieler1, spieler2);
+        matchUp.setMatchUpId(10);
+
+        when(matchUpRepository.findById(10)).thenReturn(Optional.of(matchUp));
+
+        assertThrows(InvalidRequestException.class, () -> turnierService.DresdenCalculator(1, 10));
+        verify(spielerRepository, never()).save(any());
+    }
+
+    @Test
+    void eloBerehcnung_shouldReturnRatingResultAndUpdateSpieler() {
+        Spieler gewinner = new Spieler(1, "Max Mustermann", 1500.0, 25, new ArrayList<>());
+        Spieler verlierer = new Spieler(2, "Domi Mustermann", 1500.0, 23, new ArrayList<>());
+        MatchUp matchUp = new MatchUp(gewinner, verlierer);
+        matchUp.setMatchUpId(9);
+        matchUp.setGewinner(gewinner);
+
+        when(matchUpRepository.findById(9)).thenReturn(Optional.of(matchUp));
+
+        RatingResult result = turnierService.EloBerehcnung(1, 9);
+
+        // Ea = 0.5 -> Zuwachs = 20 * 0.5 = 10
+        assertEquals(1510.0, result.neuesGewinnerRating(), 1e-9);
+        assertEquals(1490.0, result.neuesVerliererRating(), 1e-9);
+        verify(spielerRepository).save(gewinner);
+        verify(spielerRepository).save(verlierer);
     }
 }

@@ -3,6 +3,7 @@ package io.github.fenzeldino.schachdatenverwaltung.serviceTest;
 import io.github.fenzeldino.schachdatenverwaltung.dto.request.spieler.SpielerCreateDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.request.spieler.SpielerUpdateDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.spieler.SpielerResponseDTO;
+import io.github.fenzeldino.schachdatenverwaltung.exception.ResourceNotFoundException;
 import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
 import io.github.fenzeldino.schachdatenverwaltung.model.Turnier;
 import io.github.fenzeldino.schachdatenverwaltung.repository.SpielerRepository;
@@ -150,7 +151,7 @@ class SpielerServiceTest {
     void getSpieler_ShouldThrowException_WhenIdNotFound(){
 
         when(spielerRepository.findById(999)).thenReturn(Optional.empty());
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ResourceNotFoundException.class,
                 () -> spielerService.getSpieler(999));
 
         verify(spielerRepository).findById(999);

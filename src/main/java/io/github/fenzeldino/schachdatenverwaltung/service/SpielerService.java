@@ -4,6 +4,7 @@ package io.github.fenzeldino.schachdatenverwaltung.service;
 import io.github.fenzeldino.schachdatenverwaltung.dto.request.spieler.SpielerCreateDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.request.spieler.SpielerUpdateDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.spieler.SpielerResponseDTO;
+import io.github.fenzeldino.schachdatenverwaltung.exception.ResourceNotFoundException;
 import io.github.fenzeldino.schachdatenverwaltung.mapper.SpielerMapper;
 import io.github.fenzeldino.schachdatenverwaltung.model.Mitglied;
 import io.github.fenzeldino.schachdatenverwaltung.model.Person;
@@ -59,14 +60,14 @@ public class SpielerService {
     public SpielerResponseDTO getSpieler(int Id){
         return spielerRepository.findById(Id)
                 .map(SpielerMapper::toDto)
-                .orElseThrow(() -> new IllegalArgumentException("Spieler mit Id: " + Id + "wurde nicht gefunden"));
+                .orElseThrow(() -> new ResourceNotFoundException("Spieler mit Id: " + Id + "wurde nicht gefunden"));
     }
 
 
     @Transactional
     public SpielerResponseDTO updateSpieler(int Id, SpielerUpdateDTO spieler){//update dto fehlt
         Spieler existing = spielerRepository.findById(Id)
-                .orElseThrow(() -> new IllegalArgumentException("Spieler mit Id: " + Id + "wurde nicht gefunden"));
+                .orElseThrow(() -> new ResourceNotFoundException("Spieler mit Id: " + Id + "wurde nicht gefunden"));
 
         if(!spieler.spielerId().equals(existing.getSpielerId())){
             System.out.println("Spieler Ids stimmen nicht überein");
@@ -83,7 +84,7 @@ public class SpielerService {
     @Transactional
     public void deleteSpieler(int Id){
         if(!spielerRepository.existsById(Id)){
-            throw new IllegalArgumentException("Spieler nicht gefunden");
+            throw new ResourceNotFoundException("Spieler nicht gefunden");
         }
        spielerRepository.deleteById(Id);
     }

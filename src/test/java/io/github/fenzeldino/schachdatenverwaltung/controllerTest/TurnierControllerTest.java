@@ -7,6 +7,7 @@ import io.github.fenzeldino.schachdatenverwaltung.dto.response.matchUp.MatchUpRe
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.spieler.SpielerResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.TurnierResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.VereinImTurnierDTO;
+import io.github.fenzeldino.schachdatenverwaltung.model.RatingResult;
 import io.github.fenzeldino.schachdatenverwaltung.model.TurnierStatus;
 import io.github.fenzeldino.schachdatenverwaltung.service.TurnierService;
 import org.junit.jupiter.api.Test;
@@ -177,18 +178,26 @@ class TurnierControllerTest {
     }
 
     @Test
-    void calculateDresden_shouldReturnNoContent() {
-        ResponseEntity<Void> result = turnierController.calculateDresden(1, 8);
+    void calculateDresden_shouldReturnRatingResult() {
+        RatingResult ratingResult = new RatingResult(1705.0, 1695.0);
+        when(turnierService.DresdenCalculator(1, 8)).thenReturn(ratingResult);
 
-        assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
+        ResponseEntity<RatingResult> result = turnierController.calculateDresden(1, 8);
+
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(ratingResult, result.getBody());
         verify(turnierService).DresdenCalculator(1, 8);
     }
 
     @Test
-    void calculateElo_shouldReturnNoContent() {
-        ResponseEntity<Void> result = turnierController.calculateElo(1, 8);
+    void calculateElo_shouldReturnRatingResult() {
+        RatingResult ratingResult = new RatingResult(1510.0, 1490.0);
+        when(turnierService.EloBerehcnung(1, 8)).thenReturn(ratingResult);
 
-        assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
+        ResponseEntity<RatingResult> result = turnierController.calculateElo(1, 8);
+
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(ratingResult, result.getBody());
         verify(turnierService).EloBerehcnung(1, 8);
     }
 }
