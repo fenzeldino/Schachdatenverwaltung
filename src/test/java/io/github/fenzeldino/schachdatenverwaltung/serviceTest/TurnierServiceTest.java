@@ -17,6 +17,7 @@ import io.github.fenzeldino.schachdatenverwaltung.repository.SpielerRepository;
 import io.github.fenzeldino.schachdatenverwaltung.repository.TurnierRepository;
 import io.github.fenzeldino.schachdatenverwaltung.service.RatingService;
 import io.github.fenzeldino.schachdatenverwaltung.service.TurnierService;
+import io.github.fenzeldino.schachdatenverwaltung.service.TurnierStatistikService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -51,13 +52,16 @@ class TurnierServiceTest {
     @Spy
     private RatingService ratingService = new RatingService();
 
+    @Spy
+    private TurnierStatistikService turnierStatistikService = new TurnierStatistikService();
+
     @InjectMocks
     private TurnierService turnierService;
 
     @Test
     void createTurnier_shouldCreateTurnierWithSpieler() {
         // Arrange
-        TurnierCreateDTO createDto = new TurnierCreateDTO("Stadtmeisterschaft 2026", LocalDate.of(2026, 9, 12), "Dresden", List.of(1, 2));
+        TurnierCreateDTO createDto = new TurnierCreateDTO("Stadtmeisterschaft 2026", LocalDate.of(2026, 9, 12), "Dresden", 32, List.of(1, 2));
 
         Spieler spieler1 = new Spieler(1, "Max Mustermann", 2300.00, 23, new ArrayList<>());
         Spieler spieler2 = new Spieler(2, "Domi Mustermann", 2000.00, 23, new ArrayList<>());
@@ -141,7 +145,7 @@ class TurnierServiceTest {
         Spieler spielerNeu = new Spieler(3, "Nev Mustermann", 2100.00, 20, new ArrayList<>());
 
         TurnierUpdateDTO updateDto = new TurnierUpdateDTO(
-                1, "Vereinspokal", LocalDate.of(2026, 7, 20), "Dresden", TurnierStatus.LAUFEND, List.of(3));
+                1, "Vereinspokal", LocalDate.of(2026, 7, 20), "Dresden", 32, TurnierStatus.LAUFEND, List.of(3));
 
         when(turnierRepository.findById(1)).thenReturn(Optional.of(existing));
         when(spielerRepository.findAllById(List.of(3))).thenReturn(List.of(spielerNeu));
@@ -162,7 +166,7 @@ class TurnierServiceTest {
     void updateTurnier_shouldThrowException_WhenIdsDoNotMatch() {
         Turnier existing = new Turnier(1);
         TurnierUpdateDTO updateDto = new TurnierUpdateDTO(
-                2, "Vereinspokal", LocalDate.of(2026, 7, 20), "Dresden", TurnierStatus.LAUFEND, List.of(3));
+                2, "Vereinspokal", LocalDate.of(2026, 7, 20), "Dresden", 32, TurnierStatus.LAUFEND, List.of(3));
 
         when(turnierRepository.findById(1)).thenReturn(Optional.of(existing));
 

@@ -12,8 +12,11 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -59,5 +62,17 @@ class GlobalExceptionHandlerTest {
         mockMvc.perform(get("/api/Turnier/1"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Ungültige Anfrage"));
+    }
+    @Test
+    void createWithoutMaxTeilnehmer_shouldMapTo400_withErrorBody() throws Exception {
+        when(turnierService.createTurnier(any())).thenThrow(
+                new InvalidRequestException("maxTeilnehmer ist Pflicht und muss mindestens 2 sein"));
+
+        mockMvc.perform(post("/api/Turnier")
+                        .contentType(APPLICATION_JSON)
+                        .content("{\"name\":\"Turnier\",\"datum\":\"2026-09-12\",\"ort\":\"Dresden\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(
+                        "maxTeilnehmer ist Pflicht und muss mindestens 2 sein"));
     }
 }

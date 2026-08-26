@@ -4,6 +4,7 @@ import io.github.fenzeldino.schachdatenverwaltung.dto.response.turnier.TurnierRe
 import io.github.fenzeldino.schachdatenverwaltung.model.MatchUp;
 import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
 import io.github.fenzeldino.schachdatenverwaltung.model.Turnier;
+import io.github.fenzeldino.schachdatenverwaltung.service.TurnierStatistikService.TurnierStatistik;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,6 +16,10 @@ public class TurnierMapper {
     }
 
     public static TurnierResponseDTO toDto(Turnier turnier){
+        return toDto(turnier, null);
+    }
+
+    public static TurnierResponseDTO toDto(Turnier turnier, TurnierStatistik statistik){
         if(turnier == null){
             return null;
         }
@@ -36,6 +41,9 @@ public class TurnierMapper {
                 turnier.getOrt(),
                 turnier.getStatus(),
                 spielerIds.size(),
+                turnier.getMaxTeilnehmer(),
+                statistik == null ? null : statistik.vereinsAnzahl(),
+                statistik == null ? null : statistik.durchschnittsRating(),
                 spielerIds,
                 matchUpIds
         );
