@@ -34,12 +34,15 @@ public class TurnierService {
     private final TurnierRepository turnierRepository;
     private final MatchUpRepository matchUpRepository;
     private final RatingService ratingService;
+    private final TurnierStatistikService turnierStatistikService;
 
-    public TurnierService(TurnierRepository turnierRepository, SpielerRepository spielerRepository,MatchUpRepository matchUpRepository, RatingService ratingService){
+    public TurnierService(TurnierRepository turnierRepository, SpielerRepository spielerRepository,MatchUpRepository matchUpRepository, RatingService ratingService,
+                          TurnierStatistikService turnierStatistikService){
         this.turnierRepository = turnierRepository;
         this.spielerRepository = spielerRepository;
         this.matchUpRepository = matchUpRepository;
         this.ratingService = ratingService;
+        this.turnierStatistikService = turnierStatistikService;
     }
 
     @Transactional
@@ -54,11 +57,15 @@ public class TurnierService {
         if(turnierDto == null){
             throw new InvalidRequestException("Leere Argument kann nicht verarbeitet werden");
         }
+        if(turnierDto.maxTeilnehmer() == null || turnierDto.maxTeilnehmer() < 2){
+            throw new InvalidRequestException("maxTeilnehmer ist Pflicht und muss mindestens 2 sein");
+        }
 
         Turnier turnier = new Turnier();
         turnier.setName(turnierDto.name());
         turnier.setDatum(turnierDto.datum());
         turnier.setOrt(turnierDto.ort());
+        turnier.setMaxTeilnehmer(turnierDto.maxTeilnehmer());
         // Status wird bei der Erstellung nicht vom Client vorgegeben — ein neues
         // Turnier ist per Definition geplant, nicht laufend oder abgeschlossen.
         turnier.setStatus(TurnierStatus.GEPLANT);
@@ -69,20 +76,20 @@ public class TurnierService {
         }
 
         Turnier saved = turnierRepository.save(turnier);
-        return TurnierMapper.toDto(saved);
+        return toDto(saved);
     }
 
     @Transactional
     public List<TurnierResponseDTO> getAllTurniere(){
         return turnierRepository.findAll()
                 .stream()
-                .map(TurnierMapper::toDto)
+                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional
     public TurnierResponseDTO getTurnier(int id){
-        return TurnierMapper.toDto(findTurnierById(id));
+        return toDto(findTurnierById(id));
     }
 
     @Transactional
@@ -96,6 +103,7 @@ public class TurnierService {
         existing.setName(turnierDto.name());
         existing.setDatum(turnierDto.datum());
         existing.setOrt(turnierDto.ort());
+        existing.setMaxTeilnehmer(turnierDto.maxTeilnehmer());
         existing.setStatus(turnierDto.status());
 
         if(turnierDto.spielerIds() != null){
@@ -104,7 +112,7 @@ public class TurnierService {
         }
 
         Turnier saved = turnierRepository.save(existing);
-        return TurnierMapper.toDto(saved);
+        return toDto(saved);
     }
 
     @Transactional
@@ -183,6 +191,10 @@ public class TurnierService {
         Turnier turnier = findTurnierById(turnierId);
         Spieler spieler = spielerRepository.findById(spielerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Spieler nicht gefunden"));
+        if(turnier.getMaxTeilnehmer() != null
+                && turnier.getSpieler().size() >= turnier.getMaxTeilnehmer()){
+            throw new InvalidRequestException("Turnier hat die maximale Teilnehmerzahl bereits erreicht");
+        }
         turnier.setTunierspieler(spieler);
         turnierRepository.save(turnier);
     }
@@ -261,6 +273,18 @@ public class TurnierService {
         return matchUpRepository.findById(MatchUpId)
                 .orElseThrow(() -> new ResourceNotFoundException("MatchUp nicht gefunden"));
 
+    }
+
+
+    @Transactional
+    public TurnierResponseDTO turnierAbschliessen(int turnierId){
+        Turnier turnier = findTurnierById(turnierId);
+        turnier.setStatus(TurnierStatus.ABGESCHLOSSEN);
+        return toDto(turnierRepository.save(turnier));
+    }
+
+    private TurnierResponseDTO toDto(Turnier turnier){
+        return TurnierMapper.toDto(turnier, turnierStatistikService.berechne(turnier.getSpieler()));
     }
 
 }

@@ -57,6 +57,12 @@ public class TurnierController {
         return ResponseEntity.noContent().build();
     }
 
+    /* Turnier als abgeschlossen markieren: POST /api/Turnier/5/abschliessen */
+    @PostMapping("/{turnierId}/abschliessen")
+    public ResponseEntity<TurnierResponseDTO> abschliessen(@PathVariable Integer turnierId){
+        return ResponseEntity.ok(turnierService.turnierAbschliessen(turnierId));
+    }
+
     /* Spieler eines Turniers gefiltert nach IDs anzeigen: GET /api/Turnier/5/spieler?ids=1,2,3 */
     @GetMapping("/{turnierId}/spieler")
     public ResponseEntity<List<SpielerResponseDTO>> showAllTurnierSpieler(@PathVariable Integer turnierId, @RequestParam Set<Integer> ids){

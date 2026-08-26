@@ -17,6 +17,9 @@ public record TurnierResponseDTO(Integer turnierId,
                                  String ort,
                                  TurnierStatus status,
                                  Integer teilnehmerAnzahl,
+                                 Integer maxTeilnehmer,
+                                 Integer vereinsAnzahl,
+                                 Double durchschnittsRating,
                                  Set<Integer> spielerIds,
                                  Set<Integer> matchIds) {
 }

@@ -38,10 +38,10 @@ class TurnierControllerTest {
     @Test
     void create_shouldReturnCreatedTurnier() {
         TurnierCreateDTO createDto = new TurnierCreateDTO(
-                "Stadtmeisterschaft 2026", LocalDate.of(2026, 9, 12), "Dresden", List.of(1, 2));
+                "Stadtmeisterschaft 2026", LocalDate.of(2026, 9, 12), "Dresden", 32, List.of(1, 2));
         TurnierResponseDTO responseDto = new TurnierResponseDTO(
                 1, "Stadtmeisterschaft 2026", LocalDate.of(2026, 9, 12), "Dresden",
-                TurnierStatus.GEPLANT, 2, Set.of(1, 2), Set.of());
+                TurnierStatus.GEPLANT, 2,  32, 0, null, Set.of(1, 2), Set.of());
 
         when(turnierService.createTurnier(createDto)).thenReturn(responseDto);
 
@@ -56,9 +56,9 @@ class TurnierControllerTest {
     void getAllTurniere_shouldReturnListOfTurniere() {
         List<TurnierResponseDTO> turniere = List.of(
                 new TurnierResponseDTO(1, "Stadtmeisterschaft 2026", LocalDate.of(2026, 9, 12), "Dresden",
-                        TurnierStatus.GEPLANT, 0, Set.of(), Set.of()),
+                        TurnierStatus.GEPLANT, 0,  32, 0, null, Set.of(), Set.of()),
                 new TurnierResponseDTO(2, "Vereinspokal", LocalDate.of(2026, 7, 20), "Dresden",
-                        TurnierStatus.ABGESCHLOSSEN, 0, Set.of(), Set.of())
+                        TurnierStatus.ABGESCHLOSSEN, 0,  32, 0, null, Set.of(), Set.of())
         );
 
         when(turnierService.getAllTurniere()).thenReturn(turniere);
@@ -74,7 +74,7 @@ class TurnierControllerTest {
     void getTurnier_shouldReturnSingleTurnier() {
         TurnierResponseDTO responseDto = new TurnierResponseDTO(
                 1, "Stadtmeisterschaft 2026", LocalDate.of(2026, 9, 12), "Dresden",
-                TurnierStatus.GEPLANT, 1, Set.of(1), Set.of());
+                TurnierStatus.GEPLANT, 1,  32, 0, null, Set.of(1), Set.of());
 
         when(turnierService.getTurnier(1)).thenReturn(responseDto);
 
@@ -87,10 +87,10 @@ class TurnierControllerTest {
     @Test
     void updateTurnier_shouldReturnUpdatedTurnier() {
         TurnierUpdateDTO updateDto = new TurnierUpdateDTO(
-                1, "Vereinspokal", LocalDate.of(2026, 7, 20), "Dresden", TurnierStatus.LAUFEND, List.of(3));
+                1, "Vereinspokal", LocalDate.of(2026, 7, 20), "Dresden", 32, TurnierStatus.LAUFEND, List.of(3));
         TurnierResponseDTO responseDto = new TurnierResponseDTO(
                 1, "Vereinspokal", LocalDate.of(2026, 7, 20), "Dresden",
-                TurnierStatus.LAUFEND, 1, Set.of(3), Set.of());
+                TurnierStatus.LAUFEND, 1,  32, 0, null, Set.of(3), Set.of());
 
         when(turnierService.updateTurnier(1, updateDto)).thenReturn(responseDto);
 
@@ -200,4 +200,18 @@ class TurnierControllerTest {
         assertEquals(ratingResult, result.getBody());
         verify(turnierService).EloBerehcnung(1, 8);
     }
+    @Test
+    void abschliessen_shouldReturnUpdatedTurnier() {
+        TurnierResponseDTO responseDto = new TurnierResponseDTO(
+                1, "Vereinspokal", LocalDate.of(2026, 7, 20), "Dresden",
+                TurnierStatus.ABGESCHLOSSEN, 1, 32, 1, 1800.0, Set.of(3), Set.of());
+        when(turnierService.turnierAbschliessen(1)).thenReturn(responseDto);
+
+        ResponseEntity<TurnierResponseDTO> result = turnierController.abschliessen(1);
+
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(responseDto, result.getBody());
+        verify(turnierService).turnierAbschliessen(1);
+    }
+
 }

@@ -24,6 +24,8 @@ public class Turnier {
 
     private String ort;
 
+    private Integer maxTeilnehmer;
+
     @Enumerated(EnumType.STRING)
     private TurnierStatus status;
 
@@ -68,6 +70,14 @@ public class Turnier {
 
     public void setOrt(String ort) {
         this.ort = ort;
+    }
+
+    public Integer getMaxTeilnehmer() {
+        return maxTeilnehmer;
+    }
+
+    public void setMaxTeilnehmer(Integer maxTeilnehmer) {
+        this.maxTeilnehmer = maxTeilnehmer;
     }
 
     public TurnierStatus getStatus() {
