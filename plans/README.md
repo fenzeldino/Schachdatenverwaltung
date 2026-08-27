@@ -1,8 +1,29 @@
 # Implementation Plans
 
-This folder didn't exist before this round — created alongside plan 001, to
+This folder didn't exist before round 1 — created alongside plan 001, to
 mirror the convention already established in the frontend repo
 (`schach-frontend/plans/`).
+
+## Round 2 — `/grill-with-docs` session, 2026-08-27 (feature plan, not an audit)
+
+Continuation of round 1's pattern: multi-round grilling/domain-modeling
+interview with the operator, this time about activating the "+ Teilnehmer
+hinzufügen" button in the frontend's `TurnierDetailView` (deliberately
+deactivated since that repo's plan 001). Cross-repo: the frontend half lives
+in `schach-frontend/plans/008-teilnehmer-hinzufuegen.md`. One new ADR was
+written directly here
+(`docs/adr/0003-teilnehmer-nur-bei-geplantem-turnier-hinzufuegen.md`).
+
+While scoping the frontend work, two real gaps surfaced in
+`TurnierService.addSpielerToTurnier` that had never mattered before because
+its only frontend caller was deactivated: no duplicate-participant guard
+(would silently corrupt `TurnierStatistikService`'s aggregates), and no
+tournament-status gate (participants could be added to a `LAUFEND`/
+`ABGESCHLOSSEN` tournament). Both fixed in plan 002.
+
+| Plan | Title | Priority | Effort | Depends on | Status |
+|------|-------|----------|--------|------------|--------|
+| 002  | Teilnehmer hinzufügen — Absicherung von `addSpielerToTurnier` (Backend) | P1 | S | — (frontend plan 008 in `schach-frontend` depends on this) | DONE |
 
 ## Round 1 — `/grill-with-docs` session, 2026-08-26 (feature plan, not an audit)
 
