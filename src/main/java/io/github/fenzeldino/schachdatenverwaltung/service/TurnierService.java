@@ -191,6 +191,18 @@ public class TurnierService {
         Turnier turnier = findTurnierById(turnierId);
         Spieler spieler = spielerRepository.findById(spielerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Spieler nicht gefunden"));
+
+        if(turnier.getStatus() != TurnierStatus.GEPLANT){
+            throw new InvalidRequestException(
+                    "Turnier ist nicht mehr in Planung, es können keine Teilnehmer mehr hinzugefügt werden");
+        }
+
+        boolean bereitsTeilnehmer = turnier.getSpieler().stream()
+                .anyMatch(teilnehmer -> teilnehmer.getSpielerId() == spieler.getSpielerId());
+        if(bereitsTeilnehmer){
+            throw new InvalidRequestException("Spieler ist bereits Teilnehmer dieses Turniers");
+        }
+
         if(turnier.getMaxTeilnehmer() != null
                 && turnier.getSpieler().size() >= turnier.getMaxTeilnehmer()){
             throw new InvalidRequestException("Turnier hat die maximale Teilnehmerzahl bereits erreicht");

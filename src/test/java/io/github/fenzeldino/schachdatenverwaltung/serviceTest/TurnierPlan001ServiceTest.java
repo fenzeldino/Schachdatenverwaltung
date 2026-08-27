@@ -49,6 +49,7 @@ class TurnierPlan001ServiceTest {
     @Test
     void addSpielerToTurnier_shouldRejectReachedCapacity() {
         Turnier turnier = new Turnier(1);
+        turnier.setStatus(TurnierStatus.GEPLANT);
         turnier.setMaxTeilnehmer(2);
         turnier.setSpieler(new ArrayList<>(List.of(spieler(1), spieler(2))));
         when(turnierRepository.findById(1)).thenReturn(Optional.of(turnier));
@@ -61,6 +62,7 @@ class TurnierPlan001ServiceTest {
     @Test
     void addSpielerToTurnier_shouldKeepLegacyTournamentUnlimited() {
         Turnier turnier = new Turnier(1);
+        turnier.setStatus(TurnierStatus.GEPLANT);
         turnier.setSpieler(new ArrayList<>(List.of(spieler(1), spieler(2))));
         when(turnierRepository.findById(1)).thenReturn(Optional.of(turnier));
         when(spielerRepository.findById(3)).thenReturn(Optional.of(spieler(3)));

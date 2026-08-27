@@ -196,6 +196,7 @@ class TurnierServiceTest {
     @Test
     void addSpielerToTurnier_byId_shouldAddSpielerToTurnier() {
         Turnier turnier = new Turnier(1);
+        turnier.setStatus(TurnierStatus.GEPLANT);
         Spieler spieler = new Spieler(3, "Nev Mustermann", 2100.00, 20, new ArrayList<>());
 
         when(spielerRepository.findById(3)).thenReturn(Optional.of(spieler));
@@ -206,6 +207,52 @@ class TurnierServiceTest {
         assertTrue(turnier.getSpieler().contains(spieler));
         verify(spielerRepository).findById(3);
         verify(turnierRepository).save(turnier);
+    }
+
+    @Test
+    void addSpielerToTurnier_shouldRejectRunningTournament() {
+        assertSpielerCannotBeAddedWithStatus(TurnierStatus.LAUFEND);
+    }
+
+    @Test
+    void addSpielerToTurnier_shouldRejectCompletedTournament() {
+        assertSpielerCannotBeAddedWithStatus(TurnierStatus.ABGESCHLOSSEN);
+    }
+
+    @Test
+    void addSpielerToTurnier_shouldRejectTournamentWithoutStatus() {
+        assertSpielerCannotBeAddedWithStatus(null);
+    }
+
+    @Test
+    void addSpielerToTurnier_shouldRejectDuplicateParticipant() {
+        Turnier turnier = new Turnier(1);
+        turnier.setStatus(TurnierStatus.GEPLANT);
+        Spieler vorhandenerSpieler = new Spieler(3, "Nev Mustermann", 2100.00, 20, new ArrayList<>());
+        turnier.setSpieler(new ArrayList<>(List.of(vorhandenerSpieler)));
+        Spieler geladenerSpieler = new Spieler(3, "Nev Mustermann", 2100.00, 20, new ArrayList<>());
+
+        when(turnierRepository.findById(1)).thenReturn(Optional.of(turnier));
+        when(spielerRepository.findById(3)).thenReturn(Optional.of(geladenerSpieler));
+
+        assertThrows(InvalidRequestException.class, () -> turnierService.addSpielerToTurnier(1, 3));
+
+        assertEquals(1, turnier.getSpieler().size());
+        verify(turnierRepository, never()).save(any());
+    }
+
+    private void assertSpielerCannotBeAddedWithStatus(TurnierStatus status) {
+        Turnier turnier = new Turnier(1);
+        turnier.setStatus(status);
+        Spieler spieler = new Spieler(3, "Nev Mustermann", 2100.00, 20, new ArrayList<>());
+
+        when(turnierRepository.findById(1)).thenReturn(Optional.of(turnier));
+        when(spielerRepository.findById(3)).thenReturn(Optional.of(spieler));
+
+        assertThrows(InvalidRequestException.class, () -> turnierService.addSpielerToTurnier(1, 3));
+
+        assertTrue(turnier.getSpieler().isEmpty());
+        verify(turnierRepository, never()).save(any());
     }
 
     private Verein vereinMitId(int id, String name) {
