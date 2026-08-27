@@ -19,7 +19,7 @@ directly here (`docs/adr/0004-vereinszuweisung-atomar-beim-spieler-anlegen.md`).
 | Plan | Title | Priority | Effort | Depends on | Status |
 |------|-------|----------|--------|------------|--------|
 | 003  | VereinService — Exception-Konsistenz und ZPS-Code-Format-Validierung (Backend) | P2 | S | — (frontend plan 009 in `schach-frontend` depends on this) | DONE |
-| 004  | Spieler anlegen — Validierung und atomare Vereinszuweisung (Backend) | P1 | M | — (frontend plan 010 in `schach-frontend` depends on this) | TODO |
+| 004  | Spieler anlegen — Validierung und atomare Vereinszuweisung (Backend) | P1 | M | — (frontend plan 010 in `schach-frontend` depends on this) | DONE |
 
 ## Round 2 — `/grill-with-docs` session, 2026-08-27 (feature plan, not an audit)
 

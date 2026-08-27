@@ -3,11 +3,14 @@ package io.github.fenzeldino.schachdatenverwaltung.serviceTest;
 import io.github.fenzeldino.schachdatenverwaltung.dto.request.spieler.SpielerCreateDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.request.spieler.SpielerUpdateDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.spieler.SpielerResponseDTO;
+import io.github.fenzeldino.schachdatenverwaltung.exception.InvalidRequestException;
 import io.github.fenzeldino.schachdatenverwaltung.exception.ResourceNotFoundException;
 import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
 import io.github.fenzeldino.schachdatenverwaltung.model.Turnier;
+import io.github.fenzeldino.schachdatenverwaltung.model.Verein;
 import io.github.fenzeldino.schachdatenverwaltung.repository.SpielerRepository;
 import io.github.fenzeldino.schachdatenverwaltung.repository.TurnierRepository;
+import io.github.fenzeldino.schachdatenverwaltung.repository.VereinRepository;
 import io.github.fenzeldino.schachdatenverwaltung.service.SpielerService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +23,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -31,6 +35,10 @@ class SpielerServiceTest {
 
     @Mock
     private TurnierRepository turnierRepository;
+
+
+    @Mock
+    private VereinRepository vereinRepository;
 
     @InjectMocks
     private SpielerService spielerService;
@@ -69,6 +77,62 @@ class SpielerServiceTest {
                 ));
     }
 
+
+    @Test
+    void createSpieler_shouldRejectNullDto() {
+        assertThrows(InvalidRequestException.class, () -> spielerService.createSpieler((SpielerCreateDTO) null));
+    }
+
+    @Test
+    void createSpieler_shouldRejectMissingName() {
+        SpielerCreateDTO nullName = new SpielerCreateDTO(null, 1800.0, 30, List.of());
+        SpielerCreateDTO blankName = new SpielerCreateDTO("  ", 1800.0, 30, List.of());
+        assertThrows(InvalidRequestException.class, () -> spielerService.createSpieler(nullName));
+        assertThrows(InvalidRequestException.class, () -> spielerService.createSpieler(blankName));
+    }
+
+    @Test
+    void createSpieler_shouldRejectNegativeRating() {
+        SpielerCreateDTO spielerDto = new SpielerCreateDTO("Max Mustermann", -1.0, 30, List.of());
+        assertThrows(InvalidRequestException.class, () -> spielerService.createSpieler(spielerDto));
+    }
+
+    @Test
+    void createSpieler_shouldRejectNegativeAge() {
+        SpielerCreateDTO spielerDto = new SpielerCreateDTO("Max Mustermann", 1800.0, -1, List.of());
+        assertThrows(InvalidRequestException.class, () -> spielerService.createSpieler(spielerDto));
+    }
+
+    @Test
+    void createSpieler_shouldAssignVerein() {
+        SpielerCreateDTO spielerDto = new SpielerCreateDTO("Max Mustermann", 1800.0, 30, List.of(), 7);
+        Verein verein = new Verein("Schachclub Dresden");
+        verein.setVereinId(7);
+        when(vereinRepository.findById(7)).thenReturn(Optional.of(verein));
+        SpielerResponseDTO result = spielerService.createSpieler(spielerDto);
+        assertEquals(7, result.vereinId());
+        assertEquals("Schachclub Dresden", result.vereinName());
+        verify(vereinRepository).findById(7);
+        verify(spielerRepository).save(argThat(spieler -> spieler.getVerein() == verein));
+    }
+
+    @Test
+    void createSpieler_shouldRejectUnknownVerein() {
+        SpielerCreateDTO spielerDto = new SpielerCreateDTO("Max Mustermann", 1800.0, 30, List.of(), 999);
+        when(vereinRepository.findById(999)).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> spielerService.createSpieler(spielerDto));
+        verify(spielerRepository, never()).save(argThat(spieler -> true));
+    }
+
+    @Test
+    void createSpieler_shouldCreateWithoutVerein() {
+        SpielerCreateDTO spielerDto = new SpielerCreateDTO("Max Mustermann", 1800.0, 30, List.of());
+        SpielerResponseDTO result = spielerService.createSpieler(spielerDto);
+        assertNull(result.vereinId());
+        assertNull(result.vereinName());
+        verify(vereinRepository, never()).findById(org.mockito.ArgumentMatchers.anyInt());
+        verify(spielerRepository).save(argThat(spieler -> spieler.getVerein() == null));
+    }
 
     @Test
     void getAllSpieler_shouldReturnAllPlayer(){

@@ -6,9 +6,14 @@ public record SpielerCreateDTO(
                                String Name,
                                Double rating,
                                Integer alter,
-                               List<Integer> turnierIds) {
+                               List<Integer> turnierIds,
+                               Integer vereinId) {
 
     public SpielerCreateDTO {
+    }
+
+    public SpielerCreateDTO(String Name, Double rating, Integer alter, List<Integer> turnierIds) {
+        this(Name, rating, alter, turnierIds, null);
     }
 
 
@@ -30,5 +35,10 @@ public record SpielerCreateDTO(
     @Override
     public List<Integer> turnierIds() {
         return turnierIds;
+    }
+
+    @Override
+    public Integer vereinId() {
+        return vereinId;
     }
 }
