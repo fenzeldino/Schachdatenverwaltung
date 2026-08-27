@@ -4,6 +4,7 @@ import io.github.fenzeldino.schachdatenverwaltung.dto.request.verein.VereinCreat
 import io.github.fenzeldino.schachdatenverwaltung.dto.request.verein.VereinUpdateDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.spieler.SpielerResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.verein.VereinResponseDTO;
+import io.github.fenzeldino.schachdatenverwaltung.exception.InvalidRequestException;
 import io.github.fenzeldino.schachdatenverwaltung.exception.ResourceNotFoundException;
 import io.github.fenzeldino.schachdatenverwaltung.mapper.SpielerMapper;
 import io.github.fenzeldino.schachdatenverwaltung.mapper.VereinMapper;
@@ -15,10 +16,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
 public class VereinService {
+
+    private static final Pattern ZPS_CODE_PATTERN = Pattern.compile("^[A-Z]\\d{4}$");
 
     private final VereinRepository vereinRepository;
     private final SpielerRepository spielerRepository;
@@ -31,12 +35,14 @@ public class VereinService {
     @Transactional
     public VereinResponseDTO createVerein(VereinCreateDTO vereinDTO) {
         if (vereinDTO == null || vereinDTO.name() == null || vereinDTO.name().isBlank()) {
-            throw new IllegalArgumentException("Ein Verein braucht einen Namen");
+            throw new InvalidRequestException("Ein Verein braucht einen Namen");
         }
 
         if (vereinRepository.existsByNameIgnoreCase(vereinDTO.name())) {
-            throw new IllegalArgumentException("Verein mit Namen '" + vereinDTO.name() + "' existiert bereits");
+            throw new InvalidRequestException("Verein mit Namen '" + vereinDTO.name() + "' existiert bereits");
         }
+
+        validateZpsCode(vereinDTO.zpsCode());
 
         Verein gespeichert = vereinRepository.save(VereinMapper.toEntity(vereinDTO));
         return VereinMapper.toDto(gespeichert);
@@ -101,9 +107,18 @@ public class VereinService {
         Verein existing = vereinRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Verein mit Id: " + id + " wurde nicht gefunden"));
 
+        validateZpsCode(vereinDTO.zpsCode());
+
         existing.setName(vereinDTO.name());
         existing.setZpsCode(vereinDTO.zpsCode());
         return VereinMapper.toDto(vereinRepository.save(existing));
+    }
+
+    private void validateZpsCode(String zpsCode) {
+        if (zpsCode != null && !zpsCode.isBlank() && !ZPS_CODE_PATTERN.matcher(zpsCode).matches()) {
+            throw new InvalidRequestException(
+                    "ZPS-Code muss aus einem Großbuchstaben gefolgt von vier Ziffern bestehen (z. B. 'C0327')");
+        }
     }
 
     /**

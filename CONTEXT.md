@@ -38,7 +38,17 @@ Der Spieler, der ein MatchUp für sich entschieden bzw. verloren hat. `Verlierer
 Person mit einem Rating (aktuell ein generisches `rating`-Feld statt getrennter DWZ-/Elo-Werte — offener Glossar-Kandidat), die an Turnieren und MatchUps teilnimmt.
 
 **Verein**:
-Ein Schachverein, dem Mitglieder zugeordnet sind.
+Ein Schachverein, dem Mitglieder zugeordnet sind. Vereinsnamen müssen
+eindeutig sein (`VereinService.createVerein` prüft das), im Gegensatz zu
+`Spieler.name` — echte Personen können denselben Namen tragen, Vereine
+(bewusst) nicht.
+
+**ZPS-Code**:
+Kennung eines Vereins bei der Zentralen Personenstammdatei des Deutschen
+Schachbundes. Format: ein Großbuchstabe gefolgt von vier Ziffern (z. B.
+`C0327`). Optionales Feld bei `Verein`, aber falls gesetzt, seit Plan 003
+serverseitig gegen dieses Format validiert (`createVerein`/`updateVerein`).
+_Avoid_: Vereinscode, Vereinskennung
 
 **Mitglied**:
 Person mit Vereinszugehörigkeit, unabhängig von der Turnier-Teilnahme als Spieler. Noch nicht über eigene Endpunkte angebunden.
