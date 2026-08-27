@@ -4,6 +4,23 @@ This folder didn't exist before round 1 — created alongside plan 001, to
 mirror the convention already established in the frontend repo
 (`schach-frontend/plans/`).
 
+## Round 3 — `/grill-with-docs` session, 2026-08-27 (feature plan, not an audit)
+
+Same day as round 2, continuation of the same multi-round interview, but a
+different topic: activating the "+ Spieler anlegen" button in the frontend's
+`SpielerListView`. Scoping this surfaced that the Miro wireframe
+("3. Spieler – Detail") wants a Verein field on the create form, and there
+was no Verein management UI at all yet — so the session split into two
+independent features instead of one. Cross-repo: the frontend halves live in
+`schach-frontend/plans/009-vereinsverwaltung.md` and
+`schach-frontend/plans/010-spieler-anlegen.md`. One new ADR was written
+directly here (`docs/adr/0004-vereinszuweisung-atomar-beim-spieler-anlegen.md`).
+
+| Plan | Title | Priority | Effort | Depends on | Status |
+|------|-------|----------|--------|------------|--------|
+| 003  | VereinService — Exception-Konsistenz und ZPS-Code-Format-Validierung (Backend) | P2 | S | — (frontend plan 009 in `schach-frontend` depends on this) | DONE |
+| 004  | Spieler anlegen — Validierung und atomare Vereinszuweisung (Backend) | P1 | M | — (frontend plan 010 in `schach-frontend` depends on this) | TODO |
+
 ## Round 2 — `/grill-with-docs` session, 2026-08-27 (feature plan, not an audit)
 
 Continuation of round 1's pattern: multi-round grilling/domain-modeling

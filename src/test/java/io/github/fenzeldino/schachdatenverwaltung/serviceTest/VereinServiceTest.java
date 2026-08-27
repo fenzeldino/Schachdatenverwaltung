@@ -4,6 +4,7 @@ import io.github.fenzeldino.schachdatenverwaltung.dto.request.verein.VereinCreat
 import io.github.fenzeldino.schachdatenverwaltung.dto.request.verein.VereinUpdateDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.spieler.SpielerResponseDTO;
 import io.github.fenzeldino.schachdatenverwaltung.dto.response.verein.VereinResponseDTO;
+import io.github.fenzeldino.schachdatenverwaltung.exception.InvalidRequestException;
 import io.github.fenzeldino.schachdatenverwaltung.exception.ResourceNotFoundException;
 import io.github.fenzeldino.schachdatenverwaltung.model.Spieler;
 import io.github.fenzeldino.schachdatenverwaltung.model.Verein;
@@ -63,23 +64,42 @@ class VereinServiceTest {
 
     @Test
     void createVerein_shouldThrow_WhenNameIsBlank() {
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(InvalidRequestException.class,
                 () -> vereinService.createVerein(new VereinCreateDTO("   ", null)));
         verify(vereinRepository, never()).save(any());
     }
 
     @Test
     void createVerein_shouldThrow_WhenDtoIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> vereinService.createVerein(null));
+        assertThrows(InvalidRequestException.class, () -> vereinService.createVerein(null));
     }
 
     @Test
     void createVerein_shouldThrow_WhenNameAlreadyExists() {
         when(vereinRepository.existsByNameIgnoreCase("SC Dresden 1920")).thenReturn(true);
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(InvalidRequestException.class,
                 () -> vereinService.createVerein(new VereinCreateDTO("SC Dresden 1920", null)));
         verify(vereinRepository, never()).save(any());
+    }
+
+    @Test
+    void createVerein_shouldThrow_WhenZpsCodeHasInvalidFormat() {
+        for (String zpsCode : List.of("c0327", "C032", "C03270", "0327C")) {
+            assertThrows(InvalidRequestException.class,
+                    () -> vereinService.createVerein(new VereinCreateDTO("SC Dresden 1920", zpsCode)));
+        }
+        verify(vereinRepository, never()).save(any());
+    }
+
+    @Test
+    void createVerein_shouldPersist_WhenZpsCodeIsNull() {
+        when(vereinRepository.save(any(Verein.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        VereinResponseDTO result = vereinService.createVerein(new VereinCreateDTO("SC Dresden 1920", null));
+
+        assertNull(result.zpsCode());
+        verify(vereinRepository).save(any(Verein.class));
     }
 
     /* ---------- lesende Zugriffe ---------- */
@@ -185,6 +205,16 @@ class VereinServiceTest {
 
         assertEquals("Neuer Name", result.name());
         assertEquals("C0999", result.zpsCode());
+    }
+
+    @Test
+    void updateVerein_shouldThrow_WhenZpsCodeHasInvalidFormat() {
+        Verein existing = vereinMitId(1, "Alter Name");
+        when(vereinRepository.findById(1)).thenReturn(Optional.of(existing));
+
+        assertThrows(InvalidRequestException.class,
+                () -> vereinService.updateVerein(1, new VereinUpdateDTO(1, "Neuer Name", "c0327")));
+        verify(vereinRepository, never()).save(any());
     }
 
     @Test
